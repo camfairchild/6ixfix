@@ -1,0 +1,40 @@
+body {
+    font-family: Roboto;
+}
+
+.results {
+    background-color: #C4C4C4;
+    width: 80%;
+    margin: 2rem auto;
+    padding: 2rem;
+    display: flex;
+    justify-content: space-around;
+    flex-direction: column;
+    row-gap: 2rem;
+}
+
+.result {
+    padding: 2rem;
+    background-color: #D8D8D8;
+}
+    .result .title a:link {
+        text-decoration: none;
+    }
+        
+        .result .title a:link {
+            color: white;
+        }
+
+        .result .title a:hover {
+            text-decoration: underline;
+        }
+
+
+    .result .author {
+        color: white;
+        font-style: italic;
+    }
+
+    .result img {
+        width: 5rem;
+    }
