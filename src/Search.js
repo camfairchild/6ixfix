@@ -40,6 +40,8 @@ async function search(queryParams) {
 }
 
 export default function Search() {
+  // results equiv to this.state
+  // setResults equiv to this.setState
   const [results, setResults] = useState([]);
   let query = useQuery().get("query");
 
