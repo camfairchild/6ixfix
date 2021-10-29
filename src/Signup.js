@@ -26,7 +26,7 @@ export default class Signup extends React.Component {
 
     send = (event) => {
         const newProfile = {
-            type: this.state.type,
+            role: this.state.role,
             fullName: this.state.fullName,
             userName: this.state.userName,
             password: this.state.password
