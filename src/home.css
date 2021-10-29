@@ -1,6 +1,8 @@
 .signup-container {
     display: flex;
     column-gap: 5rem;
-    justify-content: center;
+    justify-content: center;    
+    margin: auto;
     margin-top: 5rem;
+    max-width: 90vw;
 }
