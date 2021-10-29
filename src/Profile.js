@@ -2,7 +2,6 @@ import React from 'react';
 import Header from './Header';
 
 import { useLocation, useParams } from 'react-router';
-import { Redirect } from 'react-router';
 
 export default function Profile(props) {
     const location = useLocation();
@@ -11,7 +10,7 @@ export default function Profile(props) {
     let userName = params['userName'] || null;
 
     function getLoggedIn() {
-        return location.state.loggedIn
+        return location.state?.loggedIn
     }
 
     function getUserProfile(userName) {
