@@ -13,6 +13,7 @@ class UserPostSubmission extends React.Component {
                     onChange={handleInputChange}
                     type="text"
                     name="postHeadline"
+                    className="textInput"
                     placeholder="Enter post headline" />
 
                 <input type="submit"

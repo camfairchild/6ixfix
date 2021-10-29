@@ -89,6 +89,7 @@
       width: max-content;
       background-color: #d8d8d8;
       font-size: medium;
+      align-self: center;
     }
 
     .userPost .textInputs {
@@ -96,6 +97,10 @@
       flex-direction: row;
       justify-content: space-between;
       align-items: flex-start;
+    }
+
+    .userPost .textInput {
+      margin-right: 1rem;
     }
 
     .userPosts {
