@@ -6,31 +6,34 @@ import UserPosts from './userPosts';
 import UserVehicleInfo from './userVehicleInfo';
 import UserServiceInfo from './userServiceInfo.js';
 import UserPostSubmission from './userPostSubmission';
-
+import Header from './Header';
 // User Post Component
 class CreateUserPost extends React.Component {
-
-  state = {
-    // these are the fields of the post that a user must fill in
-    profilePic: "",
-    vehicleMake: "",
-    vehicleModel: "",
-    vehicleMileage: "",
-    vehicleFuel: "",
-    serviceNeeded: "",
-    postHeadline: "",
-    userPosts: [
-      {
-        title: "", //
-        author: "", // username of the person which we get from log-in
-        text: "", // refers to the contents of the service required
-        profile: {
-          picture: "", // this will just be the stock image 
-          link: "", // not sure what to fill in for this
-          name: "" // same as author
+  constructor(props) {
+    super(props);
+    this.state = {
+      // these are the fields of the post that a user must fill in
+      profilePic: "",
+      vehicleMake: "",
+      vehicleModel: "",
+      vehicleMileage: "",
+      vehicleFuel: "",
+      serviceNeeded: "",
+      postHeadline: "",
+      user: this.props.user,
+      userPosts: [
+        {
+          title: "", //
+          author: this.props.user?.userName, // username of the person which we get from log-in
+          text: "", // refers to the contents of the service required
+          profile: {
+            picture: <img src="/images/defaultprofpic.png" alt="My Awesome logo"/>, // this will just be the stock image 
+            link: this.props.user?.profile, // not sure what to fill in for this
+            name: this.props.user?.fullName // same as author
+          }
         }
-      }
-    ]
+      ]
+    }
   }
 
   handleInputChange = (event) => {
@@ -48,13 +51,9 @@ class CreateUserPost extends React.Component {
 
     const post = {
       title: this.state.postHeadline,
-      author: "",
+      author: this.props.user?.userName,
       text: this.state.serviceNeeded,
-      profile: {
-        picture: <img src="defaultprofpic.png" alt="My Awesome logo" className="postImage" />, // add a default profile picture for each post
-        link: "",
-        name: ""
-      }
+      profile: this.state.profile
     }
 
     postList.push(post)
@@ -77,85 +76,86 @@ class CreateUserPost extends React.Component {
 
   render() {
     return (
+      <div className="createUserPost-container">
+        <Header page="post"/>
+        <div className="userPost">
 
-      <div className="userPost">
+          <div className="postCreationBanner">
+            <ul>
 
-        <div className="postCreationBanner">
-          <ul>
+              {/* <div className="profilePicture"> */}
 
-            {/* <div className="profilePicture"> */}
+              <li>
+                <PostHeader title="Profile Picture" />
+                <img src="/images/defaultprofpic.png" alt="profile picture" />
+                <input type="submit"
+                  className="update-post"
+                  value="Update" />
 
-            <li>
-              <PostHeader title="Profile Picture" />
+                {/*Add a default profile picture here for now*/}
+                {/*Will need to make a server call here to get user profile picture*/}
 
-              <input type="submit"
-                className="submit"
-                value="Update" />
-
-              {/*Add a default profile picture here for now*/}
-              {/*Will need to make a server call here to get user profile picture*/}
-
-              <img src="defaultprofpic.png" alt="profile picture" />
-            </li>
-
-            {/* </div> */}
-
-            <li>
-              {/* <div className="vehicleInfo"> */}
-
-              <PostHeader title="Vehicle Information"
-                subtitle="Please fill in the following fields" />
-
-              <UserVehicleInfo vehicleMake={this.state.vehicleMake}
-                vehicleModel={this.state.vehicleModel}
-                vehicleMileage={this.state.vehicleMileage}
-                vehicleFuel={this.state.vehicleFuel}
-                handleInputChange={this.handleInputChange} />
+                
+              </li>
 
               {/* </div> */}
-            </li>
+
+              <li>
+                {/* <div className="vehicleInfo"> */}
+
+                <PostHeader title="Vehicle Information"
+                  subtitle="Please fill in the following fields" />
+
+                <UserVehicleInfo vehicleMake={this.state.vehicleMake}
+                  vehicleModel={this.state.vehicleModel}
+                  vehicleMileage={this.state.vehicleMileage}
+                  vehicleFuel={this.state.vehicleFuel}
+                  handleInputChange={this.handleInputChange} />
+
+                {/* </div> */}
+              </li>
 
 
-            <li>
-              {/* <div className="serviceNeeded"> */}
+              <li>
+                {/* <div className="serviceNeeded"> */}
 
-              <PostHeader title="Service Information"
-                subtitle="Please enter the service(s) you require" />
+                <PostHeader title="Service Information"
+                  subtitle="Please enter the service(s) you require" />
 
-              <UserServiceInfo serviceNeeded={this.state.serviceNeeded}
-                handleInputChange={this.handleInputChange} />
+                <UserServiceInfo serviceNeeded={this.state.serviceNeeded}
+                  handleInputChange={this.handleInputChange} />
 
-              {/* </div> */}
-            </li>
+                {/* </div> */}
+              </li>
 
-            <li>
-              {/* <div className="postHeadline"> */}
+              <li>
+                {/* <div className="postHeadline"> */}
 
-              <PostHeader title="Post Summary"
-                subtitle="Please include a headline for your post" />
+                <PostHeader title="Post Summary"
+                  subtitle="Please include a headline for your post" />
 
-              <UserPostSubmission postHeadline={this.state.postHeadline}
-                handleInputChange={this.handleInputChange}
-                addPost={this.addPost} />
+                <UserPostSubmission postHeadline={this.state.postHeadline}
+                  handleInputChange={this.handleInputChange}
+                  addPost={this.addPost} />
 
-              {/* </div> */}
-            </li>
+                {/* </div> */}
+              </li>
 
-          </ul>
+            </ul>
+          </div>
+
+
+          <div className="previousPosts">
+
+            <PostHeader title="Previous Posts" />
+
+            <UserPosts userPosts={this.state.userPosts} // adds the users post to the screen (need to route this to its own page)
+              removePost={this.removePost} />
+
+          </div>
+
         </div>
-
-
-        <div classname="previousPosts">
-
-          <PostHeader title="Previous Posts" />
-
-          <UserPosts userPosts={this.state.userPosts} // adds the users post to the screen (need to route this to its own page)
-            removePost={this.removePost} />
-
-        </div>
-
       </div>
-
     )
   }
 }

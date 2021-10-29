@@ -6,28 +6,32 @@ import MechanicPosts from './mechanicPosts';
 import MechanicSkillsInfo from './mechanicSkillsInfo';
 import MechanicCertificationsInfo from './mechanicCertificationsInfo';
 import UserPostSubmission from './userPostSubmission';
+import Header from './Header';
 
 // User Post Component
 class CreateMechanicPost extends React.Component {
-
-  state = {
-    // these are the fields of the post that a mechanic must fill in
-    profilePic: "",
-    certifications: "",
-    skills: "",
-    postHeadline: "",
-    mechanicPosts: [
-      {
-        title: "", //
-        author: "", // username of the person which we get from log-in
-        text: "", // refers to the contents of the skills the mechanic has
-        profile: {
-          picture: "", // this will just be the stock image 
-          link: "", // not sure what to fill in for this
-          name: "" // same as author
+  constructor(props) {
+    super(props);
+    this.state = {
+      // these are the fields of the post that a mechanic must fill in
+      profilePic: "",
+      certifications: "",
+      skills: "",
+      postHeadline: "",
+      user: this.props.user,
+      mechanicPosts: [
+        {
+          title: "", //
+          author: this.props.user?.userName, // username of the person which we get from log-in
+          text: "", // refers to the contents of the skills the mechanic has
+          profile: {
+            picture: "", // this will just be the stock image 
+            link: "", // not sure what to fill in for this
+            name: this.props.user?.fullName // same as author
+          }
         }
-      }
-    ]
+      ]
+    }
   }
 
   handleInputChange = (event) => {
@@ -48,7 +52,7 @@ class CreateMechanicPost extends React.Component {
       author: "",
       text: this.state.skills,
       profile: {
-        picture: <img src="defaultprofpic.png" alt="My Awesome logo" className="postImage" />, // add a default profile picture for each post
+        picture: <img src="/images/defaultprofpic.png" alt="My Awesome logo" className="postImage" />, // add a default profile picture for each post
         link: "",
         name: ""
       }
@@ -74,82 +78,82 @@ class CreateMechanicPost extends React.Component {
 
   render() {
     return (
+      <div className="createMechanicPost-container">
+        <Header page="post"/>
+        <div className="userPost">
+          <div className="postCreationBanner">
+            <ul>
 
-      <div className="userPost">
+              {/* <div className="profilePicture"> */}
 
-        <div className="postCreationBanner">
-          <ul>
+              <li>
+                <PostHeader title="Profile Picture" />
 
-            {/* <div className="profilePicture"> */}
+                <input type="submit"
+                  className="submit"
+                  value="Update" />
 
-            <li>
-              <PostHeader title="Profile Picture" />
+                {/*Add a default profile picture here for now*/}
+                {/*Will need to make a server call here to get user profile picture*/}
 
-              <input type="submit"
-                className="submit"
-                value="Update" />
-
-              {/*Add a default profile picture here for now*/}
-              {/*Will need to make a server call here to get user profile picture*/}
-
-              <img src="defaultprofpic.png" alt="profile picture" />
-            </li>
-
-            {/* </div> */}
-
-            <li>
-              {/* <div className="vehicleInfo"> */}
-
-              <PostHeader title="Skills"
-                subtitle="Please enter the skill(s) you possess" />
-
-              <MechanicSkillsInfo skills={this.state.skills}
-                handleInputChange={this.handleInputChange} />
+                <img src="/images/defaultprofpic.png" alt="profile picture" />
+              </li>
 
               {/* </div> */}
-            </li>
+
+              <li>
+                {/* <div className="vehicleInfo"> */}
+
+                <PostHeader title="Skills"
+                  subtitle="Please enter the skill(s) you possess" />
+
+                <MechanicSkillsInfo skills={this.state.skills}
+                  handleInputChange={this.handleInputChange} />
+
+                {/* </div> */}
+              </li>
 
 
-            <li>
-              {/* <div className="serviceNeeded"> */}
+              <li>
+                {/* <div className="serviceNeeded"> */}
 
-              <PostHeader title="Certifications"
-                subtitle="Please enter the certification(s) you possess" />
+                <PostHeader title="Certifications"
+                  subtitle="Please enter the certification(s) you possess" />
 
-              <MechanicCertificationsInfo certifications={this.state.certifications}
-                handleInputChange={this.handleInputChange} />
+                <MechanicCertificationsInfo certifications={this.state.certifications}
+                  handleInputChange={this.handleInputChange} />
 
-              {/* </div> */}
-            </li>
+                {/* </div> */}
+              </li>
 
-            <li>
-              {/* <div className="postHeadline"> */}
+              <li>
+                {/* <div className="postHeadline"> */}
 
-              <PostHeader title="Post Summary"
-                subtitle="Please include a headline for your post" />
+                <PostHeader title="Post Summary"
+                  subtitle="Please include a headline for your post" />
 
-              <UserPostSubmission postHeadline={this.state.postHeadline} // we can use the UserPostSubmission class since this doesnt depend on user type
-                handleInputChange={this.handleInputChange}
-                addPost={this.addPost} />
+                <UserPostSubmission postHeadline={this.state.postHeadline} // we can use the UserPostSubmission class since this doesnt depend on user type
+                  handleInputChange={this.handleInputChange}
+                  addPost={this.addPost} />
 
-              {/* </div> */}
-            </li>
+                {/* </div> */}
+              </li>
 
-          </ul>
+            </ul>
+          </div>
+
+
+          <div className="previousPosts">
+
+            <PostHeader title="Previous Posts" />
+
+            <MechanicPosts mechanicPosts={this.state.mechanicPosts} // adds the mechanic post to the screen (need to route this to its own page)
+              removePost={this.removePost} />
+
+          </div>
+
         </div>
-
-
-        <div classname="previousPosts">
-
-          <PostHeader title="Previous Posts" />
-
-          <MechanicPosts mechanicPosts={this.state.mechanicPosts} // adds the mechanic post to the screen (need to route this to its own page)
-            removePost={this.removePost} />
-
-        </div>
-
       </div>
-
     )
   }
 }

@@ -10,16 +10,14 @@ class UserPosts extends React.Component {
         const { userPosts, removePost } = this.props
 
         return (
-            <div className="container">
-                <ul>
-                    {userPosts.map((post) => {
-                        return (
-                            <UserPost key={uid(post)}
-                                post={post}
-                                removePost={removePost} />
-                        )
-                    })}
-                </ul>
+            <div className="userPosts">
+                {userPosts.map((post) => {
+                    return (
+                        <UserPost key={uid(post)}
+                            post={post}
+                            removePost={removePost} />
+                    )
+                })}
             </div>
         )
     }

@@ -8,29 +8,29 @@ class UserVehicleInfo extends React.Component {
         const { vehicleMake, vehicleModel, vehicleMileage, vehicleFuel, handleInputChange } = this.props
 
         return (
-            <div>
-                <input value={vehicleMake}
+            <div className="textInputs">
+                <input className="textInput" value={vehicleMake}
                     onChange={handleInputChange}
                     type="text"
                     name="vehicleMake"
                     placeholder="make" />
 
 
-                <input value={vehicleModel}
+                <input className="textInput" value={vehicleModel}
                     onChange={handleInputChange}
                     type="text"
                     name="vehicleModel"
                     placeholder="model" />
 
 
-                <input value={vehicleMileage}
+                <input className="textInput"value={vehicleMileage}
                     onChange={handleInputChange}
                     type="text"
                     name="vehicleMileage"
                     placeholder="mileage" />
 
 
-                <input value={vehicleFuel}
+                <input className="textInput" value={vehicleFuel}
                     onChange={handleInputChange}
                     type="text"
                     name="vehicleFuel"
