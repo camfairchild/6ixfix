@@ -8,7 +8,7 @@ class UserServiceInfo extends React.Component {
         const { serviceNeeded, handleInputChange } = this.props
 
         return (
-            <div>
+            <div className="vehicle-info">
                 <textarea value={serviceNeeded}
                     onChange={handleInputChange}
                     rows="10"
