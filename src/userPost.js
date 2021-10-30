@@ -5,7 +5,7 @@ class UserPost extends React.Component {
 
     render() {
 
-        const { post, removePost } = this.props
+        const { post, removePost, profile } = this.props
 
         return (
             <div className="post">
@@ -15,9 +15,9 @@ class UserPost extends React.Component {
                     </div>
                     <div className="post-meta">
                         <div className="post-services">Service(s) Needed:{post.text}</div>
-                        <div className="post-profilePic">{post.profile.picture}</div>
-                        <div className="post-link">{post.profile.link}</div>
-                        <div className="post-author">{post.profile.name}</div>
+                        <div className="post-profilePic">{profile.picture}</div>
+                        <div className="post-link">{profile.link}</div>
+                        <div className="post-author">{profile.userName}</div>
                     </div>
                     
                     <input type="submit"

@@ -7,7 +7,7 @@ class UserPosts extends React.Component {
 
     render() {
 
-        const { userPosts, removePost } = this.props
+        const { userPosts, removePost, profile } = this.props
 
         return (
             <div className="userPosts">
@@ -15,7 +15,7 @@ class UserPosts extends React.Component {
                     return (
                         <UserPost key={uid(post)}
                             post={post}
-                            removePost={removePost} />
+                            removePost={removePost} profile={profile} />
                     )
                 })}
             </div>

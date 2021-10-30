@@ -14,7 +14,7 @@ class CreateMechanicPost extends React.Component {
     super(props);
     this.state = {
       // these are the fields of the post that a mechanic must fill in
-      profilePic: "",
+      selectedFile: null,
       certifications: "",
       skills: "",
       postHeadline: "",
@@ -23,14 +23,16 @@ class CreateMechanicPost extends React.Component {
         {
           title: "", //
           author: this.props.user?.userName, // username of the person which we get from log-in
-          text: "", // refers to the contents of the skills the mechanic has
-          profile: {
-            picture: "", // this will just be the stock image 
-            link: "", // not sure what to fill in for this
-            name: this.props.user?.fullName // same as author
-          }
+          text: "" // refers to the contents of the skills the mechanic has
         }
-      ]
+      ],
+      userProfile: {
+        picture: "/images/defaultprofpic.png",
+        userName: "",
+        fullName: "",
+        email: "",
+        link: ""
+      }
     }
   }
 
@@ -49,13 +51,8 @@ class CreateMechanicPost extends React.Component {
 
     const post = {
       title: this.state.postHeadline,
-      author: "",
-      text: this.state.skills,
-      profile: {
-        picture: <img src="/images/defaultprofpic.png" alt="My Awesome logo" className="postImage" />, // add a default profile picture for each post
-        link: "",
-        name: ""
-      }
+      author: this.state.user?.userName,
+      text: this.state.skills
     }
 
     postList.push(post)
@@ -75,6 +72,31 @@ class CreateMechanicPost extends React.Component {
     })
   }
 
+  handleProfBgClick = (e) => {
+    e.preventDefault()
+    document.getElementById('file-input').click()
+  }
+
+  handleProfUpdate = (e) => {
+    e.preventDefault()
+    const file = this.state.selectedFile;
+    this.changeProfilePic(file);
+  }
+
+  changeProfilePic = (file) => {
+    // PUT request to update profile picture
+  } 
+
+  handleProfSelect = (e) => {
+    e.preventDefault()
+    const file = e.target.files[0]
+    this.setState({
+      selectedFile: file
+    })
+    this.setState({ "userProfile.picture":
+      <img src={file} alt="profile picture" />
+    })
+  }
 
   render() {
     return (
@@ -88,15 +110,15 @@ class CreateMechanicPost extends React.Component {
 
               <li>
                 <PostHeader title="Profile Picture" />
-
+                <div className="profilePic-container">
+                  <input id="file-input" type="file" name="file" className="input-profilePic" onChange={this.handleProfSelect} />
+                  <div className="profilePic-bg" onClick={this.handleProfBgClick}/>
+                  <img src={this.state.userProfile.picture} alt="profile" />
+                </div>
                 <input type="submit"
-                  className="submit"
-                  value="Update" />
-
-                {/*Add a default profile picture here for now*/}
-                {/*Will need to make a server call here to get user profile picture*/}
-
-                <img src="/images/defaultprofpic.png" alt="profile picture" />
+                  className="update-post"
+                  value="Update"
+                  onClick={this.handleProfUpdate} />
               </li>
 
               {/* </div> */}
@@ -148,7 +170,7 @@ class CreateMechanicPost extends React.Component {
             <PostHeader title="Previous Posts" />
 
             <MechanicPosts mechanicPosts={this.state.mechanicPosts} // adds the mechanic post to the screen (need to route this to its own page)
-              removePost={this.removePost} />
+              removePost={this.removePost} profile={this.state.userProfile} />
 
           </div>
 

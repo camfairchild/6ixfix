@@ -13,7 +13,7 @@ class CreateUserPost extends React.Component {
     super(props);
     this.state = {
       // these are the fields of the post that a user must fill in
-      profilePic: "",
+      selectedFile: null,
       vehicleMake: "",
       vehicleModel: "",
       vehicleMileage: "",
@@ -26,13 +26,16 @@ class CreateUserPost extends React.Component {
           title: "", //
           author: this.props.user?.userName, // username of the person which we get from log-in
           text: "", // refers to the contents of the service required
-          profile: {
-            picture: <img src="/images/defaultprofpic.png" alt="My Awesome logo"/>, // this will just be the stock image 
-            link: this.props.user?.profile, // not sure what to fill in for this
-            name: this.props.user?.fullName // same as author
-          }
+          date: "", // date of the post
         }
-      ]
+      ],
+      userProfile: {
+        picture: "/images/defaultprofpic.png",
+        userName: "",
+        fullName: "",
+        email: "",
+        link: ""
+      }
     }
   }
 
@@ -52,8 +55,7 @@ class CreateUserPost extends React.Component {
     const post = {
       title: this.state.postHeadline,
       author: this.props.user?.userName,
-      text: this.state.serviceNeeded,
-      profile: this.state.profile
+      text: this.state.serviceNeeded
     }
 
     postList.push(post)
@@ -73,6 +75,36 @@ class CreateUserPost extends React.Component {
     })
   }
 
+  handleProfBgClick = (e) => {
+    e.preventDefault()
+    document.getElementById('file-input').click()
+  }
+
+  handleProfUpdate = (e) => {
+    e.preventDefault()
+    const file = this.state.selectedFile;
+    this.changeProfilePic(file);
+  }
+
+  changeProfilePic = (file) => {
+    // PUT request to update profile picture
+  } 
+
+  handleProfSelect = (e) => {
+    e.preventDefault()
+    const file = e.target.files[0]
+    this.setState({
+      selectedFile: file
+    })
+    console.log(file)
+    const fileUrl = URL.createObjectURL(file);
+    console.log(fileUrl)
+    this.setState({ 
+      "userProfile.picture": fileUrl
+    })
+  }
+
+
 
   render() {
     return (
@@ -87,10 +119,15 @@ class CreateUserPost extends React.Component {
 
               <li>
                 <PostHeader title="Profile Picture" />
-                <img src="/images/defaultprofpic.png" alt="profile picture" />
+                <div className="profilePic-container">
+                  <input id="file-input" type="file" name="file" className="input-profilePic" onChange={this.handleProfSelect} />
+                  <div className="profilePic-bg" onClick={this.handleProfBgClick}/>
+                  <img src={this.state.userProfile.picture} alt="profile" />
+                </div>
                 <input type="submit"
                   className="update-post"
-                  value="Update" />
+                  value="Update"
+                  onClick={this.handleProfUpdate} />
 
                 {/*Add a default profile picture here for now*/}
                 {/*Will need to make a server call here to get user profile picture*/}
@@ -150,7 +187,7 @@ class CreateUserPost extends React.Component {
             <PostHeader title="Previous Posts" />
 
             <UserPosts userPosts={this.state.userPosts} // adds the users post to the screen (need to route this to its own page)
-              removePost={this.removePost} />
+              removePost={this.removePost} profile={this.state.userProfile} />
 
           </div>
 
