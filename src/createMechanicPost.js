@@ -7,6 +7,7 @@ import MechanicSkillsInfo from './mechanicSkillsInfo';
 import MechanicCertificationsInfo from './mechanicCertificationsInfo';
 import UserPostSubmission from './userPostSubmission';
 import Header from './Header';
+import ProfilePic from './ProfilePic';
 
 // User Post Component
 class CreateMechanicPost extends React.Component {
@@ -72,37 +73,6 @@ class CreateMechanicPost extends React.Component {
     })
   }
 
-  handleProfBgClick = (e) => {
-    e.preventDefault()
-    document.getElementById('file-input').click()
-  }
-
-  handleProfUpdate = (e) => {
-    e.preventDefault()
-    const file = this.state.selectedFile;
-    this.changeProfilePic(file);
-  }
-
-  changeProfilePic = (file) => {
-    // PUT request to update profile picture
-  } 
-
-  handleProfSelect = (e) => {
-    e.preventDefault()
-    const file = e.target.files[0]
-    this.setState({
-      selectedFile: file
-    })
-    console.log(file)
-    const fileUrl = URL.createObjectURL(file);
-    console.log(fileUrl)
-    let userProfile = {...this.state.userProfile}
-    userProfile.picture = fileUrl;
-    this.setState({ 
-      userProfile
-    })
-  }
-
   render() {
     return (
       <div className="createMechanicPost-container">
@@ -115,11 +85,7 @@ class CreateMechanicPost extends React.Component {
 
               <li>
                 <PostHeader title="Profile Picture" />
-                <div className="profilePic-container">
-                  <input id="file-input" type="file" name="file" className="input-profilePic" onChange={this.handleProfSelect} />
-                  <div className="profilePic-bg" onClick={this.handleProfBgClick}/>
-                  <img src={this.state.userProfile.picture} alt="profile" />
-                </div>
+                <ProfilePic user={this.state.userProfile} />
                 <input type="submit"
                   className="update-post"
                   value="Update"
