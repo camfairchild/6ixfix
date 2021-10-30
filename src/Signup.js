@@ -3,6 +3,7 @@ import './signup.css';
 import _ from 'lodash';
 
 import { Redirect } from 'react-router';
+import { Link } from 'react-router-dom';
 
 export default class Signup extends React.Component {
     constructor(props) {
@@ -71,8 +72,8 @@ export default class Signup extends React.Component {
 
         return (
             <div className="signup-form">
-                <h1>Signup As A {type}:</h1>
-                <img src = {img}/>
+                <h1>Sign-up</h1>
+                <img className="logo-img" src={process.env.PUBLIC_URL + "/images/6ixfix_logo_transparent.png"}/>
                 <div className="inputName"><p>Full Name:</p><p>*</p></div>
                 <input
                     type = "text"
@@ -105,6 +106,7 @@ export default class Signup extends React.Component {
                 }
                 <button type="submit" className="submit" onClick={this.send}>Signup</button>
                 { this.state.redirect ? (<Redirect push to={this.state.redirect}/>) : null }
+                <Link to="/login" className="signup-prompt">Already have an account? Login</Link>
             </div>
         )
     }

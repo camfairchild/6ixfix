@@ -4,12 +4,13 @@ body {
 
 .signup-form {
     background-color: #C4C4C4;
-    width: 30%;
+    width: 100%;
     padding: 3rem;
     display: flex;
     justify-content: space-around;
     flex-direction: column;
     row-gap: 0.25rem;
+    align-items: left;
 }
 
 .signup-form .submit {
@@ -42,9 +43,10 @@ body {
   }
 
   .signup-form img {
-      max-height: 250px;
-      border: 5px solid white;
+      width: 15rem;
+      object-position: center;
       object-fit: cover;
+      align-self: center;
   }
 
 

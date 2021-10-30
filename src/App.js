@@ -17,9 +17,14 @@ export default class App extends React.Component {
                     <Route exact path='/search' component={Search}/>
                     <Route exact path='/help'/>
                     <Route exact path='/about'/>
-                    <Route exact path='/login' component={Login}/>
                     <Route path='/profile/:userName' component={Profile}/>
                     <Route exact path='/post' component={MakePost}/>
+                    <Route exact path='/signup'>
+                        <Home page='signup'/>
+                    </Route>
+                    <Route exact path='/login'>
+                        <Home page='login'/>
+                    </Route>
                     <Route>
                         <Home />
                     </Route>
