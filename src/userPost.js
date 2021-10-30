@@ -15,7 +15,7 @@ class UserPost extends React.Component {
                     </div>
                     <div className="post-meta">
                         <div className="post-services">Service(s) Needed:{post.text}</div>
-                        <div className="post-profilePic">{profile.picture}</div>
+                        <div className="post-profilePic"><img src={profile.picture} /></div>
                         <div className="post-link">{profile.link}</div>
                         <div className="post-author">{profile.userName}</div>
                     </div>

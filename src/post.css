@@ -21,13 +21,11 @@
       justify-content: space-evenly;
       align-items: stretch;
     }
-    
-    .postCreationBanner img {
-      height: 10rem;
-    }
   
   .post-profilePic img {
     height: 10rem;
+    width: 10rem;
+    object-fit: cover;
   }
 
   .userPost {
@@ -168,6 +166,10 @@
     .profilePic-container img {
       display: inline-flex;
       position: relative;
+
+      height: 10rem;
+      width: 10rem;
+      object-fit: cover;
     }
 
   .previous-posts {

@@ -27,6 +27,12 @@ class CreateUserPost extends React.Component {
           author: this.props.user?.userName, // username of the person which we get from log-in
           text: "", // refers to the contents of the service required
           date: "", // date of the post
+        },
+        {
+          title: "", //
+          author: this.props.user?.userName, // username of the person which we get from log-in
+          text: "", // refers to the contents of the service required
+          date: "", // date of the post
         }
       ],
       userProfile: {
@@ -99,8 +105,10 @@ class CreateUserPost extends React.Component {
     console.log(file)
     const fileUrl = URL.createObjectURL(file);
     console.log(fileUrl)
+    let userProfile = {...this.state.userProfile}
+    userProfile.picture = fileUrl;
     this.setState({ 
-      "userProfile.picture": fileUrl
+      userProfile
     })
   }
 
@@ -184,7 +192,7 @@ class CreateUserPost extends React.Component {
 
           <div className="previousPosts">
 
-            <PostHeader title="Previous Posts" />
+            <PostHeader title="Previous Posts" className="previous-posts" />
 
             <UserPosts userPosts={this.state.userPosts} // adds the users post to the screen (need to route this to its own page)
               removePost={this.removePost} profile={this.state.userProfile} />

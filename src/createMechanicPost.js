@@ -93,8 +93,13 @@ class CreateMechanicPost extends React.Component {
     this.setState({
       selectedFile: file
     })
-    this.setState({ "userProfile.picture":
-      <img src={file} alt="profile picture" />
+    console.log(file)
+    const fileUrl = URL.createObjectURL(file);
+    console.log(fileUrl)
+    let userProfile = {...this.state.userProfile}
+    userProfile.picture = fileUrl;
+    this.setState({ 
+      userProfile
     })
   }
 
@@ -167,7 +172,7 @@ class CreateMechanicPost extends React.Component {
 
           <div className="previousPosts">
 
-            <PostHeader title="Previous Posts" />
+            <PostHeader className="previous-posts" title="Previous Posts" />
 
             <MechanicPosts mechanicPosts={this.state.mechanicPosts} // adds the mechanic post to the screen (need to route this to its own page)
               removePost={this.removePost} profile={this.state.userProfile} />

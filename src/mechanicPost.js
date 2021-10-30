@@ -5,17 +5,21 @@ class MechanicPost extends React.Component {
 
     render() {
 
-        const { post, removePost } = this.props
+        const { post, removePost, profile} = this.props
 
         return (
             <div className="post">
                 <li>
-                    <h3>Title: {post.title}</h3>
-                    <h3>Author: {post.author}</h3>
-                    <h3>Service(s) Needed:{post.text}</h3>
-                    <h3>{post.profile.picture}</h3>
-                    <h3>{post.profile.link}</h3>
-                    <h3>Name: {post.profile.name}</h3>
+                    <div className="post-title">
+                        Title: {post.title}
+                    </div>
+                    <div className="post-meta">
+                        <div className="post-services">Service(s) Needed:{post.text}</div>
+                        <div className="post-profilePic"><img src={profile.picture} /></div>
+                        <div className="post-link">{profile.link}</div>
+                        <div className="post-author">{profile.userName}</div>
+                    </div>
+                    
                     <input type="submit"
                         className="submit"
                         onClick={() => removePost(post)}
