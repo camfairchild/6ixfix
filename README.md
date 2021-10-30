@@ -5,7 +5,7 @@
 ## Help
 
 ## Signups
-    Affan - started
+    Affan - finished
 ## Login
     Affan
 ## Filter
@@ -15,15 +15,15 @@
 ## Mechanic Profile Page
     Affan
 ## Posts
-    Josh
+    Josh - finished
 ## User settings
     Danny
 ## User Profile
     Danny - started
 ## Make a post (User)
-    Josh - started
+    Josh - finished
 ## Make a post (Mechanic)
-    Josh
+    Josh - finished
 ## Messaging
     Cameron
 ## Admin Dashboard
