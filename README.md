@@ -1,15 +1,15 @@
 # team46 - 6ixFix
 
 ## About
-
+    Josh
 ## Help
-
+    Josh
 ## Signups
     Affan - finished
 ## Login
-    Affan
+    Danny
 ## Filter
-    Cameron
+    Danny
 ## Mechanics Search
     Cameron - started
 ## Mechanic Profile Page
@@ -17,9 +17,9 @@
 ## Posts
     Josh - finished
 ## User settings
-    Danny
+    Josh
 ## User Profile
-    Danny - started
+    Cameron - started
 ## Make a post (User)
     Josh - finished
 ## Make a post (Mechanic)
@@ -27,5 +27,4 @@
 ## Messaging
     Cameron
 ## Admin Dashboard
-
-## User Dashboard
+    Affan
