@@ -4,6 +4,8 @@ import NavButton from './NavButton';
 import SearchBar from './SearchBar';
 import LoginButton from './LoginButton'
 
+import { Link } from 'react-router-dom';
+
 export default class Header extends React.Component {
     render() {
         return (
@@ -16,13 +18,16 @@ export default class Header extends React.Component {
                     <NavButton href="/about">ABOUT</NavButton>
                 </li>
                 <li>
-                <NavButton href="/help">HELP</NavButton>
+                    <NavButton href="/help">HELP</NavButton>
                 </li>
                 <li>
-                <SearchBar />
+                    <SearchBar />
                 </li>
                 <li>
-                <LoginButton />
+                    <NavButton href="/search">BROWSE</NavButton>
+                </li>
+                <li>
+                    <LoginButton />
                 </li>
             </ul>
         </div>
