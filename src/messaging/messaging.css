@@ -1,0 +1,164 @@
+.messaging {
+  display: flex;
+  flex-direction: column;
+}
+
+.messaging-container {
+  display: flex;
+  background-color: grey;
+  width: 80vw;
+  height: 400px;
+  align-self: center;
+  margin: 2.5rem 0rem 2.5rem 0rem;
+  flex-direction: row;
+  border: black solid 3px;
+  font-family: Roboto;
+}
+
+.messaging .profilePic-container {
+  margin: none;
+}
+
+.messaging .profilePic-container img {
+  width: 3rem;
+  height: 3rem;
+}
+
+.messaging .profilePic-container input {
+  width: 3rem;
+  height: 3rem;
+}
+
+.messaging .profilePic-container .profilePic-bg {
+  width: 3rem;
+  height: 3rem;
+}
+
+.messages-container {
+  background-color: white;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.messages {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column-reverse;
+  overflow: auto;
+}
+
+.contacts {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  border-right: grey solid 4px;
+  height: 100%;
+  background-color: lightgrey;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+.contacts-container {
+  overflow-x: visible;
+  height: 400px;
+  align-self: flex-start;
+  display: flex;
+}
+
+.contact-container {
+  display: flex;
+  background-color: lightgrey;
+  border-bottom: black solid 2px;
+  padding: 4px;
+}
+
+  .contact-container.selected-contact {
+    background-color: darkgrey;
+  }
+
+  .contact-container:hover {
+    filter: brightness(1.1);
+  }
+
+.contact-details {
+  color: black;
+  font-weight: bold;
+  text-align: center;
+  margin-right: 4px;
+}
+
+.contact-lastMessage {
+  width: 12.5rem;
+  color: black;
+}
+
+  .contact-lastMessage .contact-from {
+    font-weight: bold;
+  }
+  
+  .contact-lastMessage .contact-time {
+    text-decoration: underline;
+    font-style: italic;
+    font-size: smaller;
+  }
+
+.message-container {
+  margin: 0.5rem 0rem 0.25rem 0.5rem;
+  border: black solid 2px;
+  border-radius: 0.5rem;
+  padding: 0.5rem;
+  width: max-content;
+  min-width: 10rem;
+  align-self: flex-start;
+  background-color: lightskyblue;
+}
+
+  .message-container.sent {
+    align-self: flex-end;
+    background-color: darkgrey;
+    margin: 0.5rem 0.5rem 0.25rem 0rem;
+  }
+
+  .message-container .message-from {
+    font-weight: bold;
+    color: #FFF;
+  }
+
+  .message-container .message-timestamp {
+    text-decoration: underline;
+    font-style: italic;
+    font-size: smaller;
+    margin-bottom: 0.5rem;
+  }
+
+  .message-container .message-content {
+    font-weight: 450;
+  }
+
+.messagebar-container {
+  width: inherit;
+  background-color: grey;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+  .messagebar-send {
+    border-radius: 100%;
+    width: 2rem;
+    height: 2rem;
+    border: darkgrey solid 1px;
+    margin: 0.5rem 1rem 0.5rem 0rem;
+  }
+
+  .messagebar-send:hover {
+    filter:brightness(1.1);
+  }
+
+  .messagebar-input {
+    width: 80%;
+    margin: 0.5rem 1rem 0.5rem 0.5rem;
+  }

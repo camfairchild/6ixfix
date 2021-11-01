@@ -7,6 +7,7 @@ import Search from './Search';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import Profile from './Profile';
 import MakePost from './MakePost';
+import Messaging from './messaging/Messaging';
 
 export default class App extends React.Component {
     render() {
@@ -25,6 +26,7 @@ export default class App extends React.Component {
                     <Route exact path='/login'>
                         <Home page='login'/>
                     </Route>
+                    <Route exact path='/messages' component={Messaging} />
                     <Route>
                         <Home />
                     </Route>

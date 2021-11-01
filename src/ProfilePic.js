@@ -5,7 +5,7 @@ export default class ProfilePic extends React.Component {
         super(props);
         this.state = {
             selectedFile: null,
-            user: this.props.user
+            user: this.props.user,        
         }
     }
 
@@ -43,8 +43,8 @@ export default class ProfilePic extends React.Component {
     render() {
         return (
             <div className="profilePic-container">
-                <input id="file-input" type="file" name="file" className="input-profilePic" onChange={this.handleProfSelect} />
-                <div className="profilePic-bg" onClick={this.handleProfBgClick}/>
+                {this.props.editable ? <div><input id="file-input" type="file" name="file" className="input-profilePic" onChange={this.handleProfSelect} />
+                <div className="profilePic-bg" onClick={this.handleProfBgClick}/></div>: null}
                 <img src={this.state.user.picture} alt="profile" />
             </div>
         )
