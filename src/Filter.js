@@ -16,7 +16,7 @@ export default class Filter extends React.Component {
     render() {
         return (
             <div className="filter-container">
-                <input className="filter-submit" type="submit" onClick={submitFilter} />
+                <input className="filter-submit" type="submit" onClick={this.submitFilter} />
             </div>
         )
     }

@@ -52,7 +52,7 @@ export default function Search() {
     })
   }, [])
   
-  refreshResults = (filter) => {
+  const refreshResults = (filter) => {
     search(query, filter).then((results) => {
       setResults(results)
     })
