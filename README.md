@@ -10,8 +10,8 @@
     Danny
 ## Filter
     Danny
-## Mechanics Search
-    Cameron - started
+## Search
+    Cameron - finished
 ## Mechanic Profile Page
     Affan
 ## Posts
@@ -25,6 +25,6 @@
 ## Make a post (Mechanic)
     Josh - finished
 ## Messaging
-    Cameron
+    Cameron - finished
 ## Admin Dashboard
     Affan
