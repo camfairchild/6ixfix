@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Header from './Header';
 import './search.css';
+import Filter from './Filter';
 
 import { useLocation } from "react-router-dom";
 
@@ -13,9 +14,9 @@ function useQuery() {
   return new URLSearchParams(useLocation().search);
 }
 
-async function search(queryParams) {
-  // make api call to search for postings
-  // returns an array of post data
+async function search(queryParams, filter=null) {
+  // makes api call to search for postings with filter
+  // returns an array of filtered post data
   const fakeResult = [{
     'title': 'Title',
     'author': 'JSmith1234',
@@ -51,11 +52,17 @@ export default function Search() {
     })
   }, [])
   
+  refreshResults = (filter) => {
+    search(query, filter).then((results) => {
+      setResults(results)
+    })
+  }
 
   return (
     <div>
       <Header page="search"/>
       <SearchResults results={results} query={query}/>
+      <Filter refreshResults={refreshResults}/>
     </div>
   );
 }
