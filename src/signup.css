@@ -33,6 +33,13 @@ body {
       background-color: #d8d8d8;
       font-size: large;
   }
+  .radio-button-container {
+      align-items: left;
+  }
+  
+  .radio-button-container input {
+      width: 10%;
+  }
   .error {
       color: red;
   }
