@@ -1,9 +1,10 @@
 body {
   margin: 0;
+  
 }
 
 .header {
-  background-color: #C4C4C4;
+  background-color: #43A8f2;
   width: 100%;
   height: 3.5rem;
   margin: 0;
@@ -38,6 +39,7 @@ body {
 
 div.search form {
   margin: 0.5rem 0rem;
+  background: #ffffff;
 }
 
 div.search input {
@@ -52,7 +54,7 @@ div.navbutton {
   padding: 0.5rem 3rem;
   text-align: center;
   vertical-align: middle;
-  background: #979797;
+  background: #ffffff;
   border-radius: 0.25rem;
 }
   div.navbutton a {

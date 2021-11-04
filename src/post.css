@@ -1,6 +1,6 @@
   
   .postCreationBanner {
-    background-color: #C4C4C4;
+    background-color: #43A8f2;
     width: 100%;
     height: 60%;
     position: relative;
@@ -29,7 +29,7 @@
   }
 
   .userPost {
-    background-color: #C4C4C4;
+    background-color: #43A8f2;
     margin: 5rem;
     display: flex;
     flex-direction: column;
@@ -48,7 +48,7 @@
     }
   
     .userPost .post-title, .post-author, .post-services, h3, h1 {
-      color: white;
+      color: black;
       text-align: center;
       margin: auto;
       font-size: 2rem;
@@ -58,7 +58,7 @@
     .userPost .update-post {
       text-align: center;
       vertical-align: middle;
-      background: #979797;
+      background: #fff;
       border-radius: 0.25rem;
       text-decoration: none;
       font-family: Roboto;
@@ -69,13 +69,13 @@
     
     .userPost input {
       height: 2rem;
-      background-color: #d8d8d8;
+      background-color: #fff;
       font-size: medium;
     }
 
     .userPost .submit {
       height: 2rem;
-      background-color: #d8d8d8;
+      background-color: #fff;
       font-size: medium;
       width: max-content;
     }
@@ -83,7 +83,7 @@
     .userPost textarea {
       height: 6rem;
       width: max-content;
-      background-color: #d8d8d8;
+      background-color: #fff;
       font-size: medium;
       align-self: center;
     }
@@ -111,7 +111,7 @@
       width: 80%;
       align-self: center;
       flex-direction: column;
-      background-color: white;
+      
       margin-bottom: 5rem;
       margin-top: 5rem;
       align-items: center;
@@ -121,7 +121,7 @@
       width: 100%;
       margin-bottom: 2.5rem;
       padding: 2.5rem;
-      background-color: #C4C4C4;
+      background-color: #fff;
     }
 
   .profilePic-container {
@@ -154,7 +154,7 @@
       z-index: 3;
       height: 10rem;
       width: 10rem;
-      background-color: #C4C4C4;
+      background-color: #fff;
       
       opacity: 0;
     }

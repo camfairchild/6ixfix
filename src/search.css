@@ -3,7 +3,7 @@ body {
 }
 
 .results {
-    background-color: #C4C4C4;
+    background-color: rgb(67, 168, 242);
     width: 80%;
     margin: 2rem auto;
     padding: 2rem;
@@ -15,14 +15,16 @@ body {
 
 .result {
     padding: 2rem;
-    background-color: #D8D8D8;
+    background-color: white;
+    border-style: hidden;
+    border-radius: 10%;
 }
     .result .title a:link {
         text-decoration: none;
     }
         
         .result .title a:link {
-            color: white;
+            color: black;
         }
 
         .result .title a:hover {
@@ -31,7 +33,7 @@ body {
 
 
     .result .author {
-        color: white;
+        color: black;
         font-style: italic;
     }
 

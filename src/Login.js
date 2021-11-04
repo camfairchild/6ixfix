@@ -84,7 +84,7 @@ export default function Login(props) {
   return (
       <div className="signup-form">
                   <h1>Login</h1>
-                  <img className="logo-img" src={process.env.PUBLIC_URL + "/images/6ixfix_logo_transparent.png"}/>
+                  <img className="logo-img" src={process.env.PUBLIC_URL + "/images/6ixfix_logo_black.png"}/>
                   <div className="inputName"><p>Username:</p><p>*</p></div>
                   <input
                       type = "text"

@@ -70,13 +70,13 @@
 
 .contact-container {
   display: flex;
-  background-color: lightgrey;
+  background-color: #43A8F2;
   border-bottom: black solid 2px;
   padding: 4px;
 }
 
   .contact-container.selected-contact {
-    background-color: darkgrey;
+    background-color: #fff;
   }
 
   .contact-container:hover {

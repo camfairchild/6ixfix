@@ -76,7 +76,7 @@ export default class Signup extends React.Component {
         return (
             <div className="signup-form">
                 <h1>Sign-up</h1>
-                <img className="logo-img" src={process.env.PUBLIC_URL + "/images/6ixfix_logo_transparent.png"}/>
+                <img className="logo-img" src={process.env.PUBLIC_URL + "/images/6ixfix_logo_black.png"}/>
                 <div className = "radio-button-container" onChange={this.handleInput}>
                     <input type = 'radio' value = 'Client' name = 'type' defaultChecked='checked'/>
                     <label for = 'type'>Client</label>
