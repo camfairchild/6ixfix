@@ -72,7 +72,7 @@ export class SearchResults extends React.Component {
     console.log(this.props.query)
     return (
       <div className="results">
-        <h1>Search Results for: "{this.props.query.toString()}"</h1>
+        <h1>{this.props.query ? `Search Results for: "${this.props.query.toString()}"` : "Browsing Postings"}</h1>
         {this.props.results.map((result) => 
           <Result key={uid(result)} {...result} />
         )}
