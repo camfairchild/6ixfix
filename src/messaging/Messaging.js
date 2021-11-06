@@ -5,6 +5,8 @@ import Contacts from './Contacts';
 import Messages from './Messages';
 import Header from '../Header';
 
+import { Redirect } from 'react-router';
+
 import './messaging.css'
 
 export default class Messaging extends React.Component {
@@ -13,7 +15,8 @@ export default class Messaging extends React.Component {
         this.state = {
             selectedContact: null,
             socket: null,
-            user: null
+            user: null,
+            loggedIn: null
         }
 
         this.updateSelectedContact = this.updateSelectedContact.bind(this)
@@ -25,7 +28,8 @@ export default class Messaging extends React.Component {
             const socket = null;
             this.setState({
                 socket: socket,
-                user: user
+                user: user,
+                loggedIn: user !== null
             })
         })
     }
@@ -55,8 +59,8 @@ export default class Messaging extends React.Component {
                         socket={this.state.socket}
                         selectedContact={this.state.selectedContact}
                         user={this.state.user} 
-                        messages={this.state.messages}
                     />
+                    { this.state.loggedIn === false && <Redirect to="/login" /> }
                 </div>
             </div>
         )

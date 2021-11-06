@@ -2,7 +2,7 @@ import React from 'react';
 
 import Message from './Message';
 import MessageBar from './MessageBar';
-import { addMessageListener, getMessages } from '../Helper';
+import { addMessageListener, getMessages, removeMessageListener } from '../Helper';
 
 export default class Messages extends React.Component {
     constructor(props) {
@@ -12,13 +12,13 @@ export default class Messages extends React.Component {
         }
 
         this.handleRecentMessage = this.handleRecentMessage.bind(this);
-        // sets the listener for the messages
-        addMessageListener(this.props.socket, this.handleRecentMessage);
-
-        this.sendMessage = this.sendMessage.bind(this)
     }
 
-    handleRecentMessage(message) {
+    handleRecentMessage(recentMessage) {
+        // TODO: remove after sockets are implemented
+        // grabs message from event
+        let message = recentMessage.detail; 
+
         const user = this.props.user;
         const messages = this.state.messages;
         if (message.to === user.userName) {
@@ -34,19 +34,20 @@ export default class Messages extends React.Component {
                 messages[message.to] = [message]
             }
         }
-        console.log(message, messages)
+        console.log("message:", message)
         this.setState({ messages })
     }
 
     componentDidMount() {
         getMessages(this.props.user?.userName).then((messages) => {
             this.setState({ messages })
+            // sets the listener for the messages
+            addMessageListener(this.props.socket, this.handleRecentMessage);
         })
     }
 
-    sendMessage(newMessage) {
-        // TODO: remove when backend is written
-        this.handleRecentMessage(newMessage)
+    componentWillUnmount() {
+        removeMessageListener(this.props.socket, this.handleRecentMessage);
     }
 
     render() {
@@ -64,7 +65,6 @@ export default class Messages extends React.Component {
                     socket={this.props.socket}
                     selectedContact={this.props.selectedContact}
                     user={this.props.user} 
-                    sendMessage={this.sendMessage}
                 />
             </div>
         )

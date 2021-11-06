@@ -35,7 +35,6 @@ export default class MessageBar extends React.Component {
             if (status === '200') {
                 // success, message sent
                 // clear field
-                this.props.sendMessage(message)
 
                 this.setState({
                     newMessage: ""

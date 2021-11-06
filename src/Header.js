@@ -4,8 +4,6 @@ import NavButton from './NavButton';
 import SearchBar from './SearchBar';
 import LoginButton from './LoginButton'
 
-import { Link } from 'react-router-dom';
-
 export default class Header extends React.Component {
     render() {
         return (
@@ -25,6 +23,9 @@ export default class Header extends React.Component {
                 </li>
                 <li>
                     <NavButton href="/search">BROWSE</NavButton>
+                </li>
+                <li>
+                    <NavButton href="/messages">MESSAGES</NavButton>
                 </li>
                 <li>
                     <LoginButton />

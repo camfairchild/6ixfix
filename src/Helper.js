@@ -147,6 +147,16 @@ export function addMessageListener(socket, listener) {
   // handles the messages sent from the server
   // socket is the socket that the messages are sent to
   // calls the listener everytime the socket receives a message
+
+  // TODO: change this to use the socket.io library
+  document.addEventListener("message", listener);
+}
+
+export function removeMessageListener(socket, listener) {
+  // removes the listener from the socket
+
+  // TODO: change this to use the socket.io library
+  document.removeEventListener("message", listener);
 }
 
 export function getMostRecentMessages(userName, token = null) {
@@ -369,6 +379,12 @@ export function formatTime(time_) {
 export function sendMessage(socket, message) {
   // sends message over socket
   return new Promise((resolve, reject) => {
+    // TODO: send message over socket
+    const messageEvent = new CustomEvent("message", {
+      detail: message,
+    });
+    document.dispatchEvent(messageEvent);
+    console.log("message passed");
     resolve(["200", message]);
   });
 }

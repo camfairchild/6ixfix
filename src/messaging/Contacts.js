@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { getMostRecentMessages, addMessageListener, getContacts } from '../Helper';
+import { getMostRecentMessages, addMessageListener, getContacts, removeMessageListener } from '../Helper';
 import Contact from './Contact';
 
 export default class Contacts extends React.Component {
@@ -12,8 +12,6 @@ export default class Contacts extends React.Component {
         }
 
         this.handleRecentMessage = this.handleRecentMessage.bind(this);
-        // sets the listener for the new messages and updates the state
-        addMessageListener(this.props.socket, this.handleRecentMessage);
     }
 
     componentDidMount() {
@@ -24,17 +22,29 @@ export default class Contacts extends React.Component {
                     contacts,
                     mostRecentMessages
                 })
+                
+            // sets the listener for the new messages and updates the state
+            addMessageListener(this.props.socket, this.handleRecentMessage);
             })
         })
     }
 
-    handleRecentMessage(message) {
+    componentWillUnmount() {
+        // removes the listener for the new messages and updates the state
+        removeMessageListener(this.props.socket, this.handleRecentMessage);
+    }
+
+    handleRecentMessage(recentMessage) {
+        // TODO: remove after sockets are implemented
+        // grabs message from event
+        let message = recentMessage.detail; 
+
         // update contacts list with the new last message
         let contact;
-        if (message.from === this.props.user.userName) {
-            contact = this.message.to;
-        } else if (message.to === this.props.user.userName) {
-            contact = this.message.from;
+        if (message.from === this.props.user?.userName) {
+            contact = message.to;
+        } else if (message.to === this.props.user?.userName) {
+            contact = message.from;
         }
         let mostRecentMessages = this.state.mostRecentMessages;
         mostRecentMessages[contact] = message;
