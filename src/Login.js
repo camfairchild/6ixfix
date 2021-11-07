@@ -20,7 +20,7 @@ export default function Login(props) {
   if (loggedIn) { // a user is logged in already
     // redirect to /profile
     let redirect = {
-      pathname: `/profile/${loggedIn?.userName}`,
+      pathname: loggedIn?.profile?.link,
       state: {
         profile,
         loggedIn
@@ -84,7 +84,7 @@ export default function Login(props) {
             userName: 'admin',
             location: 'Toronto',
             profilePic: null,
-            link: '/profile/admin',
+            link: '/admin',
             email: "admin1234@gmail.com",
             password: "admin",
         }
@@ -115,15 +115,15 @@ export default function Login(props) {
       
       callLoginAPI(userName, password).then(profile => {
         let redirect = {
-            pathname: 'login'
+            pathname: '/login'
         };
-        // user created successfully
+
         redirect = {
             pathname: profile.link,
             // mock
             state: {
                 profile: _.omit(profile, ['password']),
-                loggedIn: profile.userName
+                loggedIn: _.omit(profile, ['password'])
             }
         }
         setRedirect(redirect)
