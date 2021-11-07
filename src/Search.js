@@ -3,16 +3,10 @@ import Header from './Header';
 import './search.css';
 import Filter from './Filter';
 
-import { useLocation } from "react-router-dom";
-
+import { useQuery } from './Helper';
 import { uid } from 'react-uid';
 
 
-function useQuery() {
-  // gets browser location and then grabs query params
-  // https://reactrouter.com/web/example/query-parameters
-  return new URLSearchParams(useLocation().search);
-}
 
 async function search(queryParams, filter=null) {
   // makes api call to search for postings with filter
