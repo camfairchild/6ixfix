@@ -3,7 +3,6 @@ import _ from 'lodash';
 
 import { useLocation, Redirect } from 'react-router';
 import { Link } from 'react-router-dom';
-import Signup from './Signup';
 
 export default function Login(props) {
   const [state, setState] = React.useState({
