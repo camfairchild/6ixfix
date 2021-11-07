@@ -8,6 +8,7 @@ import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import Profile from './Profile';
 import MakePost from './MakePost';
 import Messaging from './messaging/Messaging';
+import { Dashboard } from './Dashboard/Dashboard';
 
 export default class App extends React.Component {
     render() {
@@ -18,6 +19,7 @@ export default class App extends React.Component {
                     <Route exact path='/search' component={Search}/>
                     <Route exact path='/help'/>
                     <Route exact path='/about'/>
+                    <Route path='/admin/:view' component={Dashboard}/>
                     <Route path='/profile/:userName' component={Profile}/>
                     <Route exact path='/post' component={MakePost}/>
                     <Route exact path='/signup'>
@@ -27,9 +29,9 @@ export default class App extends React.Component {
                         <Home page='login'/>
                     </Route>
                     <Route exact path='/messages' component={Messaging} />
-                    <Route>
+                    {/* <Route>
                         <Home />
-                    </Route>
+                    </Route> */}
                 </Switch>
             </Router>
         )

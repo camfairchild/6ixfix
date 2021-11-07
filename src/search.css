@@ -3,21 +3,25 @@ body {
 }
 
 .results {
-    background-color: rgb(67, 168, 242);
-    max-width: 105rem;
+    background-color: rgba(67, 168, 242, 1);
+    width: 80%;
+    margin: 2rem auto;
     padding: 2rem;
     display: flex;
     justify-content: space-around;
     flex-direction: column;
     row-gap: 2rem;
     flex-grow: 100;
+    border: solid;
+    border-width: 5px;
+    border-radius: 15px;
 }
 
 .result {
     padding: 2rem;
     background-color: white;
     border-style: hidden;
-    border-radius: 10%;
+    border-radius: 20px;
 }
     .result .title a:link {
         text-decoration: none;

@@ -1,3 +1,6 @@
+import React from "react";
+import { useLocation } from "react-router";
+
 export async function getUser() {
   // grabs the current user from local storage
   return new Promise((resolve, reject) => {
@@ -7,6 +10,35 @@ export async function getUser() {
       userName: "user",
       password: "user",
     };
+    const client = {
+      name: 'Jimmy Parker', 
+      type: 'Client',
+      userName: 'jPark23',
+      location: 'Markham',
+      profilePic: null,
+      link: '/',
+      email: "parkerj97@hotmail.com",
+      carMake: 'Honda',
+      carModel: 'Civic',
+      carYear: '2012',
+      serviceRequested: 'Oil Change',
+      numViews: 10
+      }
+
+    const mechanic = {
+      name: 'John Doe', 
+      type: 'Mechanic',
+      userName: 'jDoe123',
+      location: 'Toronto',
+      profilePic: null,
+      link: '/',
+      email: "abc@gmail.com",
+      mechType: 'Private',
+      certified: true, //can also potentially have a list of certifications based on the profile
+      numViews: 32
+      }
+
+      
     resolve(mock);
   });
 }
@@ -387,4 +419,12 @@ export function sendMessage(socket, message) {
     console.log("message passed");
     resolve(["200", message]);
   });
+}
+
+export function useQuery() {
+  // gets browser location and then grabs query params
+  // https://reactrouter.com/web/example/query-parameters
+  const { search } = useLocation();
+  
+  return React.useMemo(() => new URLSearchParams(search), [search]);
 }
