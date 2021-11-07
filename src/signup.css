@@ -4,13 +4,12 @@ body {
 
 .signup-container {
     background-color: #43A8f2;
-    width: 100%;
     padding: 3rem;
     display: flex;
     justify-content: space-around;
     flex-direction: column;
-    row-gap: 0.25rem;
-    align-items: left;
+    row-gap: 0.35rem;
+    flex-grow: 100;
 }
 
 .signup-form {
@@ -58,12 +57,13 @@ body {
   }
 
   .signup-container img {
-      width: 15rem;
+      height: 8rem;
+      transform: translateY(0.5rem);
+      scale: 1.4;
       object-position: center;
-      object-fit: cover;
+      object-fit: contain;
       align-self: center;
   }
-
 
   .signup-form .inputName {
     display: inline-flex;

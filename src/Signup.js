@@ -3,16 +3,22 @@ import './signup.css';
 import _ from 'lodash';
 
 import { Redirect } from 'react-router';
+import { validate as validateEmail } from 'email-validator';
 import { Link } from 'react-router-dom';
 
 export default class Signup extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            fullName: "",
             userName: "",
             password: "",
-            error: null,
+            email: "",
+            error: {
+                password: "",
+                username: "",
+                email: "",
+                confirm: ""
+            },
             type: "client"
         }
     }
@@ -20,100 +26,160 @@ export default class Signup extends React.Component {
     handleInput = (event) => {
         const name = event.target.name;
         const value = event.target.value;
+        let error = this.state.error;
+        error[name] = "";
         this.setState({
-            [name]: value
+            [name]: value,
+            error: error
         });
-        
+    }
+
+    callSignupAPI = (newProfile) => {
+        // mock api call to signup POST endpoint
+        // 403 - username already exists
+        // 403 - email already exists
+        // 400 - invalid email
+        // 400 - invalid password
+        // 400 - passwords don't match
+        // 200 - success
+        // 500 - server error
+        return new Promise((resolve, reject) => {
+            if (!newProfile.password || !newProfile.userName || !newProfile.email) {
+                reject({
+                    status: '401',
+                    message: 'Missing required fields'
+                });
+            }
+            resolve(newProfile);
+        })
     }
 
     send = (event) => {
+        event.preventDefault();
         const newProfile = {
             role: this.state.role,
-            fullName: this.state.fullName,
             userName: this.state.userName,
-            password: this.state.password
+            password: this.state.password,
+            email: this.state.email
         }
+        
+        if (!validateEmail(this.state.email)) {
+            let error = this.state.error;
+            error.email = "Not a valid email";
+            return this.setState({
+                error: error
+            });
+        }
+        
+        // https://stackoverflow.com/a/21456918
+        const passwordReqCheck = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+        if (!passwordReqCheck.test(this.state.password)) {
+            let error = this.state.error;
+            error.password = "Password does not meet criteria:\n" +
+            "8 char minimum,\n" +
+            "at least one uppercase,\n" +
+            "one lowercase letter,\n" +
+            "one number and one special character.";
+            return this.setState({
+                error: error
+            });
+        }
+        if (this.state.password !== this.state.confirmPassword) {
+            let error = this.state.error;
+            error.confirm = "Passwords do not match";
+            return this.setState({
+                error: error
+            });
+        }
+        
 
         // sends POST to API with new signup details
         // recieves http status and profile
-        const [status, profile] = ((newProfile) => {
-            if (!newProfile.password || !newProfile.userName || !newProfile.fullName) {
-                return ['401', null]
-            }
-            return ['200', newProfile]
-        })(newProfile);
-        console.log(newProfile)
+
                 
         let redirect = {
             pathname: "/"
         };
 
         let error;
-
-        if (status === '200') {
-            // user created successfully
-            redirect = {
-                pathname: "/login",
-                // mock
-                state: { profile: _.omit(profile, 'password'), loggedIn: newProfile }
-            }
-        } else {
-            redirect = {
-                pathname: "/",
-                // error
-            }
-            error = `Server Error: ${status}`
-        }
-        
-        this.setState({ redirect, error })
+        this.callSignupAPI(newProfile)
+            .then((profile) => {
+                redirect = {
+                    pathname: "/profile/" + profile.userName,
+                    // mock
+                    state: { profile: _.omit(profile, 'password'), loggedIn: newProfile }
+                }
+                this.setState({
+                    redirect: redirect
+                });
+            })
+            .catch((error) => {
+                console.log(error);
+                this.setState({
+                    error: {
+                        username: error.message
+                    }
+                });
+            });
     }
     printType = (event) => {
         console.log(event.target.value)
     }
     render() {
-        const {type, img} = this.props;
 
         return (
-            <div className="signup-form">
+            <div className="signup-container">
                 <h1>Sign-up</h1>
                 <img className="logo-img" src={process.env.PUBLIC_URL + "/images/6ixfix_logo_black.png"}/>
-                <div className = "radio-button-container" onChange={this.handleInput}>
-                    <input type = 'radio' value = 'Client' name = 'type' defaultChecked='checked'/>
-                    <label for = 'type'>Client</label>
-                    <input type = 'radio' value = 'Mechanic' name = 'type'/> 
-                    <label for = 'type'>Mechanic</label>
-                </div>
-                <div className="inputName"><p>Full Name:</p><p>*</p></div>
-                <input
-                    type = "text"
-                    name = "fullName"
-                    value = {this.state.fullName}
-                    onChange = {this.handleInput}
-                    placeholder = "Enter your full name:"/>
-                {
-                    this.state.error ? <p className="error">Error: {this.state.error}</p> : null
-                }
-                <div className="inputName"><p>Username:</p><p>*</p></div>
-                <input
-                    type = "text"
-                    name = "userName"
-                    value = {this.state.userName}
-                    onChange = {this.handleInput}
-                    placeholder = "Choose a username:"/>
-                {
-                    this.state.error ? <p className="error">Error: {this.state.error}</p> : null
-                }
-                <div className="inputName"><p>Password:</p><p>*</p></div>
-                <input
-                    type = "text"
-                    name = "password"
-                    value = {this.state.password}
-                    onChange = {this.handleInput}
-                    placeholder = "Choose a password:"/>
-                {
-                    this.state.error ? <p className="error">Error: {this.state.error}</p> : null
-                }
-                <button type="submit" className="submit" onClick={this.send}>Signup</button>
+                <form className="signup-form">
+                    <div className = "radio-button-container" onChange={this.handleInput}>
+                        <input type = 'radio' value = 'Client' name = 'type' defaultChecked='checked'/>
+                        <label for = 'type'>Client</label>
+                        <input type = 'radio' value = 'Mechanic' name = 'type'/> 
+                        <label for = 'type'>Mechanic</label>
+                    </div>
+                    <div className="inputName"><p>Email:</p><p>*</p></div>
+                    <input
+                        type = "text"
+                        name = "email"
+                        value = {this.state.email}
+                        onChange = {this.handleInput}
+                        placeholder = "email@example.com"/>
+                    {
+                        this.state.error.email ? <p className="error">Error: {this.state.error.email}</p> : null
+                    }
+                    <div className="inputName"><p>Username:</p><p>*</p></div>
+                    <input
+                        type = "text"
+                        name = "userName"
+                        value = {this.state.userName}
+                        onChange = {this.handleInput}
+                        placeholder = "jdoe123"/>
+                    {
+                        this.state.error.username ? <p className="error">Error: {this.state.error.username}</p> : null
+                    }
+                    <div className="inputName"><p>Password:</p><p>*</p></div>
+                    <input
+                        type = "password"
+                        name = "password"
+                        value = {this.state.password}
+                        onChange = {this.handleInput}
+                        placeholder = "password"/>
+                    {
+                        this.state.error.password ? <p className="error">Error: {this.state.error.password}</p> : null
+                    }
+                    <div className="inputName"><p>Confirm Password:</p><p>*</p></div>
+                    <input
+                        type = "password"
+                        name = "confirmPassword"
+                        value = {this.state.confirmPassword}
+                        onChange = {this.handleInput}
+                        placeholder = "confirm password"/>
+                    {
+                        this.state.error.confirm ? <p className="error">Error: {this.state.error.confirm}</p> : null
+                    }
+                    <button type="submit" className="submit" onClick={this.send}>Signup</button>
+                </form>
                 { this.state.redirect ? (<Redirect push to={this.state.redirect}/>) : null }
                 <Link to="/login" className="signup-prompt">Already have an account? Login</Link>
             </div>
