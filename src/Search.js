@@ -36,6 +36,26 @@ async function search(queryParams, filter=null) {
       'link': '/',
       'name': 'JAppleseed'
     }
+  },
+  {
+    'title': 'Title2',
+    'author': 'JAppleseed',
+    'text': 'Lorem Ipsum Dolor Sit Amet',
+    'profile': {
+      'picture': '/images/defaultprofpic.png',
+      'link': '/',
+      'name': 'JAppleseed'
+    }
+  },
+  {
+    'title': 'Title2',
+    'author': 'JAppleseed',
+    'text': 'Lorem Ipsum Dolor Sit Amet',
+    'profile': {
+      'picture': '/images/defaultprofpic.png',
+      'link': '/',
+      'name': 'JAppleseed'
+    }
   }]
   return new Promise((resolve, reject) => resolve(fakeResult))
 }
@@ -61,8 +81,10 @@ export default function Search() {
   return (
     <div>
       <Header page="search"/>
-      <SearchResults results={results} query={query}/>
-      <Filter refreshResults={refreshResults}/>
+      <div className="search-container" >
+        <Filter refreshResults={refreshResults}/>
+        <SearchResults results={results} query={query}/>
+      </div>
     </div>
   );
 }
@@ -87,7 +109,7 @@ export class Result extends React.Component {
     <div className="result">
       <img className="profpic" src={this.props.profile?.picture} alt={`${this.props.author}'s profile'`}/>
       <div className="content">
-        <h2 className="title"><a href={this.props.profile?.link}>{this.props.title}</a></h2>
+        <h2 className="title"><a href={`/profile/${this.props.author}`}>{this.props.title}</a></h2>
         <span className="author">{this.props.author}</span>
         <p className="text">{this.props.text}</p>
       </div>

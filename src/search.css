@@ -4,13 +4,13 @@ body {
 
 .results {
     background-color: rgb(67, 168, 242);
-    width: 80%;
-    margin: 2rem auto;
+    max-width: 105rem;
     padding: 2rem;
     display: flex;
     justify-content: space-around;
     flex-direction: column;
     row-gap: 2rem;
+    flex-grow: 100;
 }
 
 .result {
@@ -40,3 +40,25 @@ body {
     .result img {
         width: 5rem;
     }
+
+.search-container {
+    margin: 2rem;
+    display: flex;
+    flex-direction: row;
+    column-gap: 1rem;
+}
+
+.filter-container {
+    display: flex;
+    flex-direction: column;
+    row-gap: 0.5rem;
+    background-color: #C4C4C4;
+    height: max-content;
+    padding: 1rem;
+    position: sticky;
+    top: 3rem;
+}
+
+.filter-container .option-container {
+    font-weight: 400;
+}
