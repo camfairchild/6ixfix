@@ -5,11 +5,13 @@ import { useLocation, Redirect } from 'react-router';
 import { Link } from 'react-router-dom';
 
 export default function Login(props) {
-  const [state, setState] = React.useState({
-      userName: "",
-      password: "",
-      error: null
-  });
+    const [userName, setUserName] = React.useState('');
+    const [password, setPassword] = React.useState('');
+    const [error, setError] = React.useState({
+        userName: null,
+        password: null
+    });
+    const [redirect, setRedirect] = React.useState(false);
 
   const location = useLocation();
   const profile = location.state?.profile || null;
@@ -32,80 +34,135 @@ export default function Login(props) {
   function handleInput(event) {
     const name = event.target.name;
     const value = event.target.value;
+    switch (name) {
+      case 'userName':
+        setUserName(value);
+        setError({
+            ...error,
+            userName: null
+        });
+        break;
+      case 'password':
+        setPassword(value);
+        setError({
+            ...error,
+            password: null
+        });
+        break;
+      default:
+        break;
+    }
+  }
 
-    setState({
-        [name]: value
-    });
+  function callLoginAPI(userName, password) {
+      // calls api and returns a promise that resolves to the user object
+      // and the api status code
+      const mockUsers = {
+        "user": {
+            name: 'Client Doe',
+            type: 'Client',
+            userName: 'user',
+            location: 'Toronto',
+            profilePic: null,
+            link: '/profile/user',
+            email: "abc@gmail.com",
+            password: "user",
+        },
+        "user2": {
+            name: 'Mechanic Doe',
+            type: 'Mechanic',
+            userName: 'user2',
+            location: 'Toronto',
+            profilePic: null,
+            link: '/profile/user2',
+            email: "1234@gmail.com",
+            password: "user2",
+        },
+        "admin": {
+            name: 'Admin Doe',
+            type: 'Admin',
+            userName: 'admin',
+            location: 'Toronto',
+            profilePic: null,
+            link: '/profile/admin',
+            email: "admin1234@gmail.com",
+            password: "admin",
+        }
+      }
+      return new Promise((resolve, reject) => {
+        const mock = mockUsers[userName];
+        console.log(mock);
+        if (!mock) {
+            reject({
+                status: '401',
+                message: 'Username or password is incorrect'
+            });
+        } else if (mock.password !== password) {
+            reject({
+                status: '401',
+                message: 'Username or password is incorrect'
+            });
+        } else {
+            resolve(mock);
+        }
+    })
   }
 
   function send(event) {
-      const newProfile = {
-          role: state.role,
-          fullName: state.fullName,
-          userName: state.userName,
-          password: state.password
-      }
-
+      event.preventDefault();
       // sends POST to API with new signup details
       // recieves http status and profile
-      const [status, profile] = ((newProfile) => {
-          if (!newProfile.password || !newProfile.userName || !newProfile.fullName) {
-              return ['401', null]
-          }
-          return ['200', newProfile]
-      })(newProfile);
-      console.log(newProfile)
-              
-      let redirect = {
-          pathname: "/"
-      };
-
-      let error;
-
-      if (status === '200') {
-          // user created successfully
-          redirect = {
-              pathname: "/login",
-              // mock
-              state: { profile: _.omit(profile, 'password'), loggedIn: newProfile }
-          }
-      } else {
-          redirect = {
-              pathname: "/",
-              // error
-          }
-          error = `Server Error: ${status}`
-      }
       
-      setState({ redirect, error })
+      callLoginAPI(userName, password).then(profile => {
+        let redirect = {
+            pathname: 'login'
+        };
+        // user created successfully
+        redirect = {
+            pathname: profile.link,
+            // mock
+            state: {
+                profile: _.omit(profile, ['password']),
+                loggedIn: profile.userName
+            }
+        }
+        setRedirect(redirect)
+      }).catch((error) => {
+        setError({
+            userName: error.message,
+            password: error.message
+        })
+      });
   }
 
   return (
-      <div className="signup-form">
+      <div className="signup-container">
                   <h1>Login</h1>
                   <img className="logo-img" src={process.env.PUBLIC_URL + "/images/6ixfix_logo_black.png"}/>
+                  <form className="signup-form">
                   <div className="inputName"><p>Username:</p><p>*</p></div>
                   <input
                       type = "text"
                       name = "userName"
-                      value = {state.userName}
+                      value = {userName}
                       onChange = {handleInput}
                       placeholder = "Choose a username:"/>
                   {
-                      state.error ? <p className="error">Error: {state.error}</p> : null
+                      error.userName ? <p className="error">Error: {error.userName}</p> : null
                   }
                   <div className="inputName"><p>Password:</p><p>*</p></div>
                   <input
-                      type = "text"
+                      type = "password"
                       name = "password"
-                      value = {state.password}
+                      value = {password}
                       onChange = {handleInput}
                       placeholder = "Choose a password:"/>
                   {
-                      state.error ? <p className="error">Error: {state.error}</p> : null
+                      error.password ? <p className="error">Error: {error.password}</p> : null
                   }
                   <button type="submit" className="submit" onClick={send}>Login</button>
-                  { state.redirect ? (<Redirect push to={state.redirect}/>) : null }
+                  </form>
+                  { redirect ? (<Redirect push to={redirect}/>) : null }
                   <Link to="/signup" className="signup-prompt">Don't have an account? Signup</Link>
       </div>
   );

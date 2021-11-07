@@ -9,7 +9,7 @@ export default class Home extends React.Component {
     return (
       <div>
         <Header page="home"/>
-        <div className="signup-container">
+        <div className="signup-page-container">
           {this.props.page === 'signup' ? <Signup /> : <Login />}
         </div>
       </div>

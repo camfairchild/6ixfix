@@ -2,10 +2,18 @@ body {
     font-family: Roboto;
 }
 
-.signup-form {
+.signup-container {
     background-color: #43A8f2;
     width: 100%;
     padding: 3rem;
+    display: flex;
+    justify-content: space-around;
+    flex-direction: column;
+    row-gap: 0.25rem;
+    align-items: left;
+}
+
+.signup-form {
     display: flex;
     justify-content: space-around;
     flex-direction: column;
@@ -44,12 +52,12 @@ body {
       color: red;
   }
 
-  .signup-form h1 {
+  .signup-container h1 {
       color: #000;
       text-align: center;
   }
 
-  .signup-form img {
+  .signup-container img {
       width: 15rem;
       object-position: center;
       object-fit: cover;
