@@ -1,5 +1,6 @@
 import React from "react";
 import { useLocation } from "react-router";
+import _ from 'lodash';
 
 export async function getUser() {
   // grabs the current user from local storage
@@ -427,4 +428,229 @@ export function useQuery() {
   const { search } = useLocation();
   
   return React.useMemo(() => new URLSearchParams(search), [search]);
+}
+
+export function getProfileByuserName(userName) {
+    // makes API call to get profile based on userName
+    
+    return new Promise((resolve, reject) => {
+      const payload = {
+          userName
+      }
+      console.log("Makes API Call:", payload);
+
+      // mock profiles
+      const profiles = [
+        {
+          fullName: 'Kermit T. Frog',
+          type: 'Client',
+          userName: 'kermitTheFrog',
+          location: 'The Muppets Studio',
+          picture: process.env.PUBLIC_URL + '/images/kermit.webp',
+          link: '/profile/kermitTheFrog',
+          email: "kermit@disney.com",
+          bio: "Hi-ho! It's me, Kermit the Frog!",
+          bannerImage: process.env.PUBLIC_URL + '/images/kermitBanner.webp',
+          carMake: 'Ford',
+          carModel: 'Escape Hybrid',
+          carYear: '2006',
+          serviceRequested: 'Full Inspection',
+          mechType: null,
+          certified: null,
+          rate: null,
+          numViews: 52,
+          carPics: [
+            {
+              picture: process.env.PUBLIC_URL + '/images/kermitFord.webp',
+              caption: 'My Ford Escape Hybrid',
+            },
+            { picture: process.env.PUBLIC_URL + '/images/kermitFord2.jpg',
+              caption: 'Driving',
+            },
+          ]
+        },
+        {
+          fullName: 'Jimmy Parker',
+          type: 'Client',
+          userName: 'jPark23',
+          location: 'Markham',
+          picture: null,
+          link: '/profile/jpark23',
+          email: "parkerj97@hotmail.com",
+          bio: `Hi, My name is Jimmy Parker. I'm a third-year university student on a budget and a not-so-reliable car. 
+          Looking for a mechanic who can take care of my automobile mainetenance needs`,
+          bannerImage: null,
+          carMake: 'Honda',
+          carModel: 'Civic',
+          carYear: '2012',
+          serviceRequested: 'Oil Change',
+          mechType: null,
+          certified: null,
+          rate: null,
+          numViews: 10,
+          carPics: []
+        },
+        {
+          fullName: 'Nav',
+          type: 'Client',
+          userName: 'brownBoy1',
+          location: 'Markham',
+          picture: process.env.PUBLIC_URL + '/images/Nav.jpeg',
+          link: '/profile/brownBoy1',
+          email: "nav@yahoo.com",
+          bio: `What's good, it's your boy Nav! I'm a top 5 soundcloud rapper, the first brown boy ever.
+          I need some help with my corolla, bless up.`,
+          bannerImage: null,
+          carMake: 'Toyota',
+          carModel: 'Corolla',
+          carYear: '2007',
+          serviceRequested: 'Brake Maintenance',
+          mechType: null,
+          certified: null,
+          rate: null,
+          numViews: 35,
+          carPics: []
+        },
+        {
+          fullName: 'Shawn Carter',
+          type: 'Client',
+          userName: 'carter97',
+          location: 'Brampton',
+          picture: null,
+          link: '/profile/carter97',
+          email: "shawn27@carter.com",
+          bio: `Hey my name is Shawn. I'm a teacher at a Brampton high school and am looking for a 
+          nice, reliable mechanic to take care of my new Jetta.`,
+          bannerImage: null,
+          carMake: 'Volkswagen',
+          carModel: 'Jetta',
+          carYear: '2018',
+          serviceRequested: 'Full Inspection',
+          mechType: null,
+          certified: null,
+          rate: null,
+          numViews: 52,
+          carPics: []
+        },
+        {
+          fullName: 'John Doe',
+          type: 'Mechanic',
+          userName: 'jDoe123',
+          location: 'Toronto',
+          picture: null,
+          link: '/profile/jDoe123',
+          email: "abc@gmail.com",
+          bio: `Hello potential clients! My name is John and I'm a certified private mechanic.
+          I offer a variety of services including oil changes, brake maintenance and tire changes.
+          I'm looking for new clients so please get in touch!`,
+          bannerImage: null,
+          carMake: null,
+          carModel: null,
+          carYear: null,
+          serviceRequested: null,
+          mechType: 'Private',
+          rate: '$25/hr',
+          certified: true,
+          numViews: 32,
+          carPics: []
+        },
+        {
+          fullName: 'Kenneth Crane',
+          type: 'Mechanic',
+          userName: 'craneK78',
+          location: 'Waterloo',
+          picture: null,
+          link: '/profile/craneK78',
+          email: "kenneth@crane.com",
+          bio: `Hi friends! My name is Kenn and I'm a certified dealer mechanic working for 
+          Waterloo's Carimex Auto Sales. I offer a variety of services with a full warranty on everything! Get in touch
+          to book an appointment and get more information.`,
+          bannerImage: null,
+          carMake: null,
+          carModel: null,
+          carYear: null,
+          serviceRequested: null,
+          mechType: 'Dealer',
+          rate: '$45/hr',
+          certified: true,
+          numViews: 27,
+          carPics: []
+        },{
+          fullName: 'Kenneth Crane',
+          type: 'Mechanic',
+          userName: 'user2',
+          location: 'Waterloo',
+          picture: null,
+          link: '/profile/craneK78',
+          email: "kenneth@crane.com",
+          bio: `Hi friends! My name is Kenn and I'm a certified dealer mechanic working for 
+          Waterloo's Carimex Auto Sales. I offer a variety of services with a full warranty on everything! Get in touch
+          to book an appointment and get more information.`,
+          bannerImage: null,
+          carMake: null,
+          carModel: null,
+          carYear: null,
+          serviceRequested: null,
+          mechType: 'Dealer',
+          rate: '$45/hr',
+          certified: true,
+          numViews: 27,
+          carPics: []
+        },
+        {
+          fullName: 'Drake',
+          type: 'Mechanic',
+          userName: 'drizzy86',
+          location: 'Degrassi',
+          picture: process.env.PUBLIC_URL + '/images/Drake-Profile-Pic.png',
+          link: '/profile/drizzy86',
+          email: "drake@ovo.com",
+          bio: `Yeah! It's ya boy Drizzy. I got tired of the music scene so I decided to try out
+          this mechanic life style. Hit me up for details and I'll hook you up with a banger deal!`,
+          bannerImage: null,
+          carMake: null,
+          carModel: null,
+          carYear: null,
+          serviceRequested: null,
+          mechType: 'Private',
+          rate: '$20/hr',
+          certified: false,
+          numViews: 52,
+          carPics: []
+        },
+
+        
+      ]
+      // mock data recieved from state
+      let profile;
+      if (userName && userName !== 'jsmith123') {
+        if (_.map(profiles, 'userName').includes(userName)) {
+          profile = _.find(profiles, {userName});
+        } else {
+          profile = {
+            fullName: 'User FullName',
+            type: 'Client',
+            userName: 'user',
+            location: 'Toronto',
+            picture: process.env.PUBLIC_URL + '/images/defaultprofpic.png',
+            link: '/profile/user',
+            email: "user@example.com",
+            bio: "I love my car! I have the best car and everyone needs to know about it!",
+            bannerImage: process.env.PUBLIC_URL + '/images/defaultbanner.jpg',
+            carMake: 'Nissan',
+            carModel: 'Altima',
+            carYear: '2008',
+            serviceRequested: 'Oil change',
+            numViews: 17,
+            carPics: [
+              {
+                picture: process.env.PUBLIC_URL + '/images/altima.jpg',
+                caption: 'My Nissan Altima',
+              }
+            ]
+          }
+        }
+      }
+      resolve(profile)
+    })  
 }
