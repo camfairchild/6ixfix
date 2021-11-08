@@ -1,0 +1,24 @@
+h4 {
+    color: black;
+    font-size: 25pt;
+}
+
+.faq {
+    margin-top: 5%;
+    margin-right: 15%;
+    margin-left: 15%;
+
+    padding-top: 5%;
+    padding-left: 5%;
+    padding-right: 5%;
+    padding-bottom: 5%;
+    vertical-align: middle;
+    background-color: #C4C4C4;
+    border: 3px solid black;
+}
+.faqtext {
+    font-family: Roboto;
+    font-weight: 500;
+    font-size: x-large;
+    color: #000;
+}

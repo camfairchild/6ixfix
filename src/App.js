@@ -2,6 +2,8 @@ import React from 'react';
 import Home from './Home';
 import Login from './Login';
 import Search from './Search';
+import About from './About';
+import Help from './Help';
 
 // https://reactrouter.com/web/guides/quick-start
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
@@ -18,8 +20,8 @@ export default class App extends React.Component {
                 <Switch>    
                     <Route exact path='/' component={Home}/>
                     <Route exact path='/search' component={Search}/>
-                    <Route exact path='/help'/>
-                    <Route exact path='/about'/>
+                    <Route exact path='/help' component={Help} />
+                    <Route exact path='/about' component={About} />
                     {/* <Route path='/admin/:view' component={Admin}/> */}
                     <Route path='/profile/:userName' component={Profile}/>
                     <Route exact path='/post' component={MakePost}/>
