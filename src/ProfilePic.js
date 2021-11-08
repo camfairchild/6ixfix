@@ -1,12 +1,22 @@
 import React from 'react';
 
+import { getProfileByuserName } from './Helper';
+
 export default class ProfilePic extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             selectedFile: null,
-            user: this.props.user,        
+            picture: `${process.env.PUBLIC_URL}/images/defaultprofpic.png`        
         }
+    }
+
+    componentDidMount() {
+        getProfileByuserName(this.props.user?.userName).then((profile) => {
+            this.setState({
+                picture: profile?.picture || `${process.env.PUBLIC_URL}/images/defaultprofpic.png`
+            })
+        })
     }
 
     handleProfBgClick = (e) => {
@@ -21,31 +31,31 @@ export default class ProfilePic extends React.Component {
     }
 
     changeProfilePic = (file) => {
-    // PUT request to update profile picture
+        // PUT request to update profile picture
+        this.setState({selectedFile: null })
     } 
 
     handleProfSelect = (e) => {
         e.preventDefault()
         const file = e.target.files[0]
-        this.setState({
-            selectedFile: file
-        })
-        console.log(file)
+        console.log("s", file)
         const fileUrl = URL.createObjectURL(file);
         console.log(fileUrl)
-        let user = {...this.state.user}
-        user.picture = fileUrl;
         this.setState({ 
-            user
+            picture: fileUrl,
+            selectedFile: fileUrl
         })
     }
 
     render() {
         return (
-            <div className="profilePic-container">
+            <div className="profilePic-container" >
                 {this.props.editable ? <div><input id="file-input" type="file" name="file" className="input-profilePic" onChange={this.handleProfSelect} />
-                <div className="profilePic-bg" onClick={this.handleProfBgClick}/></div>: null}
-                <img src={this.state.user.picture} alt="profile" />
+                <div className="profilePic-bg" onClick={this.handleProfBgClick}/>
+                { this.state.selectedFile ?
+                <input className="submit-profilePic" value="Change Profile Picture" type="submit" onClick={this.handleProfUpdate}/> : null}
+                </div>: null}
+                <img src={this.state.picture} alt="profile" key={this.state.selectedFile} />
             </div>
         )
     }
