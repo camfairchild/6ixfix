@@ -1,9 +1,9 @@
-h4 {
+.About  h4 {
     color: black;
     font-size: 25pt;
 }
 
-.faq {
+.About .faq {
     margin-top: 5%;
     margin-right: 15%;
     margin-left: 15%;
@@ -17,7 +17,7 @@ h4 {
     border: 5px solid black;
     border-radius: 15px;
 }
-.faqtext {
+.About .faqtext {
     font-family: Roboto;
     font-weight: 500;
     font-size: x-large;
