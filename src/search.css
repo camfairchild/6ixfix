@@ -70,3 +70,40 @@ body {
 .filter-container .option-container {
     font-weight: 400;
 }
+
+.filter-container {
+    display: flex;
+    flex-direction: column;
+    row-gap: 0.5rem;
+    background-color: rgba(67, 168, 242, 1);
+    height: max-content;
+    padding: 1rem;
+    position: sticky;
+    top: 3rem;
+    min-width: 210px;
+    border-radius: 5px;
+    text-transform: capitalize;
+}
+
+.filter-submit {
+    outline: none;
+    background-color: #fff;
+    border: none;
+    padding: 15px 20px;
+    margin: 5px 0;
+    border-radius: 5px;
+    cursor: pointer;
+    text-transform: uppercase;
+    font-family: Roboto;
+    font-weight: 700;
+    color: #000;
+    font-size: 17px;
+
+
+}
+
+.filter-container .option-container {
+    font-weight: 400;
+    display: flex;
+    justify-content: space-between;
+}
