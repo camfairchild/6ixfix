@@ -15,7 +15,7 @@ Login: We have currently implemented the login to follow the hardcoded login as 
 About: The about page displays some FAQs which will allow users to better understand how the website operates.
 Profile pt2: The profile page also allows users to update their vehicle information and service they require or their certificates, skills and rate depending on which type of user they are (client or mechanic). Currently, these changes require a server call to be stored and we use hardcoded values in Phase 1.
 
-Admin: The admin page allows admin users to view all users on the website and their corresponding profiles. The admin user is also able to ban users of their choice from the website. Currently, the admin page will require server calls to fully implement this functionality so hardcoded data has been used for Phase 1.
+Admin: The admin page allows admin users to view all users on the website and their corresponding profiles. The admin user is also able to ban users of their choice from the website. Currently, the admin page will require server calls to fully implement this functionality so hardcoded data has been used for Phase 1. They can also click browse to view all the users in the system.
 
 ## About
     Josh
