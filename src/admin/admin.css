@@ -1,0 +1,43 @@
+.admin-container .profile-container img {
+    width: 10rem;
+    height: 10rem;
+}
+
+.admin-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.admin-container .admin-content {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    height: 100%;
+    margin: 2rem;
+}
+
+.admin-container .admin-selector {
+    float: left;
+    position: relative;
+    top: 0;
+    border: 2px solid #ccc;
+    height: max-content;
+    margin-left: 1rem;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    align-content: space-around;
+    column-gap: 1rem;
+}
+
+.admin-container .admin-selector .selector-item {
+    border: 2px solid #ccc;
+    font-size: large;
+    font-weight: bold;
+    cursor: pointer;
+    width: 100%;
+}

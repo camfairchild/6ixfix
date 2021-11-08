@@ -1,8 +1,9 @@
 import React from 'react';
 import { uid } from 'react-uid';
 import { getUser } from '../Helper';
-import { DELETE_ICON } from '../Icons/icons';
-import { User } from './User';
+import {DELETE_ICON, USER_ICON, LOCATION_ICON, CAR_ICON, SERVICE_ICON, EMAIL_ICON, VIEWS_ICON } from "../Icons/icons";
+import { Link } from 'react-router-dom';
+
 
 
 export default class Clients extends React.Component {
@@ -48,15 +49,6 @@ export default class Clients extends React.Component {
             carYear: '2018',
             serviceRequested: 'Full Inspection',
             numViews: 52
-        },
-        {
-            name: 'Kermit T. Frog',
-            type: 'Client',
-            userName: 'kermitTheFrog',
-            location: 'The Muppets Studio',
-            profilePic: '/images/kermit.webp',
-            link: '/profile/kermitTheFrog',
-            email: "kermit@disney.com"
         }] //make an api call to get all the clients in the system
     }
 
@@ -100,10 +92,51 @@ export default class Clients extends React.Component {
                     {this.state.clients.map((client) => {
                         return (
                             <div key={uid(client)} className="result dashboard__result">
-                                <User user={client} />
+                                <div className="profile-container">
+                                    <img src={client.profilePic !== null ? client.profilePic : '/images/defaultprofpic.png'} />
+                                </div>
+                                <div className="profile-info-container">
+                                    <h4>{client.name}</h4>
+                                    <div className='icon-text-container'>
+                                        <div className='profile-icon'>{USER_ICON}</div>
+                                        <div className='icon-text'>{client.userName}</div>
+                                    </div>
+                                    <br/>
+                                    <div className='icon-text-container'>
+                                        <div className='profile-icon'>{LOCATION_ICON}</div>
+                                        <div className='icon-text'>{client.location}</div>
+                                    </div>
+                                    <br/>
+                                    <div className='icon-text-container'>
+                                        <div className='profile-icon'>{EMAIL_ICON}</div>
+                                        <div className='icon-text'><a href={"mailto:" + client.email}>{client.email}</a></div>
+                                    </div>
+                                    <br/>
+                                    <div className='icon-text-container'>
+                                        <div className='profile-icon'>{CAR_ICON}</div>
+                                        <div className='icon-text'>{client.carYear +' '+ client.carMake +' '+client.carModel}</div>
+                                    </div>
+                                    <br/>
+                                    <div className='icon-text-container'>
+                                        <div className='profile-icon'>{SERVICE_ICON}</div>
+                                        <div className='icon-text'>{client.serviceRequested}</div>
+                                    </div>
+                                    <br/>
+                                    <div className='icon-text-container'>
+                                        <div className='profile-icon'>{VIEWS_ICON}</div>
+                                        <div className='icon-text'>{client.numViews}</div>
+                                    </div>
+                                    <br/>
+                                </div>
                                 <div className="delete__btn">
+                                    <div className='ban' onClick={() => this.banUser(client)}>{DELETE_ICON}</div> 
+                                </div>
 
-                                <div className='ban' onClick={() => this.banUser(client)}>{DELETE_ICON}</div>                                </div>
+                                <div className="get-profile-btn-container">
+                                    <Link className="profile-btn" to={`/profile/${client.userName}`}>
+                                        Continue to profile
+                                    </Link>
+                                </div>
                             </div>
                         )
                     })}

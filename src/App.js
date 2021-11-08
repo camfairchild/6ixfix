@@ -9,6 +9,7 @@ import Profile from './Profile';
 import MakePost from './MakePost';
 import Messaging from './messaging/Messaging';
 import { Dashboard } from './Dashboard/Dashboard';
+import Admin from './admin/Admin';
 
 export default class App extends React.Component {
     render() {
@@ -19,7 +20,7 @@ export default class App extends React.Component {
                     <Route exact path='/search' component={Search}/>
                     <Route exact path='/help'/>
                     <Route exact path='/about'/>
-                    <Route path='/admin/:view' component={Dashboard}/>
+                    {/* <Route path='/admin/:view' component={Admin}/> */}
                     <Route path='/profile/:userName' component={Profile}/>
                     <Route exact path='/post' component={MakePost}/>
                     <Route exact path='/signup'>
@@ -32,6 +33,7 @@ export default class App extends React.Component {
                     {/* <Route>
                         <Home />
                     </Route> */}
+                    <Route path="/admin" exact component={Dashboard}/>
                 </Switch>
             </Router>
         )

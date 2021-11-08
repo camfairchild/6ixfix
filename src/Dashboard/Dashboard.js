@@ -1,16 +1,12 @@
 import React, { useState } from "react";
-import _ from "lodash";
-
 import Header from "../Header";
 import "./Dashboard.css"
 import { renderPageContent } from "./renderPageContent";
 import { dashboardNavigation } from "./dashboardNavigation";
-import { useParams } from "react-router";
 
 export const Dashboard = () => {
-    let view = useParams()['view']
-    view = _.map(dashboardNavigation, 'state').includes(view) ? view : 'user'
-    const [page, setPage] = useState(view)
+
+    const [page, setPage] = useState('user')
 
     return (
         <div className="page__wrapper">
