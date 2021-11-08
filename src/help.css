@@ -1,4 +1,4 @@
-h2 {
+.Help h2 {
     color: black;
     font-size: 30pt;
     width: 30%;
@@ -7,14 +7,14 @@ h2 {
     padding-bottom: 3%;
 }
 
-h4 {
+.Help h4 {
     font-size: 20pt;
     width: 50%;
     margin: auto;   
     text-align: center;
 }
 
-.contact {
+.Help .contact {
     margin-top: 5%;
     margin-right: 15%;
     margin-left: 15%;
@@ -29,7 +29,7 @@ h4 {
     border-radius: 15px;
 }
 
-input[name='name'], input[name='message'] {
+.Help input[name='name'], input[name='message'] {
     width: 100%;
     background-color: #fff;
     font-size: large;
@@ -37,7 +37,7 @@ input[name='name'], input[name='message'] {
 
 }
 
-input[type=submit] {
+.Help input[type=submit] {
     width: 20%;
     margin-bottom: 5%;
     margin-left: 40%;
@@ -50,7 +50,7 @@ input[type=submit] {
     color: #000;
 }
 
-textarea {
+.Help textarea {
     width: 100%;
     resize: none;
 
@@ -59,12 +59,12 @@ textarea {
     font-family: Roboto;
 }
 
-.submitbutton {
+.Help  .submitbutton {
     text-align: center;
     vertical-align: middle;
 }
 
-.contactForm {
+.Help  .contactForm {
     padding: 10px;
     font-size: 20px;
     width: 40%;
@@ -75,6 +75,6 @@ textarea {
     color: #000;
 }
 
-#red {
+.Help #red {
     color: red;
 }
