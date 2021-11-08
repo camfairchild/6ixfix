@@ -17,31 +17,7 @@ Profile pt2: The profile page also allows users to update their vehicle informat
 
 Admin: The admin page allows admin users to view all users on the website and their corresponding profiles. The admin user is also able to ban users of their choice from the website. Currently, the admin page will require server calls to fully implement this functionality so hardcoded data has been used for Phase 1. They can also click browse to view all the users in the system.
 
-## About
-    Josh
-## Help
-    Josh
-## Signups
-    Affan - finished
-## Login
-    Danny
-## Filter
-    Danny - finished
-## Search
-    Cameron - finished
-## Mechanic Profile Page
-    Affan
-## Posts
-    Josh - finished
-## User settings
-    Josh
-## User Profile
-    Cameron - started
-## Make a post (User)
-    Josh - finished
-## Make a post (Mechanic)
-    Josh - finished
-## Messaging
-    Cameron - finished
-## Admin Dashboard
-    Affan
+## Third Party Libraries
+
+"email-validator": "^2.0.4"
+"lodash": "^4.17.21"
