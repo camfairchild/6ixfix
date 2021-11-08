@@ -75,7 +75,7 @@ export default class AllUsers extends React.Component {
         })
         console.log(user)
         this.callAPIBan(user, this.state.loggedIn).then((result) => {
-            const { status, message } = result;
+            const [status, message] = result;
             console.log(status)
             if (status === 200) {
                 this.setState({

@@ -7,57 +7,63 @@ import { Link } from 'react-router-dom';
 
 
 export default class Clients extends React.Component {
-    state = {
-        clients: [{
-            name: 'Jimmy Parker',
-            type: 'Client',
-            userName: 'jPark23',
-            location: 'Markham',
-            profilePic: null,
-            link: '/',
-            email: "parkerj97@hotmail.com",
-            carMake: 'Honda',
-            carModel: 'Civic',
-            carYear: '2012',
-            serviceRequested: 'Oil Change',
-            numViews: 10
-        },
-        {
-            name: 'Nav',
-            type: 'Client',
-            userName: 'brownBoy1',
-            location: 'Rexdale',
-            profilePic: '/images/Nav.jpeg',
-            link: '/',
-            email: "nav@yahoo.com",
-            carMake: 'Toyota',
-            carModel: 'Corolla',
-            carYear: '2007',
-            serviceRequested: 'Brake Maintenance',
-            numViews: 35
-        },
-        {
-            name: 'Shawn Carter',
-            type: 'Client',
-            userName: 'carter97',
-            location: 'Brampton',
-            profilePic: null,
-            link: '/',
-            email: "shawn27@carter.com",
-            carMake: 'VolksWagen',
-            carModel: 'Jetta',
-            carYear: '2018',
-            serviceRequested: 'Full Inspection',
-            numViews: 52
-        }] //make an api call to get all the clients in the system
+    constructor(props) {
+        super(props)
+        this.state = {
+            clients: [{
+                name: 'Jimmy Parker',
+                type: 'Client',
+                userName: 'jPark23',
+                location: 'Markham',
+                profilePic: null,
+                link: '/',
+                email: "parkerj97@hotmail.com",
+                carMake: 'Honda',
+                carModel: 'Civic',
+                carYear: '2012',
+                serviceRequested: 'Oil Change',
+                numViews: 10
+            },
+            {
+                name: 'Nav',
+                type: 'Client',
+                userName: 'brownBoy1',
+                location: 'Rexdale',
+                profilePic: '/images/Nav.jpeg',
+                link: '/',
+                email: "nav@yahoo.com",
+                carMake: 'Toyota',
+                carModel: 'Corolla',
+                carYear: '2007',
+                serviceRequested: 'Brake Maintenance',
+                numViews: 35
+            },
+            {
+                name: 'Shawn Carter',
+                type: 'Client',
+                userName: 'carter97',
+                location: 'Brampton',
+                profilePic: null,
+                link: '/',
+                email: "shawn27@carter.com",
+                carMake: 'VolksWagen',
+                carModel: 'Jetta',
+                carYear: '2018',
+                serviceRequested: 'Full Inspection',
+                numViews: 52
+            }] //make an api call to get all the clients in the system
+        }
+        this.banClient = this.banClient.bind(this);
+        this.callAPIBan = this.callAPIBan.bind(this);
     }
+    
 
     banClient = (client) => {
         const clientList = this.state.clients.filter((c) => {
             return c !== client
         })
         this.callAPIBan(client, this.state.loggedIn).then((result) => {
-            const { status, message } = result;
+            const [status, message] = result;
             if (status === 200) {
                 this.setState({
                     clients: clientList
@@ -129,7 +135,7 @@ export default class Clients extends React.Component {
                                     <br/>
                                 </div>
                                 <div className="delete__btn">
-                                    <div className='ban' onClick={() => this.banUser(client)}>{DELETE_ICON}</div> 
+                                    <div className='ban' onClick={() => this.banClient(client)}>{DELETE_ICON}</div> 
                                 </div>
 
                                 <div className="get-profile-btn-container">

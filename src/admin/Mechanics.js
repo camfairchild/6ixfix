@@ -2,6 +2,7 @@ import React from 'react';
 import { uid } from 'react-uid';
 import { DELETE_ICON, USER_ICON, LOCATION_ICON, CERTIFIED_ICON, EMAIL_ICON, VIEWS_ICON } from "../Icons/icons";
 import { Link } from 'react-router-dom';
+import { getUser } from '../Helper';
 
 export default class Mechanics extends React.Component {
     state = {
@@ -43,12 +44,43 @@ export default class Mechanics extends React.Component {
         }] //make an api call to get all the mechanics in the system
     }
 
+    // banMech = (mechanic) => {
+    //     const mechList = this.state.mechanics.filter((mech) => {
+    //         return mech !== mechanic
+    //     })
+    //     this.setState({ //we also want to make an api call sending the new mech list to the server
+    //         mechanics: mechList
+    //     })
+    // }
+
     banMech = (mechanic) => {
         const mechList = this.state.mechanics.filter((mech) => {
             return mech !== mechanic
         })
-        this.setState({ //we also want to make an api call sending the new mech list to the server
-            mechanics: mechList
+        this.callAPIBan(mechanic, this.state.loggedIn).then((result) => {
+            const [status, message] = result;
+            if (status === 200) {
+                this.setState({
+                    mechanics: mechList
+                })
+            } else {
+                // error
+                console.log("error")
+            }
+        })
+    }
+    callAPIBan = (client, admin) => {
+        console.log("banning user")
+        return new Promise((resolve, reject) => {
+            resolve([200, ""]);
+        })
+    }
+
+    componentDidMount() {
+        getUser().then((user) => {
+            this.setState({
+                loggedIn: user
+            })
         })
     }
 
