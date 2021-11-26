@@ -1,0 +1,15 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "description": "back-end server for 6ixFix app",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Affanullah Siddiqui, Joshua Emerson, Cameron Fairchild, Danny Audisho",
+  "license": "ISC",
+  "dependencies": {
+    "mongoose": "^6.0.13",
+    "validator": "^13.7.0"
+  }
+}
