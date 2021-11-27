@@ -189,8 +189,8 @@ Request body expects:
 }
 */
 // Returned JSON has the updated client database 
-//   document that the car was added to, AND the client subdocument:
-//   { "car": <reservation subdocument>, "client": <entire restaurant document>}
+//   document that the car was added to, AND the car subdocument:
+//   { "car": <car subdocument>, "client": <entire client document>}
 // POST /clients/id
 app.post('/api/clients/:id', mongoChecker, async (req, res) => {
 	// Add code here
@@ -231,10 +231,60 @@ app.post('/api/clients/:id', mongoChecker, async (req, res) => {
 		log(error)
 		res.status(500).send('Internal Server Error')  // server error
 	}
-
-	
-
 })
+
+/// Route for adding a car picture to a client's pictures.
+/* 
+Request body expects:
+{
+	picture: <picture_url>,
+    caption: <caption>, (optional)
+}
+*/
+// Returned JSON has the updated client database 
+//   document that the picture was added to, AND the picture subdocument:
+//   { "picture": <picture subdocument>, "client": <entire client document>}
+// POST /clients/id
+app.post('/api/clientPictures/:id', mongoChecker, async (req, res) => {
+	// Add code here
+
+	const id = req.params.id
+
+	// Good practise: Validate id immediately.
+	if (!ObjectId.isValid(id)) {
+		res.status(404).send()  // if invalid id, definitely can't find resource, 404.
+		return;  // so that we don't run the rest of the handler.
+	}
+
+	try {
+		const profile = await Profile.findById(id)
+		if (!profile) {
+			res.status(404).send('Resource not found')  // could not find this client
+		} else if (profile.type !== 'Client') {
+            res.status(400).send("Bad Request: Not a client")
+        } else {  
+			const picture = profile.carPics.create({ 
+				picture: req.body.picture,  
+				caption: req.body.caption,
+			});
+			profile.carPics.push(picture)
+			try {
+				await profile.save()
+				res.send({
+					"picture": picture, 
+					"client": profile
+				})
+			} catch (error) {
+				log(error)
+				res.status(400).send('Bad Request')  // server error
+			}
+		}
+	} catch(error) {
+		log(error)
+		res.status(500).send('Internal Server Error')  // server error
+	}
+})
+
 
 /// Route for getting information for one car of a client (subdocument)
 // GET /api/clients/id
@@ -346,6 +396,168 @@ app.delete('/api/profiles/:id', mongoChecker, async (req, res) => {
 	} catch(error) {
 		log(error)
 		res.status(500).send() // server error, could not delete.
+	}
+})
+
+
+/// Route for changing car information
+/* 
+Request body expects:
+{
+	carMake: <make>,
+    carModel: <model>,
+    carYear: <year>
+}
+*/
+// Returned JSON should have the updated restaurant database
+//   document in which the car was changed, AND the car subdocument changed:
+//   { "car": <car subdocument>, "client": <entire car document>}
+// PATCH restaurant/<client_id>/<car_id>
+app.patch('/api/clients/:id/:car_id', mongoChecker, async (req, res) => {
+	// Add code here
+	const id = req.params.id
+
+	const cid = req.params.car_id
+
+	// Good practise: Validate id immediately.
+	if (!ObjectId.isValid(id) || !ObjectId.isValid(cid)) {
+		res.status(404).send('Resource not found: Invalid id')  // if invalid id, definitely can't find resource, 404.
+		return;  // so that we don't run the rest of the handler.
+	}
+
+	try {
+		const profile = await Profile.findById(id)
+		if (!profile) {
+			res.status(404).send('Resource not found')  // could not find this client
+		} else if (profile.type !== "Client") {
+            res.status(400).send("Bad Request: Not a client") //this profile is not for a client so no cars
+        } else {  
+			const car = profile.cars.id(cid)
+			if (!car) {
+				res.status(404).send('Resource not found')  // could not find this restaurant
+			} else {
+				car.carMake = req.body.carMake
+				car.carModel = req.body.carModel
+				car.carYear = req.body.carYear
+				try {
+					await profile.save()
+					res.send({
+						"car": car, 
+						"client": profile
+					})
+				} catch (error) {
+					log(error)
+					res.status(500).send('Internal Server Error')  // server error
+				}
+			}
+		}
+	} catch(error) {
+		log(error)
+		res.status(500).send('Internal Server Error')  // server error
+	}
+
+})
+
+/// Route for changing a car picture for a particular client
+/* 
+Request body expects:
+{
+	picture: <picture_url>,
+    caption: <caption>, (optional)
+}
+*/
+// Returned JSON has the updated client database 
+//   document in which the picture was changed, AND the picture subdocument:
+//   { "picture": <picture subdocument>, "client": <entire client document>}
+// PATCH restaurant/<client_id>/<car_id>
+app.patch('/api/clients/pictures/:id/:pict_id', mongoChecker, async (req, res) => {
+	// Add code here
+	const id = req.params.id
+
+	const pid = req.params.pict_id
+
+	// Good practise: Validate id immediately.
+	if (!ObjectId.isValid(id) || !ObjectId.isValid(pid)) {
+		res.status(404).send('Resource not found: Invalid id')  // if invalid id, definitely can't find resource, 404.
+		return;  // so that we don't run the rest of the handler.
+	}
+
+	try {
+		const profile = await Profile.findById(id)
+		if (!profile) {
+			res.status(404).send('Resource not found')  // could not find this client
+		} else if (profile.type !== "Client") {
+            res.status(400).send("Bad Request: Not a client") //this profile is not for a client so no cars
+        } else {  
+			const picture = profile.carPics.id(pid)
+			if (!picture) {
+				res.status(404).send('Resource not found')  // could not find this restaurant
+			} else {
+				picture.picture = req.body.picture 
+				picture.caption = req.body.caption
+				try {
+					await profile.save()
+					res.send({
+						"picture": picture, 
+						"client": profile
+					})
+				} catch (error) {
+					log(error)
+					res.status(500).send('Internal Server Error')  // server error
+				}
+			}
+		}
+	} catch(error) {
+		log(error)
+		res.status(500).send('Internal Server Error')  // server error
+	}
+
+})
+
+/// a PATCH route for making *specific* changes to a profile.
+// The body will be an array that consists of a list of changes to make to the
+//  resource:
+/*
+[
+  { "op": "replace", "path": "/serviceRequested", "value": "brake maintenance" },
+  { "op": "replace", "path": "/fullName", "value": "Ryan Dragic" },
+  ...
+]
+*/
+// Based on standard specifcation: https://tools.ietf.org/html/rfc6902#section-3
+//   - there are other ways to modify resources (adding, removing properties), but here we will
+//     just deal with replacements since our schema is fixed.
+app.patch('/api/profiles/:id', mongoChecker, async (req, res) => {
+	const id = req.params.id
+
+	if (!ObjectId.isValid(id)) {
+		res.status(404).send()
+		return;  // so that we don't run the rest of the handler.
+	}
+
+
+	// Find the fields to update and their values.
+	const fieldsToUpdate = {}
+	req.body.map((change) => {
+		const propertyToChange = change.path.substr(1) // getting rid of the '/' character
+		fieldsToUpdate[propertyToChange] = change.value
+	})
+
+	// Update the student by their id.
+	try {
+		const profile = await Profile.findOneAndUpdate({_id: id}, {$set: fieldsToUpdate}, {new: true, useFindAndModify: false})
+		if (!profile) {
+			res.status(404).send('Resource not found')
+		} else {   
+			res.send(profile)
+		}
+	} catch (error) {
+		log(error)
+		if (isMongoError(error)) { // check for if mongo server suddenly dissconnected before this request.
+			res.status(500).send('Internal server error')
+		} else {
+			res.status(400).send('Bad Request') // bad request for changing the student.
+		}
 	}
 })
 
