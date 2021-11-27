@@ -290,30 +290,34 @@ app.delete('/api/clients/:id/:car_id', mongoChecker, async (req, res) => {
 	}
 
 	try {
-		const profile = await Profile.findById(id)
-		if (!profile) {
-			res.status(404).send('Resource not found')  // could not find this client
-		} else if (profile.type !== "Client") {
-            res.status(400).send("Bad Request: Not a client") //this profile is not for a client so no cars
-        } else { 
-            console.log(profile) 
-			const car = await profile.cars.id(cid).remove() // not returning the car object for some reason
-			console.log(car)
-			if (!car) {
-				res.status(404).send('Resource not found')  // could not find this car
-			} else {
-				try {
-					await profile.save()
-					res.send({
-						"car": car, 
-						"client": profile
-					})
-				} catch (error) {
-					log(error)
-					res.status(500).send('Internal Server Error')  // server error
+		const profile = await Profile.findByIdAndUpdate(id, [
+			{$pull: {
+				cars: {
+					_id: cid
+				}
+			}},
+			{$set: { // check if defaultCar was this one, set to null if so
+				defaultCar: {
+					$cond : [
+						{ $eq: [ "$defaultCar._id", cid ] },
+						null,
+						"$defaultCar"
+					]
 				}
 			}
-		}
+		}], {
+			new: false
+		}).catch(error => {
+			log(error)
+			return res.status(500).send('Internal Server Error')  // server error
+		})
+
+		if (!profile) {
+			return res.status(404).send('Resource not found')  // could not find this profile
+		} 
+		return res.json({
+			"car": profile.cars.id(cid),
+		})
 	} catch(error) {
 		log(error)
 		res.status(500).send('Internal Server Error')  // server error
