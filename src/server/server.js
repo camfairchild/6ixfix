@@ -18,7 +18,8 @@ const { Profile } = require('./models/profiles')
 const { ObjectID } = require('mongodb')
 
 // body-parser: middleware for parsing HTTP JSON body into a usable object
-const bodyParser = require('body-parser') 
+const bodyParser = require('body-parser'); 
+const { mongo } = require('mongoose');
 app.use(bodyParser.json())
 
 /*** Helper functions below **********************************/
@@ -82,7 +83,7 @@ app.post('/api/profiles', mongoChecker, async (req, res) => {
     if (req.body.type === 'Mechanic') {
         profile.mechType = req.body.mechType
         profile.certified = req.body.certified,
-        profile.certified = req.body.rate
+        profile.rate = req.body.rate
     }
 
 
@@ -98,6 +99,250 @@ app.post('/api/profiles', mongoChecker, async (req, res) => {
 		}
 	}
 
+})
+
+/// Route for getting all profile information.
+// GET /api/profiles
+app.get('/api/profiles', mongoChecker, async (req, res) => {
+
+	// Get the restaurants
+	try {
+		const profiles = await Profile.find()
+		res.send(profiles) 
+	} catch(error) {
+		log(error)
+		res.status(500).send("Internal Server Error")
+	}
+
+})
+
+
+/// Route for getting information for one profile.
+// GET /api/profiles/id
+app.get('/api/profiles/:id', mongoChecker, async (req, res) => {
+	// Add code here
+
+	const id = req.params.id
+
+	// Good practise: Validate id immediately.
+	if (!ObjectID.isValid(id)) {
+		res.status(404).send()  // if invalid id, definitely can't find resource, 404.
+		return;  // so that we don't run the rest of the handler.
+	}
+
+	// If id valid, findById
+	try {
+		const profile = await Profile.findById(id)
+		if (!profile) {
+			res.status(404).send('Resource not found')  // could not find this restaurant
+		} else {  
+			res.send(profile)
+		}
+	} catch(error) {
+		log(error)
+		res.status(500).send('Internal Server Error')  // server error
+	}
+
+})
+
+/// Route for getting all client profile information.
+// GET /api/clients
+app.get('/api/clients', mongoChecker, async (req, res) => {
+
+	// Get the restaurants
+	try {
+		const profiles = await Profile.find(
+            {type: "Client"}
+        )
+		res.send(profiles) 
+	} catch(error) {
+		log(error)
+		res.status(500).send("Internal Server Error")
+	}
+
+})
+
+/// Route for getting all mechanic profile information.
+// GET /api/mechanics
+app.get('/api/mechanics', mongoChecker, async (req, res) => {
+
+	// Get the restaurants
+	try {
+		const profiles = await Profile.find(
+            {type: "Mechanic"}
+        )
+		res.send(profiles) 
+	} catch(error) {
+		log(error)
+		res.status(500).send("Internal Server Error")
+	}
+
+})
+
+/// Route for adding a car to a client.
+/* 
+Request body expects:
+{
+	carMake: <make>,
+    carModel: <model>,
+    carYear: <year>
+}
+*/
+// Returned JSON has the updated client database 
+//   document that the car was added to, AND the client subdocument:
+//   { "car": <reservation subdocument>, "client": <entire restaurant document>}
+// POST /clients/id
+app.post('/api/clients/:id', mongoChecker, async (req, res) => {
+	// Add code here
+
+	const id = req.params.id
+
+	// Good practise: Validate id immediately.
+	if (!ObjectID.isValid(id)) {
+		res.status(404).send()  // if invalid id, definitely can't find resource, 404.
+		return;  // so that we don't run the rest of the handler.
+	}
+
+	try {
+		const profile = await Profile.findById(id)
+		if (!profile) {
+			res.status(404).send('Resource not found')  // could not find this client
+		} else if (profile.type !== 'Client') {
+            res.status(400).send("Bad Request: Not a client")
+        } else {  
+			const car = profile.cars.create({ 
+				carMake: req.body.carMake,  
+				carModel: req.body.carModel,
+                carYear: req.body.carYear
+			});
+			profile.cars.push(car)
+			try {
+				await profile.save()
+				res.send({
+					"car": car, 
+					"client": profile
+				})
+			} catch (error) {
+				log(error)
+				res.status(400).send('Bad Request')  // server error
+			}
+		}
+	} catch(error) {
+		log(error)
+		res.status(500).send('Internal Server Error')  // server error
+	}
+
+	
+
+})
+
+/// Route for getting information for one car of a client (subdocument)
+// GET /api/clients/id
+app.get('/api/clients/:id/:car_id', mongoChecker, async (req, res) => {
+	// Add code here
+	const id = req.params.id
+
+	const cid = req.params.car_id
+
+	// Good practise: Validate id immediately.
+	if (!ObjectID.isValid(id) || !ObjectID.isValid(cid)) {
+		res.status(404).send('Resource not found: Invalid id')  // if invalid id, definitely can't find resource, 404.
+		return;  // so that we don't run the rest of the handler.
+	}
+
+	try {
+		const profile = await Profile.findById(id)
+		if (!profile) {
+			res.status(404).send('Resource not found')  // could not find this profile
+		} else if (profile.type !== "Client") {
+            res.status(400).send("Bad Request: Not a client") //this profile is not for a client so no cars
+        } else {  
+            console.log(profile)
+			const car = profile.cars.id(cid)
+			if (!car) {
+				res.status(404).send('Resource not found')  // could not find this car
+			} else {
+				res.send(car)
+			}
+		}
+	} catch(error) {
+		log(error)
+		res.status(500).send('Internal Server Error')  // server error
+	}
+
+
+})
+
+/// Route for deleting a car from a client
+// Returned JSON should have the updated client database
+//   document from which the car was deleted, AND the car subdocument deleted:
+//   { "car": <car subdocument>, "client": <entire client document>}
+// DELETE /api/clients/<client_id>/<car_id>
+app.delete('/api/clients/:id/:car_id', mongoChecker, async (req, res) => {
+	// Add code here
+	const id = req.params.id
+
+	const cid = req.params.car_id
+
+	// Good practise: Validate id immediately.
+	if (!ObjectID.isValid(id) || !ObjectID.isValid(cid)) {
+		res.status(404).send('Resource not found: Invalid id')  // if invalid id, definitely can't find resource, 404.
+		return;  // so that we don't run the rest of the handler.
+	}
+
+	try {
+		const profile = await Profile.findById(id)
+		if (!profile) {
+			res.status(404).send('Resource not found')  // could not find this client
+		} else if (profile.type !== "Client") {
+            res.status(400).send("Bad Request: Not a client") //this profile is not for a client so no cars
+        } else { 
+            console.log(profile) 
+			const car = profile.cars.id(cid).remove() // not returning the car object for some reason
+			if (!car) {
+				res.status(404).send('Resource not found')  // could not find this car
+			} else {
+				try {
+					await profile.save()
+					res.send({
+						"car": car, 
+						"client": profile
+					})
+				} catch (error) {
+					log(error)
+					res.status(500).send('Internal Server Error')  // server error
+				}
+			}
+		}
+	} catch(error) {
+		log(error)
+		res.status(500).send('Internal Server Error')  // server error
+	}
+})
+
+/// a DELETE route to remove a profile by their id.
+/// Return JSON is the profile document that was deleted
+app.delete('/api/profiles/:id', mongoChecker, async (req, res) => {
+	const id = req.params.id
+
+	// Validate id
+	if (!ObjectID.isValid(id)) {
+		res.status(404).send('Resource not found') 
+		return;
+	}
+
+	// Delete a profile by their id
+	try {
+		const profile = await Profile.findByIdAndRemove(id)
+		if (!profile) {
+			res.status(404).send() // could not find this profile
+		} else {   
+			res.send(profile)
+		}
+	} catch(error) {
+		log(error)
+		res.status(500).send() // server error, could not delete.
+	}
 })
 
 /*************************************************/
