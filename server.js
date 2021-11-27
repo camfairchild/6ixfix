@@ -15,7 +15,7 @@ mongoose.set('bufferCommands', false);  // don't buffer db requests if the db se
 const { Profile } = require('./models/profiles')
 
 // to validate object IDs
-const { ObjectID } = require('mongodb')
+const { ObjectId } = require('mongodb')
 
 // body-parser: middleware for parsing HTTP JSON body into a usable object
 const bodyParser = require('body-parser'); 
@@ -125,7 +125,7 @@ app.get('/api/profiles/:id', mongoChecker, async (req, res) => {
 	const id = req.params.id
 
 	// Good practise: Validate id immediately.
-	if (!ObjectID.isValid(id)) {
+	if (!ObjectId.isValid(id)) {
 		res.status(404).send()  // if invalid id, definitely can't find resource, 404.
 		return;  // so that we don't run the rest of the handler.
 	}
@@ -198,7 +198,7 @@ app.post('/api/clients/:id', mongoChecker, async (req, res) => {
 	const id = req.params.id
 
 	// Good practise: Validate id immediately.
-	if (!ObjectID.isValid(id)) {
+	if (!ObjectId.isValid(id)) {
 		res.status(404).send()  // if invalid id, definitely can't find resource, 404.
 		return;  // so that we don't run the rest of the handler.
 	}
@@ -245,7 +245,7 @@ app.get('/api/clients/:id/:car_id', mongoChecker, async (req, res) => {
 	const cid = req.params.car_id
 
 	// Good practise: Validate id immediately.
-	if (!ObjectID.isValid(id) || !ObjectID.isValid(cid)) {
+	if (!ObjectId.isValid(id) || !ObjectId.isValid(cid)) {
 		res.status(404).send('Resource not found: Invalid id')  // if invalid id, definitely can't find resource, 404.
 		return;  // so that we don't run the rest of the handler.
 	}
@@ -257,7 +257,6 @@ app.get('/api/clients/:id/:car_id', mongoChecker, async (req, res) => {
 		} else if (profile.type !== "Client") {
             res.status(400).send("Bad Request: Not a client") //this profile is not for a client so no cars
         } else {  
-            console.log(profile)
 			const car = profile.cars.id(cid)
 			if (!car) {
 				res.status(404).send('Resource not found')  // could not find this car
@@ -285,7 +284,7 @@ app.delete('/api/clients/:id/:car_id', mongoChecker, async (req, res) => {
 	const cid = req.params.car_id
 
 	// Good practise: Validate id immediately.
-	if (!ObjectID.isValid(id) || !ObjectID.isValid(cid)) {
+	if (!ObjectId.isValid(id) || !ObjectId.isValid(cid)) {
 		res.status(404).send('Resource not found: Invalid id')  // if invalid id, definitely can't find resource, 404.
 		return;  // so that we don't run the rest of the handler.
 	}
@@ -298,7 +297,8 @@ app.delete('/api/clients/:id/:car_id', mongoChecker, async (req, res) => {
             res.status(400).send("Bad Request: Not a client") //this profile is not for a client so no cars
         } else { 
             console.log(profile) 
-			const car = profile.cars.id(cid).remove() // not returning the car object for some reason
+			const car = await profile.cars.id(cid).remove() // not returning the car object for some reason
+			console.log(car)
 			if (!car) {
 				res.status(404).send('Resource not found')  // could not find this car
 			} else {
@@ -326,7 +326,7 @@ app.delete('/api/profiles/:id', mongoChecker, async (req, res) => {
 	const id = req.params.id
 
 	// Validate id
-	if (!ObjectID.isValid(id)) {
+	if (!ObjectId.isValid(id)) {
 		res.status(404).send('Resource not found') 
 		return;
 	}
