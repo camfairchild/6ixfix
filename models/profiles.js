@@ -1,6 +1,6 @@
 /* Student mongoose model */
-const mongoose = require('mongoose')
-const validator = require('validator')
+import mongoose from 'mongoose'
+import validator from 'validator'
 
 const CarSchema = new mongoose.Schema({
     carMake: {
@@ -21,7 +21,9 @@ const CarSchema = new mongoose.Schema({
 
 const CarPictureSchema = new mongoose.Schema({
     picture: {
-        type: String,
+        mimetype: String,
+        size: Number,
+        data: Buffer
     },
     caption: {
         type: String,
@@ -29,7 +31,7 @@ const CarPictureSchema = new mongoose.Schema({
     }
 })
 
-const ProfileSchema = mongoose.Schema({
+const ProfileSchema = new mongoose.Schema({
 	fullName: {
 		type: String,
 		required: true,
@@ -133,4 +135,4 @@ const ProfileSchema = mongoose.Schema({
 })
 
 const Profile = mongoose.model('Profile', ProfileSchema);
-module.exports = { Profile }
+export default Profile;

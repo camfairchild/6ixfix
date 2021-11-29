@@ -3,10 +3,11 @@
   "version": "1.0.0",
   "description": "back-end server for 6ixFix app",
   "main": "server.js",
+  "type": "module",
   "scripts": {
     "setup": "yarn install && cd client && yarn install && cd ..",
-    "build-run": "cd client && yarn run build && cd .. && node server.js",
-    "start": "node server.js",
+    "build-run": "cd client && yarn run build && cd .. && nodemon server.js",
+    "start": "nodemon server.js",
     "heroku-postbuild": "cd client && yarn install && yarn run build",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -14,11 +15,15 @@
   "license": "ISC",
   "dependencies": {
     "bcryptjs": "^2.4.3",
-    "body-parser": "^1.19.0",
+    "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
     "express": "^4.17.1",
+    "express-fileupload": "^1.2.1",
     "express-session": "^1.17.2",
     "mongoose": "^6.0.13",
     "validator": "^13.7.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.15"
   }
 }
