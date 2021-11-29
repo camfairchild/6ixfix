@@ -18,6 +18,14 @@ Profile pt2: The profile page also allows users to update their vehicle informat
 Admin: The admin page allows admin users to view all users on the website and their corresponding profiles. The admin user is also able to ban users of their choice from the website. Currently, the admin page will require server calls to fully implement this functionality so hardcoded data has been used for Phase 1. They can also click browse to view all the users in the system.
 
 ## Third Party Libraries
-
-"email-validator": "^2.0.4"
-"lodash": "^4.17.21"
+From npm
+"email-validator": "^2.0.4",
+"lodash": "^4.17.21",
+"bcryptjs": "^2.4.3",
+"cookie-parser": "^1.4.6",
+"cors": "^2.8.5",
+"express": "^4.17.1",
+"express-fileupload": "^1.2.1",
+"express-session": "^1.17.2",
+"mongoose": "^6.0.13",
+"validator": "^13.7.0"
