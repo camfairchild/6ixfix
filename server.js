@@ -4,6 +4,8 @@ import path from 'path'
 import express from 'express'
 import cookieParser from 'cookie-parser'
 import fileUpload from 'express-fileupload'
+import session from 'express-session'
+import cors from 'cors'
 
 import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
@@ -22,9 +24,12 @@ const db = mongoose.connect(mongoURI, { useNewUrlParser: true, useUnifiedTopolog
 // import the mongoose models
 import Profile from './models/profiles.js'
 import Picture from './models/picture.js'
+import Message from './models/messages.js'
+import User from './models/users.js'
 import apiRouter from './routes/api.js'
 
 // express json: middleware for parsing HTTP JSON body into a usable object
+app.use(cors())
 app.use(express.json())
 app.use(cookieParser())
 app.use(express.urlencoded({ extended: false }));
@@ -32,6 +37,15 @@ app.use(fileUpload({
 	limits: { 
         fileSize: 2 * 1024 * 1024 * 1024 //2MB max file size
     },
+}))
+app.use(session({
+	secret: 'Quantum9-Brittle-Machinist',
+	resave: false,
+	saveUninitialized: true,
+	cookie: {
+		maxAge: 1000 * 60 * 60 * 24 * 7, // 1 week
+		secure: auto,
+	}
 }))
 
 /*** Helper functions below **********************************/
@@ -49,6 +63,11 @@ app.use('/api', apiRouter)
 /*** Webpage routes below **********************************/
 // Serve the build
 app.use(express.static(path.join(__dirname, "/client/build")));
+
+app.get('/logout',(req,res) => {
+    req.session.destroy();
+    res.redirect('/login');
+});
 
 // All routes other than above will go to index.html
 app.get("*", (req, res) => {

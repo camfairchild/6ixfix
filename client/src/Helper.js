@@ -1,6 +1,19 @@
 import React from "react";
 import { useLocation } from "react-router";
 import _ from 'lodash';
+import axios from "axios";
+
+let base_url;
+if (process.env.NODE_ENV === "development") {
+  base_url = "http://localhost:5000/";
+} else {
+  base_url = "https://app-6ixfix.herokuapp.com/";
+}
+
+const instance = axios.create({
+  baseURL: base_url,
+  withCredentials: true,
+})
 
 export async function getUser() {
   // grabs the current user from local storage
@@ -192,68 +205,16 @@ export function removeMessageListener(socket, listener) {
   document.removeEventListener("message", listener);
 }
 
-export function getMostRecentMessages(userName, token = null) {
-  // returns the most recent message for each contact the user has by userName
-  // token is a login token for authentication
-  userName = userName || "";
+export function getMostRecentMessages() {
+  // returns the most recent message for each contact the user has
   return new Promise((resolve, reject) => {
-    let mock = [];
-    if (userName.toLowerCase().includes("mechanic")) {
-      mock = {
-        client1: {
-          from: "client1",
-          to: userName,
-          message: "test message 3",
-          time_: new Date("2021-10-31T13:01:00+00:00"),
-        },
-        client2: {
-          from: userName,
-          to: "client2",
-          message: "test message 5",
-          time_: new Date("2021-10-29T16:35:19+00:00"),
-        },
-      };
-    } else {
-      mock = {
-        mech1: {
-          from: "mech1",
-          to: userName,
-          message: "test message 3",
-          time_: new Date("2021-10-31T13:01:00+00:00"),
-        },
-        mech2: {
-          from: userName,
-          to: "mech2",
-          message: "test message 5",
-          time_: new Date("2021-10-29T16:35:19+00:00"),
-        },
-        mech3: {
-          from: userName,
-          to: "mech3",
-          message: "test message 5",
-          time_: new Date("2021-10-29T16:35:19+00:00"),
-        },
-        mech4: {
-          from: userName,
-          to: "mech4",
-          message: "test message 5",
-          time_: new Date("2021-10-29T16:35:19+00:00"),
-        },
-        mech5: {
-          from: userName,
-          to: "mech5",
-          message: "test message 5",
-          time_: new Date("2021-10-29T16:35:19+00:00"),
-        },
-        mech6: {
-          from: userName,
-          to: "mech6",
-          message: "test message 19",
-          time_: new Date("2021-10-28T16:06:19+00:00"),
-        },
-      };
-    }
-    resolve(mock);
+    instance.get(`/messages/`).then((res) => {
+      if (res.status === 200) {
+        resolve(res.data);
+      } else {
+        reject(res.data);
+      }
+    });
   });
 }
 
@@ -409,16 +370,34 @@ export function formatTime(time_) {
   return result;
 }
 
-export function sendMessage(socket, message) {
-  // sends message over socket
+export async function sendMessage(message) {
   return new Promise((resolve, reject) => {
-    // TODO: send message over socket
-    const messageEvent = new CustomEvent("message", {
-      detail: message,
-    });
-    document.dispatchEvent(messageEvent);
-    console.log("message passed");
-    resolve(["200", message]);
+    if (!message) {
+      reject("No message to send");
+    }
+    const options = {
+      url: `/api/messages/`,
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json;charset=UTF-8'
+      },
+      data: {
+        message
+      }
+    };
+    
+    instance(options).then(res => {
+      if (res.status !== 200) {
+        return reject(res.data);
+      }
+
+      const messageEvent = new CustomEvent("message", {
+        detail: message,
+      });
+      document.dispatchEvent(messageEvent);
+      resolve(["200", message]);
+    })
   });
 }
 

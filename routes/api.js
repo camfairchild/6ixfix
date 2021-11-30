@@ -6,6 +6,7 @@ const log = console.log;
 
 import profilesRouter from './api/profiles.js';
 import clientsRouter from './api/clients.js';
+import messagesRouter from './api/messages.js';
 
 import mongoChecker from '../middleware/mongoose.js';
 
@@ -13,6 +14,7 @@ const Profile = mongoose.model('Profile');
 
 router.use('/profiles', profilesRouter);
 router.use('/clients', clientsRouter);
+router.use('/messages', messagesRouter);
 
 /// Route for getting all mechanic profile information.
 // GET /api/mechanics
