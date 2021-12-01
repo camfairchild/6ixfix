@@ -1,0 +1,24 @@
+.error-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: whitesmoke;
+    height: 100vh;
+}
+
+.error-code {
+    font-size: 8rem;
+    color: lightgray
+}
+
+.error-message {
+    font-size: 1.5rem;
+    color: darkgrey
+}
+
+.error-error {
+    background-color: grey;
+    color: white
+}
+

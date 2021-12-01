@@ -16,6 +16,8 @@ export default class ProfilePic extends React.Component {
             this.setState({
                 picture: profile?.picture || `${process.env.PUBLIC_URL}/images/defaultprofpic.png`
             })
+        }).catch((err) => {
+            console.log(err);
         })
     }
 
@@ -50,12 +52,12 @@ export default class ProfilePic extends React.Component {
     render() {
         return (
             <div className="profilePic-container" >
-                {this.props.editable ? <div><input id="file-input" type="file" name="file" className="input-profilePic" onChange={this.handleProfSelect} />
-                <div className="profilePic-bg" onClick={this.handleProfBgClick}/>
-                { this.state.selectedFile ?
-                <input className="submit-profilePic" value="Change Profile Picture" type="submit" onClick={this.handleProfUpdate}/> : null}
-                </div>: null}
+                {this.props.editable ? <div className="profilePic-upload"><input id="file-input" type="file" name="file" className="input-profilePic" onChange={this.handleProfSelect} />
+                <div className="profilePic-bg" onClick={this.handleProfBgClick}/></div> : null}
+                
                 <img src={this.state.picture} alt="profile" key={this.state.selectedFile} />
+                { this.props.editable && this.state.selectedFile ?
+                <input className="submit-profilePic" value="Change Profile Picture" type="submit" onClick={this.handleProfUpdate}/> : null}
             </div>
         )
     }

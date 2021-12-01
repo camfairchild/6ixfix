@@ -130,7 +130,7 @@
     align-self: center;
   }
 
-    .profilePic-container input {
+    .profilePic-container input[type="file"] {
       opacity: 0;
       
       position: absolute;
@@ -190,3 +190,7 @@
     width: 100%;
     resize:none;
   }
+
+.submit-profilePic {
+  border-radius: 0;
+}

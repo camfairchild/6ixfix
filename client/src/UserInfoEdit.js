@@ -8,13 +8,26 @@ export default class UserInfoEdit extends React.Component {
             const goodKeys = [
                 "location",
                 "fullName",
-                "serviceRequested",
-                "rate",
                 "bio",
-                "mechType"
             ]
-            const remove = Object.keys(this.props.profile || {})
-            this.state = _.omit(this.props.profile, _.difference(remove, goodKeys))
+
+            const goodMechKeys = [
+                "mechType",
+                "rate",
+            ]
+
+            const goodClientKeys = [
+                "serviceRequested",
+            ]
+
+            let remove = Object.keys(this.props.profile || {})
+            remove = _.difference(remove, goodKeys)
+            if (this.props.profile?.type === "mechanic") {
+                remove = _.difference(remove, goodMechKeys)
+            } else {
+                remove = _.difference(remove, goodClientKeys)
+            }
+            this.state = _.omit(this.props.profile, remove)
 
             this.handleInputChange = this.handleInputChange.bind(this);
         };

@@ -1,10 +1,12 @@
 import React from 'react';
 import './signup.css';
-import _ from 'lodash';
 
 import { Redirect } from 'react-router';
 import { validate as validateEmail } from 'email-validator';
 import { Link } from 'react-router-dom';
+import { ReactSession } from 'react-client-session';
+
+import { signup_ } from './Helper';
 
 export default class Signup extends React.Component {
     constructor(props) {
@@ -13,13 +15,15 @@ export default class Signup extends React.Component {
             userName: "",
             password: "",
             email: "",
+            confirmPassword: "",
             error: {
                 password: "",
                 username: "",
                 email: "",
                 confirm: ""
             },
-            type: "client"
+            type: "client",
+            redirect: null
         }
     }
 
@@ -43,14 +47,23 @@ export default class Signup extends React.Component {
         // 400 - passwords don't match
         // 200 - success
         // 500 - server error
-        return new Promise((resolve, reject) => {
-            if (!newProfile.password || !newProfile.userName || !newProfile.email) {
+        return new Promise(async (resolve, reject) => {
+            if (!newProfile.password || !newProfile.userName || !newProfile.email || !newProfile.role) {
                 reject({
                     status: '401',
                     message: 'Missing required fields'
                 });
             }
-            resolve(newProfile);
+            const { userName, password, email, confirmPassword, role: type } = newProfile
+            const result = await signup_(userName, password, confirmPassword, email, type)
+            if (result.status !== 200) {
+                reject({
+                    status: '400',
+                    message: 'Username or password is incorrect'
+                });
+            } else {
+                resolve(result.data.profile);
+            }
         })
     }
 
@@ -60,7 +73,8 @@ export default class Signup extends React.Component {
             role: this.state.role,
             userName: this.state.userName,
             password: this.state.password,
-            email: this.state.email
+            email: this.state.email,
+            confirmPassword: this.state.confirmPassword
         }
         
         if (!validateEmail(this.state.email)) {
@@ -103,12 +117,13 @@ export default class Signup extends React.Component {
 
         let error;
         this.callSignupAPI(newProfile)
-            .then((profile) => {
+            .then((result) => {
+                const user = result.data.user
                 redirect = {
-                    pathname: "/profile/" + profile.userName,
-                    // mock
-                    state: { profile: _.omit(profile, 'password'), loggedIn: newProfile }
+                    pathname: "/profile/" + user.userName,
                 }
+                ReactSession.set("username", user.userName);
+                ReactSession.set("userId", user._id)
                 this.setState({
                     redirect: redirect
                 });

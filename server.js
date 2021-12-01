@@ -6,6 +6,7 @@ import cookieParser from 'cookie-parser'
 import fileUpload from 'express-fileupload'
 import session from 'express-session'
 import cors from 'cors'
+const MongoStore = require("connect-mongo"); // to store session information on the database in production
 
 import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
@@ -24,9 +25,17 @@ const db = mongoose.connect(mongoURI, { useNewUrlParser: true, useUnifiedTopolog
 // import the mongoose models
 import Profile from './models/profiles.js'
 import Picture from './models/picture.js'
-import Message from './models/messages.js'
-import User from './models/users.js'
+import Message from './models/message.js'
+import User from './models/user.js'
 import apiRouter from './routes/api.js'
+import pictureRouter from './routes/picture.js'
+
+import cloudinary from 'cloudinary'
+cloudinary.config({
+    cloud_name: 'app-6ixfix',
+    api_key: '352848523658664',
+    api_secret: 'xrcl63fW0yEipRaXD9s-wlXcamk'
+});
 
 // express json: middleware for parsing HTTP JSON body into a usable object
 app.use(cors())
@@ -35,18 +44,29 @@ app.use(cookieParser())
 app.use(express.urlencoded({ extended: false }));
 app.use(fileUpload({
 	limits: { 
-        fileSize: 2 * 1024 * 1024 * 1024 //2MB max file size
+        fileSize: 10 * 1024 * 1024 * 1024 //10MB max file size
     },
+	useTempFiles : true,
+    tempFileDir : '/tmp/'
 }))
 app.use(session({
-	secret: 'Quantum9-Brittle-Machinist',
-	resave: false,
-	saveUninitialized: true,
-	cookie: {
-		maxAge: 1000 * 60 * 60 * 24 * 7, // 1 week
-		secure: auto,
-	}
-}))
+    secret: process.env.SESSION_SECRET || "secret", // make a SESSION_SECRET environment variable when deploying (for example, on heroku)
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+      expires: 60000,
+      httpOnly: true,
+    },
+    // store the sessions on the database in production
+    store:
+      env === "production"
+        ? MongoStore.create({
+            mongoUrl:
+              process.env.MONGODB_URI ||
+              "mongodb+srv://affan:csc309project@cluster0.hc477.mongodb.net/6ixFixAPI",
+          })
+        : null,
+  }))
 
 /*** Helper functions below **********************************/
 function isMongoError(error) { // checks for first error returned by promise rejection if Mongo database suddently disconnects
@@ -54,6 +74,7 @@ function isMongoError(error) { // checks for first error returned by promise rej
 }
 
 app.use('/api', apiRouter)
+app.use('/picture', pictureRouter)
 
 /*************************************************/
 
@@ -63,11 +84,6 @@ app.use('/api', apiRouter)
 /*** Webpage routes below **********************************/
 // Serve the build
 app.use(express.static(path.join(__dirname, "/client/build")));
-
-app.get('/logout',(req,res) => {
-    req.session.destroy();
-    res.redirect('/login');
-});
 
 // All routes other than above will go to index.html
 app.get("*", (req, res) => {

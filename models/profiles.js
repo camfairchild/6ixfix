@@ -34,9 +34,9 @@ const CarPictureSchema = new mongoose.Schema({
 const ProfileSchema = new mongoose.Schema({
 	fullName: {
 		type: String,
-		required: true,
 		minlength: 1,
-		trim: true
+		trim: true,
+        default: null
 	},
 	type: {
 		type: String,
@@ -52,18 +52,18 @@ const ProfileSchema = new mongoose.Schema({
     },
     location: {
         type: String,
-		required: true,
 		minlength: 1,
-		trim: true
+		trim: true,
+        default: null
     },
     picture: {
         type: String,
-        required: false,
         default: null
     },
     link: {
         type: String,
-        required: true
+        required: true,
+        default: null
     },
     email: {
 		type: String,
@@ -78,57 +78,48 @@ const ProfileSchema = new mongoose.Schema({
 	},
     bio: {
         type: String,
-        required: true,
-        trim: true
+        trim: true,
+        default: null
     },
     bannerImage: {
         type: String,
-        required: false,
         default: null
     },
     cars: {
         type: [CarSchema],
-        required: false,
         default: null
     },
     defaultCar: {
         type: mongoose.Schema.Types.ObjectId,
-        required: false,
         ref: 'CarSchema',
         default: null
     },
     serviceRequested: {
         type: String,
-        required: false,
         trim: true,
         minlength: 1,
         default: null
     },
     mechType: {
         type: String,
-        required: false,
         enum: ['Dealer', 'Private', null],
         default: null
     },
     certified: {
         type: Boolean,
-        required: false,
         default: null
     },
     rate: {
         type: String,
-        required: false,
         trim: true,
         default: null
     },
     numViews: {
         type: Number,
-        required: true,
         default: 0
     },
     carPics:  {
         type: [CarPictureSchema],
-        required: false,
         default: null
     }
 

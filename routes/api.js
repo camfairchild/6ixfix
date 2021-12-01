@@ -7,14 +7,21 @@ const log = console.log;
 import profilesRouter from './api/profiles.js';
 import clientsRouter from './api/clients.js';
 import messagesRouter from './api/messages.js';
+import authRouter from './api/auth.js';
 
 import mongoChecker from '../middleware/mongoose.js';
+import isLoggedIn from '../middleware/loggedin.js'
+
+import { upload_image } from '../api/picture.js'
 
 const Profile = mongoose.model('Profile');
+const User = mongoose.model('User');
 
 router.use('/profiles', profilesRouter);
 router.use('/clients', clientsRouter);
 router.use('/messages', messagesRouter);
+router.use('/auth', authRouter)
+
 
 /// Route for getting all mechanic profile information.
 // GET /api/mechanics
@@ -47,15 +54,24 @@ Request body expects:
 //   document that the picture was added to, AND the picture subdocument:
 //   { "picture": <picture subdocument>, "client": <entire client document>}
 // POST /clients/id
-router.post('/clientPictures/:id', mongoChecker, async (req, res) => {
+router.post('/clientPictures/', mongoChecker, isLoggedIn, async (req, res) => {
 	// Add code here
 
-	const id = req.params.id
+	const user_id = req.user._id
+	const id = (await Profile.findOne({ userName: req.user.userName }))?._id
 
 	// Good practise: Validate id immediately.
 	if (!mongoose.isValidObjectId(id)) {
-		res.status(404).json() // if invalid id, definitely can't find resource, 404.
+		res.status(404).json({
+			error: "Invalid Id"
+		}) // if invalid id, definitely can't find resource, 404.
 		return;  // so that we don't run the rest of the handler.
+	}
+
+	if (!req.files || !req.files.picture) {
+		res.status(400).json({
+			error: "Must include a picture to upload"
+		})
 	}
 
 	try {
@@ -64,18 +80,10 @@ router.post('/clientPictures/:id', mongoChecker, async (req, res) => {
 			res.status(404).json('Resource not found')  // could not find this client
 		} else if (profile.type !== 'Client') {
             res.status(400).json("Bad Request: Not a client")
-        } else if (!req.files) {
-            res.status(400).json("Bad Request: No files were uploaded")
         } else {  
-			const picture = profile.carPics.create({ 
-				picture: {
-                    data: req.files.picture.data,
-                    size: req.files.picture.size,
-                    mimetype: req.files.picture.mimetype
-                },
-				caption: req.body.caption,
-			});
-			profile.carPics.push(picture)
+			const picture = await upload_image(req.files.picture, req.body.caption)
+			
+			profile.carPics.push(picture._id)
 			try {
 				await profile.save()
 				res.json({
@@ -83,8 +91,7 @@ router.post('/clientPictures/:id', mongoChecker, async (req, res) => {
 					"client": profile
 				})
 			} catch (error) {
-				log(error)
-				res.status(400).json('Bad Request')  // server error
+				throw error
 			}
 		}
 	} catch(error) {
@@ -93,26 +100,30 @@ router.post('/clientPictures/:id', mongoChecker, async (req, res) => {
 	}
 })
 
-router.get('/picture/:id', mongoChecker, async (req, res) => {
-	const id = req.params.id
-	if (!mongoose.isValidObjectId(id)) {
-		res.status(404).json() // if invalid id, definitely can't find resource, 404.
-		return;  // so that we don't run the rest of the handler.
-	}
-
+router.get('/profile', mongoChecker, isLoggedIn, async (req, res) => {
 	try {
-		const pic = Picture.findById(id)
-		if (!pic) {
-			return res.status(404).json('Resource not found')  // could not find this client
-		} else {
-			res.set('Content-Type', pic.picture.mimetype)
-			res.end(pic.picture.data, 'binary')
-		}
-	} catch(error) {
-		log(error)
-		res.status(500).json('Internal Server Error')  // server error
-	}		
-	
+	const user = await User.findById(req.user);
+	const profile = await Profile.findOne({ userName: user.userName })
+	res.json(profile)
+	} catch (error) {
+		res.status(500).json({
+			message: 'Server error',
+			error
+		})
+	}
+})
+
+router.get('/user/:id', mongoChecker, isLoggedIn, async (req, res) => {
+	try {
+	const user = await User.findById(req.user);
+	const profile = await Profile.findOne({ userName: user.userName })
+	res.json(profile)
+	} catch (error) {
+		res.status(500).json({
+			message: 'Server error',
+			error
+		})
+	}
 })
 
 export default router;

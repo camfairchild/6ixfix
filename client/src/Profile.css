@@ -5,6 +5,8 @@
 .profilePic-container {
     border: black solid 2px;
     overflow: hidden;
+    display: flex;
+    flex-direction: column;
 }
 
 .profile-container {
@@ -156,4 +158,8 @@
     font-size: larger;
     margin-bottom: 0.5rem;
     align-self: center;
+}
+
+.profilePic-upload {
+    
 }

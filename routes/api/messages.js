@@ -2,7 +2,7 @@ import express from 'express';
 import mongoose from 'mongoose';
 const router = express.Router();
 
-import mongoChecker from '../../middleware/mongoose';
+import mongoChecker from '../../middleware/mongoose.js';
 
 const Message = mongoose.model('Message');
 const User = mongoose.model('User');

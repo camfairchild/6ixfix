@@ -4,6 +4,7 @@ const router = new Router();
 const log = console.log
 
 import mongoChecker from '../../middleware/mongoose.js';
+import isLoggedIn from '../../middleware/loggedin.js';
 import mongoose from 'mongoose';
 const Profile = mongoose.model('Profile')
 const Picture = mongoose.model('Picture')
@@ -103,30 +104,31 @@ router.get('/', mongoChecker, async (req, res) => {
 })
 
 
-/// Route for getting information for one profile.
-// GET /api/profiles/id
-router.get('/:id', mongoChecker, async (req, res) => {
-	// Add code here
+/// Route for getting information for one profile by userName.
+// GET /api/profiles/:userName
+router.get('/:userName', mongoChecker, isLoggedIn, async (req, res) => {
+	const { userName } = req.params
 
-	const id = req.params.id
-
-	// Good practise: Validate id immediately.
-	if (!mongoose.isValidObjectId(id)) {
-		res.status(404).send()  // if invalid id, definitely can't find resource, 404.
-		return;  // so that we don't run the rest of the handler.
+	if (!userName) {
+		return res.status(400).json({
+			error: 'Missing userName param'
+		})
 	}
-
 	// If id valid, findById
 	try {
-		const profile = await Profile.findById(id)
+		const profile = await Profile.findOne({ userName })
 		if (!profile) {
-			res.status(404).send('Resource not found')  // could not find this restaurant
+			res.status(404).json({
+				error: 'Resource not found'
+			})
 		} else {  
-			res.send(profile)
+			res.json(profile)
 		}
 	} catch(error) {
 		log(error)
-		res.status(500).send('Internal Server Error')  // server error
+		res.status(500).json({
+			error: 'Internal Server Error'
+		})  // server error
 	}
 
 })

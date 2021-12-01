@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import Header from './Header';
+import Error from './Error';
 
 import { useLocation, useParams, useHistory } from 'react-router';
 
 import './Profile.css'
 import ProfilePic from './ProfilePic';
-import { getUser, getProfileByuserName } from './Helper';
+import { getUser, getProfileByuserName, updateProfile, uploadImage, useQuery } from './Helper';
 import UserVehicleInfo from './userVehicleInfo';
 import UserInfoEdit from './UserInfoEdit';
 
@@ -19,19 +20,44 @@ export default function Profile(props) {
     const [editUserInfo, setEditUserInfo] = useState(false);
 
     const params = useParams();
-    const userName = params['userName'] || null;
+    let userName = params['userName'] || null;
+
+    const query = useQuery()
+    const err_ = query.get('e')
 
     const history = useHistory();
 
     useEffect(() => {
-        getUser().then((user) => {
-            getProfileByuserName(userName).then((profile) => {
-                setUser(user)
-                setLoggedIn(user !== null)
+        async function fetchData() {
+            try {
+                const user_ = await getUser()
+                if (!userName && user_) {
+                        userName = user_.userName
+                }
+                let profile;
+                try {
+                    profile = await getProfileByuserName(userName)
+                } catch (error) {
+                    return console.log(error)
+                }
+                setUser(user_)
+                setLoggedIn(user_ !== null)
                 setProfile(profile)
-                setisUser(user?.userName === profile.userName)
-            })
-        })
+                console.log(user_?.userName, profile?.userName)
+                setisUser(user_?.userName === profile.userName)
+            } catch (err) {
+                if (err.code === 404) {
+                    return history.push(`/profile/${userName || ""}?e=404`)
+                } else {
+                    return history.push(`/profile/${userName || ""}?e=500`, {error: err})
+                }
+            }
+        }
+
+        if (!err_) {
+            // no error
+            fetchData()
+        }  
     }, [])
 
     const GoToMessages = () => {
@@ -51,29 +77,28 @@ export default function Profile(props) {
         callUpdateProfile(profile)
     }
 
-    const callUpdateProfile = (newProfile) => {
+    const callUpdateProfile = async (newProfile) => {
         // make api call to update profile
+        try {
+            updateProfile(newProfile)
+        } catch(error) {
+            console.log(error)
+        }
     }
 
-    const addToGallery = () => {
+    const addToGallery = async () => {
         if (!newImage) {
             return 
         }
-        setProfile({
-            ...profile,
-            carPics: [...profile.carPics, {
-                picture: newImage
-            }]
-        })
-        callUpdateProfile(profile)
+        const result = await uploadImage(newImage)
+        setProfile(result.client)
         setNewImage(null)
     }
 
     const addImageChange = (e) => {
         e.preventDefault()
         const file = e.target.files[0]
-        const fileURL = URL.createObjectURL(file);
-        setNewImage(fileURL)
+        setNewImage(file)
     }
 
     const EditUserInfo = (e) => {
@@ -95,7 +120,7 @@ export default function Profile(props) {
 
         <div className="profilePage">
             <Header page="profile" />
-
+            { err_ ? <Error code={err_} origin="profile" error={history.location.state?.error}/> :
             <div className="profile-container">
                 <div className="profile-views">Profile Views: {profile?.numViews || 0}</div>
                 <div className="profile-banner">
@@ -156,13 +181,13 @@ export default function Profile(props) {
                             {profile?.carPics?.map((image, index) => {
                                 return (
                                     <div className="profile-gallery-item" key={index}>
-                                        <img src={image.picture} alt="gallery image" />
+                                        <img src={image.url} alt="gallery" />
                                         <div className="profile-gallery-caption">{image.caption}</div>
                                     </div>)
                             })}
                         </div>
                     </div>
-            </div>
+            </div> }
         </div>
     );
 
