@@ -19,13 +19,16 @@ Admin: The admin page allows admin users to view all users on the website and th
 
 ## Third Party Libraries
 From npm
-"email-validator": "^2.0.4",
-"lodash": "^4.17.21",
-"bcryptjs": "^2.4.3",
+"bcrypt": "^5.0.1",
+"cloudinary": "^1.27.1",
 "cookie-parser": "^1.4.6",
 "cors": "^2.8.5",
+"cross-env": "^7.0.3",
+"dotenv": "^10.0.0",
+"env-cmd": "^10.1.0",
 "express": "^4.17.1",
 "express-fileupload": "^1.2.1",
 "express-session": "^1.17.2",
 "mongoose": "^6.0.13",
+"nodemon": "^2.0.15",
 "validator": "^13.7.0"
