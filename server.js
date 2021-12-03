@@ -6,7 +6,7 @@ import cookieParser from 'cookie-parser'
 import fileUpload from 'express-fileupload'
 import session from 'express-session'
 import cors from 'cors'
-const MongoStore = require("connect-mongo"); // to store session information on the database in production
+import MongoStore from "connect-mongo"; // to store session information on the database in production
 
 import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
