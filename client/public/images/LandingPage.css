@@ -1,0 +1,56 @@
+.main-container {
+    display: inline-flex;
+}
+
+.secondary-container {
+    margin-top: 100px;
+    display: flex;
+    justify-content: space-evenly;
+}
+
+#landing-page {
+    margin-top: 75px;
+    margin-left: 80px;   
+    width: 800px;
+    height: 550px;
+}
+
+#pic {
+    width: 150px;
+    height: 150px;
+}
+
+.main-content {
+    margin-top: 200px;
+    margin-left: 200px;
+    line-height: normal;
+}
+
+.secondary-content {
+    margin-top: 50px;
+    line-height: normal;
+}
+
+.element{
+    display: block;
+    align-items: center;
+    text-align: center;
+}
+
+.main-text {
+    font-family: sans-serif;
+    font-size: 58px;
+    font-weight: 700;
+}
+
+.secondary-text {
+    font-family: sans-serif;
+    font-size: 24px;
+    font-weight: 200;
+}
+
+.tertiary-text {
+    font-family: sans-serif;
+    font-size: 18px;
+    font-weight: 200;
+}

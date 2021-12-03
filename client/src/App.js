@@ -10,6 +10,7 @@ import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import Profile from './Profile';
 import MakePost from './MakePost';
 import Messaging from './messaging/Messaging';
+import LandingPage from './LandingPage';
 import { Dashboard } from './Dashboard/Dashboard';
 import { ReactSession } from 'react-client-session';
 export default class App extends React.Component {
@@ -20,7 +21,7 @@ export default class App extends React.Component {
         return (
             <Router>
                 <Switch>    
-                    <Route exact path='/' component={Home}/>
+                    <Route exact path='/' component={LandingPage}/>
                     <Route exact path='/search' component={Search}/>
                     <Route exact path='/help' component={Help} />
                     <Route exact path='/about' component={About} />
