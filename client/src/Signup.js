@@ -56,6 +56,7 @@ export default class Signup extends React.Component {
             }
             const { userName, password, email, confirmPassword, role: type } = newProfile
             const result = await signup_(userName, password, confirmPassword, email, type)
+            console.log(result)
             if (result.status !== 200) {
                 reject({
                     status: '400',
@@ -110,21 +111,16 @@ export default class Signup extends React.Component {
         // sends POST to API with new signup details
         // recieves http status and profile
 
-                
-        let redirect = {
-            pathname: "/"
-        };
-
         let error;
         this.callSignupAPI(newProfile)
             .then((result) => {
                 const user = result.data.user
-                redirect = {
+                let redirect = {
                     pathname: "/profile/" + user.userName,
                 }
                 ReactSession.set("username", user.userName);
                 ReactSession.set("userId", user._id)
-                console.log(redirect)
+                console.log("redirect", redirect)
                 this.setState({
                     redirect: redirect
                 });

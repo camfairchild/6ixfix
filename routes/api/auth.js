@@ -66,7 +66,7 @@ router.post('/signup', async (req, res) => {
         ]})
         if (user > 0) {
             return res.status(400).json({
-                error: 'Username is taken! Please provide a different userName'
+                error: 'Username or email is taken! Please provide a different userName'
             })
         }
         const newUser = new User({
@@ -83,9 +83,10 @@ router.post('/signup', async (req, res) => {
         })
 
         req.session.user = newUser._id;
-
+        const returnUser = _.omit(newUser, ['password'])
+        console.log(returnUser)
         return res.json({
-            user: _.omit(newUser, ['password']),
+            user: returnUser,
             message: 'Account created'
         })
     } catch (error) {
