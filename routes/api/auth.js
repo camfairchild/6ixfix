@@ -4,6 +4,7 @@ import bcrypt from "bcrypt";
 const User = mongoose.model("User");
 const Profile = mongoose.model('Profile')
 import { Router } from 'express';
+import _ from 'lodash';
 
 const router = new Router();
 
