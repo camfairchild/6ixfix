@@ -83,10 +83,9 @@ router.post('/signup', async (req, res) => {
         })
 
         req.session.user = newUser._id;
-        const returnUser = _.omit(newUser, ['password'])
-        console.log(returnUser)
+        delete newUser.password // delete password from response
         return res.json({
-            user: returnUser,
+            user: newUser,
             message: 'Account created'
         })
     } catch (error) {
