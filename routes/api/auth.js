@@ -85,7 +85,7 @@ router.post('/signup', async (req, res) => {
         req.session.user = newUser._id;
 
         return res.json({
-            user: _.omit(newUser, 'password'),
+            user: _.omit(newUser, ['password']),
             message: 'Account created'
         })
     } catch (error) {
