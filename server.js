@@ -59,7 +59,7 @@ app.use(session({
     },
     // store the sessions on the database in production
     store:
-      env === "production"
+      process.env.NODE_ENV === "production"
         ? MongoStore.create({
             mongoUrl:
               process.env.MONGODB_URI ||
