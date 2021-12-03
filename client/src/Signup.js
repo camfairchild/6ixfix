@@ -58,11 +58,13 @@ export default class Signup extends React.Component {
             const result = await signup_(userName, password, confirmPassword, email, type)
             console.log(result)
             if (result.status !== 200) {
+                console.log('failure')
                 reject({
                     status: '400',
                     message: 'Username or password is incorrect'
                 });
             } else {
+                console.log('success')
                 resolve(result.data.profile);
             }
         })
