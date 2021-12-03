@@ -1,5 +1,10 @@
 # team46 - 6ixFix
 
+## heroku app
+
+[https://app-6ixfix.herokuapp.com/](https://app-6ixfix.herokuapp.com/)
+## Description
+
 The help page includes a contact form which will send the inputted information (as well as the user info if they are logged in) as an email to the site admins after implementation in the next phase.
 
 Settings; The settings page allows any user to modify their personal information, location, payment information and features of the website itself such as the theme they want to be displayed. Currently, the settings a user changes are not permanently saved as this will require a server call. We instead display mock data for Phase 1. 
