@@ -124,6 +124,7 @@ export default class Signup extends React.Component {
                 }
                 ReactSession.set("username", user.userName);
                 ReactSession.set("userId", user._id)
+                console.log(redirect)
                 this.setState({
                     redirect: redirect
                 });
