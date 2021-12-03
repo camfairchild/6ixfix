@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { getProfileByuserName } from './Helper';
+import { getProfileByuserName, uploadProfilePic } from './Helper';
 
 export default class ProfilePic extends React.Component {
     constructor(props) {
@@ -35,6 +35,7 @@ export default class ProfilePic extends React.Component {
     changeProfilePic = (file) => {
         // PUT request to update profile picture
         this.setState({selectedFile: null })
+        uploadProfilePic(file)
     } 
 
     handleProfSelect = (e) => {
@@ -45,7 +46,7 @@ export default class ProfilePic extends React.Component {
         console.log(fileUrl)
         this.setState({ 
             picture: fileUrl,
-            selectedFile: fileUrl
+            selectedFile: file
         })
     }
 

@@ -114,13 +114,13 @@ export default class Signup extends React.Component {
         let error;
         this.callSignupAPI(newProfile)
             .then((result) => {
-                const user = result.data.user
+                const user = result.data.profile
                 let redirect = {
                     pathname: "/profile/" + user.userName,
                 }
-                ReactSession.set("username", user.userName);
-                ReactSession.set("userId", user._id)
                 console.log("redirect", redirect)
+                ReactSession.set("username", user.userName);
+                ReactSession.set("userId", result.data.user_id)
                 this.setState({
                     redirect: redirect
                 });

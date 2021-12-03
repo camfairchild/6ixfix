@@ -329,6 +329,23 @@ export async function uploadImage(image, caption) {
   }
 }
 
+
+export async function uploadProfilePic(image) {
+  try {
+    const formData = new FormData();
+    formData.append("picture", image)
+    const response = await instance.post(`api/profilePic/`, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    })
+    console.log(response)
+    return response.data
+  } catch (error) {
+    console.error(error)
+  }
+}
+
 export async function login_(userName, password) {
   const result = await instance.post('api/auth/login/', {
     userName, password

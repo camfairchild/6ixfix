@@ -100,6 +100,52 @@ router.post('/clientPictures/', mongoChecker, isLoggedIn, async (req, res) => {
 	}
 })
 
+router.post('/profilePic/', mongoChecker, isLoggedIn, async (req, res) => {
+	// Add code here
+
+	const user_id = req.user._id
+	const id = (await Profile.findOne({ userName: req.user.userName }))?._id
+
+	// Good practise: Validate id immediately.
+	if (!mongoose.isValidObjectId(id)) {
+		res.status(404).json({
+			error: "Invalid Id"
+		}) // if invalid id, definitely can't find resource, 404.
+		return;  // so that we don't run the rest of the handler.
+	}
+
+	if (!req.files || !req.files.picture) {
+		res.status(400).json({
+			error: "Must include a picture to upload"
+		})
+	}
+
+	try {
+		const profile = await Profile.findById(id)
+		if (!profile) {
+			res.status(404).json('Resource not found')  // could not find this client
+		} else if (profile.type !== 'Client') {
+            res.status(400).json("Bad Request: Not a client")
+        } else {  
+			const picture = await upload_image(req.files.picture, '')
+			
+			profile.picture = '/picture/' + picture._id
+			try {
+				await profile.save()
+				res.json({
+					"picture": picture, 
+					"client": profile
+				})
+			} catch (error) {
+				throw error
+			}
+		}
+	} catch(error) {
+		log(error)
+		res.status(500).json('Internal Server Error')  // server error
+	}
+})
+
 router.get('/profile', mongoChecker, isLoggedIn, async (req, res) => {
 	try {
 	const user = await User.findById(req.user);

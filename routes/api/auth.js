@@ -75,7 +75,7 @@ router.post('/signup', async (req, res) => {
             email
         })
         await newUser.save()
-        await Profile.create({
+        const profile = await Profile.create({
             userName,
             email,
             type,
@@ -85,7 +85,8 @@ router.post('/signup', async (req, res) => {
         req.session.user = newUser._id;
         delete newUser.password // delete password from response
         return res.json({
-            user: newUser,
+            user_id: newUser._id,
+            user: profile,
             message: 'Account created'
         })
     } catch (error) {
