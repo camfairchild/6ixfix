@@ -15,7 +15,7 @@ router.get('/', mongoChecker, isLoggedIn, async (req, res) => {
     try {
     const user = await User.findById(user_id).lean()
     const profile = await Profile.findOne({ userName: user.userName }).lean()
-    const isAdmin = (profile.type === 'Admin')
+    const isAdmin = (profile.userType === 'Admin')
     
     } catch (error) {
       console.log(error)
