@@ -10,7 +10,8 @@ import isLoggedIn from '../../middleware/loggedin.js'
 const Profile = mongoose.model('Profile');
 const User = mongoose.model('User');
 
-router.get('/', mongoChecker, isLoggedIn, async (req, res) => {
+router.use(isLoggedIn) // checks session first
+router.get('/', mongoChecker, async (req, res) => {
     const user_id = req.user
     try {
     const user = await User.findById(user_id).lean()
