@@ -19,7 +19,7 @@ router.post('/', mongoChecker, async (req, res) => {
 	let bannerImage;
 	let picture;
 
-	if (req.files.bannerImage) {
+	if (req.files?.bannerImage) {
 		bannerImage = new Picture({
 			picture: {
 				data: req.files.bannerImage.data,
@@ -27,7 +27,7 @@ router.post('/', mongoChecker, async (req, res) => {
 			},
 		})
 	}
-	if (req.files.picture) {
+	if (req.files?.picture) {
 		picture = new Picture({
 			picture: {
 				data: req.files.picture.data,
@@ -38,7 +38,7 @@ router.post('/', mongoChecker, async (req, res) => {
 	// Create a new Profile using the Profile mongoose model
 	const profile = new Profile({
 		fullName: req.body.fullName,
-        userType: req.body.type,
+        userType: req.body.userType,
         userName: req.body.userName,
         location: req.body.location,
         picture: picture,

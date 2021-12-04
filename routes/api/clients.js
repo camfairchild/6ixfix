@@ -11,10 +11,10 @@ import mongoChecker from '../../middleware/mongoose.js';
 // GET /api/clients
 router.get('/', mongoChecker, async (req, res) => {
 
-	// Get the restaurants
+	// Get all clients
 	try {
 		const profiles = await Profile.find(
-            {type: "Client"}
+            {userType: "Client"}
         )
 		res.send(profiles) 
 	} catch(error) {
@@ -52,7 +52,7 @@ router.post('/:id', mongoChecker, async (req, res) => {
 		const profile = await Profile.findById(id)
 		if (!profile) {
 			res.status(404).send('Resource not found')  // could not find this client
-		} else if (profile.type !== 'Client') {
+		} else if (profile.userType !== 'Client') {
             res.status(400).send("Bad Request: Not a client")
         } else {  
 			const car = profile.cars.create({ 
@@ -96,7 +96,7 @@ router.get('/:id/:car_id', mongoChecker, async (req, res) => {
 		const profile = await Profile.findById(id)
 		if (!profile) {
 			res.status(404).send('Resource not found')  // could not find this profile
-		} else if (profile.type !== "Client") {
+		} else if (profile.userType !== "Client") {
             res.status(400).send("Bad Request: Not a client") //this profile is not for a client so no cars
         } else {  
 			const car = profile.cars.id(cid)
@@ -198,7 +198,7 @@ router.patch('/:id/:car_id', mongoChecker, async (req, res) => {
 		const profile = await Profile.findById(id)
 		if (!profile) {
 			res.status(404).send('Resource not found')  // could not find this client
-		} else if (profile.type !== "Client") {
+		} else if (profile.userType !== "Client") {
             res.status(400).send("Bad Request: Not a client") //this profile is not for a client so no cars
         } else {  
 			const car = profile.cars.id(cid)
@@ -255,7 +255,7 @@ router.patch('/pictures/:id/:pict_id', mongoChecker, async (req, res) => {
 		const profile = await Profile.findById(id)
 		if (!profile) {
 			res.status(404).send('Resource not found')  // could not find this client
-		} else if (profile.type !== "Client") {
+		} else if (profile.userType !== "Client") {
             res.status(400).send("Bad Request: Not a client") //this profile is not for a client so no cars
         } else {  
 			const picture = profile.carPics.id(pid)

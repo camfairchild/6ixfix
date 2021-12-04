@@ -30,7 +30,7 @@ router.get('/mechanics', mongoChecker, async (req, res) => {
 	// Get the restaurants
 	try {
 		const profiles = await Profile.find(
-            {type: "Mechanic"}
+            {userType: "Mechanic"}
         )
 		res.send(profiles) 
 	} catch(error) {

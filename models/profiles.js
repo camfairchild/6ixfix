@@ -38,7 +38,7 @@ const ProfileSchema = new mongoose.Schema({
 		trim: true,
         default: null
 	},
-	type: {
+	userType: {
 		type: String,
 		required: true,
         enum: ['Client', 'Mechanic', 'Admin'],
