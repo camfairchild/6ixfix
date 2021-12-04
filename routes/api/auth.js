@@ -46,13 +46,16 @@ router.post('/signup', async (req, res) => {
         return res.status(400).json({
             error: 'Please provide a userName, password, email, and type'
         })
-    } else if (password.length < 8) {
-        return res.status(400).json({
-            error: 'Password length must be at least 8 characters long'
-        })
     } else if (password !== confirmPassword) {
         return res.status(400).json({
             error: 'Password must match password confirmation'
+        })
+    }
+    
+    // don't check for dev environment
+    if (process.env.NODE_ENV === "production" && password.length < 8) {
+        return res.status(400).json({
+            error: 'Password length must be at least 8 characters long'
         })
     }
     try {
