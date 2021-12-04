@@ -8,6 +8,7 @@ import profilesRouter from './api/profiles.js';
 import clientsRouter from './api/clients.js';
 import messagesRouter from './api/messages.js';
 import authRouter from './api/auth.js';
+import adminRouter from './api/admin.js';
 
 import mongoChecker from '../middleware/mongoose.js';
 import isLoggedIn from '../middleware/loggedin.js'
@@ -21,6 +22,7 @@ router.use('/profiles', profilesRouter);
 router.use('/clients', clientsRouter);
 router.use('/messages', messagesRouter);
 router.use('/auth', authRouter)
+router.use('/admin', adminRouter);
 
 
 /// Route for getting all mechanic profile information.
