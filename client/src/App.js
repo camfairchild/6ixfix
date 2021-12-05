@@ -10,10 +10,8 @@ import Profile from './profile/Profile';
 import Messaging from './messaging/Messaging';
 import LandingPage from './LandingPage';
 import { Dashboard } from './Dashboard/Dashboard';
-import ReactSession from 'react-client-session';
 export default class App extends React.Component {
     render() {
-        ReactSession.setStoreType("sessionStorage");
         console.log(`Running in env: ${process.env.REACT_APP_ENV}`)
         return (
             <Router>
@@ -34,10 +32,8 @@ export default class App extends React.Component {
                         <Home page='login'/>
                     </Route>
                     <Route exact path='/messages' component={Messaging} />
-                    {/* <Route>
-                        <Home />
-                    </Route> */}
-                    <Route path="/admin" exact component={Dashboard}/>
+                    {/* Optional argument here*/}
+                    <Route path="/admin/:view?" component={Dashboard}/>
                 </Switch>
             </Router>
         )

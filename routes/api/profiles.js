@@ -106,7 +106,7 @@ router.get('/', mongoChecker, async (req, res) => {
 
 /// Route for getting information for one profile by userName.
 // GET /api/profiles/:userName
-router.get('/:userName', mongoChecker, isLoggedIn, async (req, res) => {
+router.get('/:userName', mongoChecker, async (req, res) => {
 	const { userName } = req.params
 
 	if (!userName) {
@@ -114,7 +114,7 @@ router.get('/:userName', mongoChecker, isLoggedIn, async (req, res) => {
 			error: 'Missing userName param'
 		})
 	}
-	// If id valid, findById
+	
 	try {
 		const profile = await Profile.findOne({ userName })
 		if (!profile) {
@@ -135,7 +135,7 @@ router.get('/:userName', mongoChecker, isLoggedIn, async (req, res) => {
 
 /// a DELETE route to remove a profile by their id.
 /// Return JSON is the profile document that was deleted
-router.delete('/:id', mongoChecker, async (req, res) => {
+router.delete('/:id', mongoChecker, isLoggedIn, async (req, res) => {
 	const id = req.params.id
 
 	// Validate id
@@ -146,6 +146,18 @@ router.delete('/:id', mongoChecker, async (req, res) => {
 
 	// Delete a profile by their id
 	try {
+		const loggedInUser = await User.findOne({ _id: req.user })
+		if (loggedInUser.userName !== req.params.userName) {
+			// check if admin
+			const loggedInProfile = await Profile.findOne({ userName: loggedInUser.userName })
+			if (loggedInProfile.userType !== 'Admin') {
+				// not admin or deleted user
+				return res.status(403).json({
+					error: 'Forbidden'
+				})
+			}
+		}
+
 		const profile = await Profile.findByIdAndRemove(id)
 		if (!profile) {
 			res.status(404).send() // could not find this profile

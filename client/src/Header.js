@@ -1,21 +1,14 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import Logo from './Logo';
 import NavButton from './NavButton';
 import SearchBar from './SearchBar';
 import LoginButton from './LoginButton'
 import LogoutButton from './LogoutButton'
-import { getUser } from './Helper'
+import { useSessionStorage } from './useSessionStorage';
 
 export default function Header() {
-    const [user, setUser] = useState(null)
-
-    useEffect(() => {
-        // get user on load
-        getUser().then(user => {
-            setUser(user)
-        })
-    }, [])
-
+    const [user, setUser] = useSessionStorage('user', null);
+    console.log("user", user);
     return (
     <div className="header">
         <ul>

@@ -1,6 +1,5 @@
 import React from 'react';
 import { uid } from 'react-uid';
-import { getUser } from '../Helper';
 import {DELETE_ICON, USER_ICON, LOCATION_ICON, CAR_ICON, SERVICE_ICON, EMAIL_ICON, VIEWS_ICON } from "../Icons/icons";
 import { Link } from 'react-router-dom';
 

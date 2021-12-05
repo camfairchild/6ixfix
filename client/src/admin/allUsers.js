@@ -3,7 +3,7 @@ import { uid } from 'react-uid';
 import {DELETE_ICON, USER_ICON, LOCATION_ICON, EMAIL_ICON } from "../Icons/icons";
 import {Link} from "react-router-dom";
 
-import { getUser, getAllProfiles, deleteUser } from '../Helper';
+import { getAllProfiles, deleteUser } from '../Helper';
 
 export default class AllUsers extends React.Component {
     constructor(props) {
@@ -69,10 +69,6 @@ export default class AllUsers extends React.Component {
         this.banUser = this.banUser.bind(this);
     }
     async componentDidMount() {
-        const user = await getUser();
-        if (user.userType !== 'Admin') {
-            this.props.history.push('/');
-        }
         const list = await getAllProfiles();
         console.log(list)
         const filteredList = list.filter((user) => {

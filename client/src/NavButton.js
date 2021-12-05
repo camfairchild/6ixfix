@@ -4,7 +4,7 @@ export default class NavButton extends React.Component {
     render() {
         return(
             <div className="navbutton">
-                <a href={this.props.href}>{this.props.children}</a>
+                <a href={this.props.href} onClick={this.props.onClick}>{this.props.children}</a>
             </div>
         );
     }

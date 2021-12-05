@@ -1,7 +1,6 @@
 import React from "react";
 import { useLocation } from "react-router";
 import axios from "axios";
-import ReactSession from 'react-client-session';
 
 let base_url;
 if (process.env.REACT_APP_ENV === "development") {
@@ -14,22 +13,6 @@ const instance = axios.create({
   baseURL: base_url,
   withCredentials: true,
 })
-
-export async function getUser() {
-  // grabs the current user from local storage
-  return new Promise(async (resolve, reject) => {
-    let user = {
-      userName: ReactSession.get("username"),
-      userId: ReactSession.get("userId"),
-      userType: ReactSession.get("userType"),
-    }
-    if (!user) {
-      reject(null)
-    } else {
-      resolve(user)
-    }
-  });
-}
 
 export function getUserByUserName(userName) {
   // makes a call to the server to get the profile by userName
@@ -351,13 +334,6 @@ export async function login_(userName, password) {
   const result = await instance.post('api/auth/login/', {
     userName, password
   })
-  if (result.status === 200) {
-    const { userName, _id } = result.data.user
-    ReactSession.set('userName', userName)
-    ReactSession.set('_id', _id)
-    const profile = await getProfileByuserName(userName)
-    ReactSession.set('userType', profile.userType)
-  }
   return result
 }
 
@@ -365,20 +341,11 @@ export async function signup_(userName, password, confirmPassword, email, type) 
   const result = await instance.post('api/auth/signup/', {
     userName, password, confirmPassword, email, type
   })
-  if (result.status === 200) {
-    const { user, user_id } = result.data
-    ReactSession.set('userName', user.userName)
-    ReactSession.set('_id', user_id)
-    ReactSession.set('userType', user.userType)
-  }
   return result
 }
 
 export async function logout() {
-  const result = await instance.post('api/auth/logout/')
-  if (result.status === 200) {
-    ReactSession.clear()
-  }
+  const result = await instance.put('api/auth/logout/')
   return result
 }
 
@@ -393,7 +360,7 @@ export async function getAllProfiles() {
 }
 
 export async function deleteUser(id) {
-  const result = await instance.delete(`api/profiles/${id}`)
+  const result = await instance.delete(`api/admin/profiles/${id}`)
   if (result.status === 200) {
     return result.data
   } else {

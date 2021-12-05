@@ -1,11 +1,15 @@
 import React from 'react';
 
+import { useSessionStorage } from './useSessionStorage'
+
 import { useLocation, Redirect } from 'react-router';
-import ReactSession from 'react-client-session';
 import { Link } from 'react-router-dom';
 import { login_ } from './Helper';
 
+
 export default function Login(props) {
+  const [user, setUser] = useSessionStorage('user', null);
+
   const [userName, setUserName] = React.useState('');
   const [password, setPassword] = React.useState('');
   const [error, setError] = React.useState({
@@ -13,24 +17,6 @@ export default function Login(props) {
     password: null
   });
   const [redirect, setRedirect] = React.useState(null);
-
-  const location = useLocation();
-  const profile = location.state?.profile || null;
-  const loggedIn = location.state?.loggedIn || null;
-
-  if (loggedIn) { // a user is logged in already
-    // redirect to /profile
-    let redirect = {
-      pathname: loggedIn?.profile?.link,
-      state: {
-        profile,
-        loggedIn
-      }
-    };
-    return (
-      <Redirect to={redirect} />
-    );
-  }
 
   function handleInput(event) {
     const name = event.target.name;
@@ -59,20 +45,25 @@ export default function Login(props) {
     // calls api and returns a promise that resolves to the user object
     // and the api status code
     return new Promise(async (resolve, reject) => {
-      if (!userName || !password) {
-        reject({
-          status: '401',
-          message: 'Username or password is incorrect'
-        });
-      }
-      const result = await login_(userName, password)
-      if (result.status !== 200) {
-        reject({
-          status: '401',
-          message: 'Username or password is incorrect'
-        });
-      } else {
-        resolve(result.data.user);
+      try {
+
+        if (!userName || !password) {
+          reject({
+            status: '401',
+            message: 'Username or password is incorrect'
+          });
+        }
+        const result = await login_(userName, password)
+        if (result.status !== 200) {
+          reject({
+            status: '401',
+            message: 'Username or password is incorrect'
+          });
+        } else {
+          resolve(result);
+        }
+      } catch (error) {
+        reject(error);
       }
     })
   }
@@ -82,14 +73,17 @@ export default function Login(props) {
     // sends POST to API with new signup details
     // recieves http status and profile
 
-    callLoginAPI(userName, password).then(user => {
+    callLoginAPI(userName, password).then(result => {
+      setUser(({
+        userName: result.data.user.userName,
+        user_id: result.data.user_id,
+      }));
       let redirect = {
-        pathname: `/profile/${user.userName}`,
+        pathname: `/profile/${result.data.user.userName}`,
       }
-      ReactSession.set("username", user.userName);
-      ReactSession.set("userId", user._id)
       setRedirect(redirect)
     }).catch((error) => {
+      console.log(error);
       setError({
         userName: error.message,
         password: error.message

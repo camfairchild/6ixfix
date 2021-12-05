@@ -8,7 +8,7 @@ import profilesRouter from './api/profiles.js';
 import clientsRouter from './api/clients.js';
 import messagesRouter from './api/messages.js';
 import authRouter from './api/auth.js';
-// import adminRouter from './api/admin.js';
+import adminRouter from './api/admin.js';
 
 import mongoChecker from '../middleware/mongoose.js';
 import isLoggedIn from '../middleware/loggedin.js'
@@ -22,7 +22,7 @@ router.use('/profiles', profilesRouter);
 router.use('/clients', clientsRouter);
 router.use('/messages', messagesRouter);
 router.use('/auth', authRouter)
-// router.use('/admin', adminRouter);
+router.use('/admin', adminRouter);
 
 
 /// Route for getting all mechanic profile information.
@@ -103,18 +103,8 @@ router.post('/clientPictures/', mongoChecker, isLoggedIn, async (req, res) => {
 })
 
 router.post('/profilePic/', mongoChecker, isLoggedIn, async (req, res) => {
-	// Add code here
-
-	const user_id = req.user._id
+	const user_id = req.user
 	const id = (await Profile.findOne({ userName: req.user.userName }))?._id
-
-	// Good practise: Validate id immediately.
-	if (!mongoose.isValidObjectId(id)) {
-		res.status(404).json({
-			error: "Invalid Id"
-		}) // if invalid id, definitely can't find resource, 404.
-		return;  // so that we don't run the rest of the handler.
-	}
 
 	if (!req.files || !req.files.picture) {
 		res.status(400).json({

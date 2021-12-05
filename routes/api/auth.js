@@ -10,9 +10,11 @@ const router = new Router();
 
 const log = console.log;
 
-router.get('/logout', (req,res) => {
+router.put('/logout', (req,res) => {
     req.session.destroy();
-    res.redirect('/login');
+    res.json({
+        success: true
+    })
 });
 
 //login route
@@ -24,12 +26,17 @@ router.post('/login', async (req, res) => {
         })
     }
     const user = await User.findOne({ userName }).lean()
-    const goodLogin = await bcrypt.compare(password, user?.password)
+    const goodLogin = user && await bcrypt.compare(password, user?.password)
     if (goodLogin) {
         req.session.user = user._id;
         req.session.username = user.userName;
-        res.json({
-            user,
+        const profile = await Profile.findOne({userName: user.userName }).lean()
+        return res.json({
+            user: {
+                userName: user.userName,
+                _id: user._id
+            },
+            profile,
             message: 'Authenticated'
         })
     } else {
@@ -55,9 +62,16 @@ router.post('/signup', async (req, res) => {
     // don't check for dev environment
     if (process.env.NODE_ENV !== "development") {
         if (password.length < 8) {
-        return res.status(400).json({
-            error: 'Password length must be at least 8 characters long'
-        })
+            return res.status(400).json({
+                error: 'Password length must be at least 8 characters long'
+            })
+        }
+
+        // dont let people create Admin accounts through the signup form
+        if (type === 'Admin') {
+            return res.status(403).json({
+                error: 'Admin account is not allowed'
+            })
         }
     }
     try {

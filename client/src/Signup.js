@@ -1,44 +1,48 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './signup.css';
 
 import { Redirect } from 'react-router';
 import { validate as validateEmail } from 'email-validator';
 import { Link } from 'react-router-dom';
-import ReactSession from 'react-client-session';
 
 import { signup_ } from './Helper';
+import { useSessionStorage } from './useSessionStorage';
 
-export default class Signup extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            userName: "",
-            password: "",
-            email: "",
-            confirmPassword: "",
-            error: {
-                password: "",
-                username: "",
-                email: "",
-                confirm: ""
-            },
-            type: "client",
-            redirect: null
-        }
-    }
+export default function Signup(props) {
+    const [user, setUser] = useSessionStorage('user', null);
 
-    handleInput = (event) => {
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
+    const [userName, setUsername] = useState('');
+    const [error, setError] = useState({
+        email: '',
+        password: '',
+        confirm: '',
+        username: ''
+    });
+    const [redirect, setRedirect] = useState(false);
+    const [type, setRole] = useState('client');
+
+    const handleInput = (event) => {
         const name = event.target.name;
         const value = event.target.value;
-        let error = this.state.error;
-        error[name] = "";
-        this.setState({
-            [name]: value,
-            error: error
-        });
+        if (name === 'email') {
+            setEmail(value);
+        } else if (name === 'password') {
+            setPassword(value);
+        } else if (name === 'confirmPassword') {
+            setConfirmPassword(value);
+        } else if (name === 'userName') {
+            setUsername(value);
+        } else if (name === 'type') {
+            setRole(value);
+        }
+        setError({ ...error, [name]: value });
+        setError({ ...error, 'username': '' });
     }
 
-    callSignupAPI = (newProfile) => {
+    const callSignupAPI = (newProfile) => {
         // mock api call to signup POST endpoint
         // 403 - username already exists
         // 403 - email already exists
@@ -68,133 +72,117 @@ export default class Signup extends React.Component {
         })
     }
 
-    send = (event) => {
+    const send = (event) => {
         event.preventDefault();
         const newProfile = {
-            role: this.state.role,
-            userName: this.state.userName,
-            password: this.state.password,
-            email: this.state.email,
-            confirmPassword: this.state.confirmPassword
+            role: type,
+            userName,
+            password,
+            email,
+            confirmPassword
         }
         
-        if (!validateEmail(this.state.email)) {
-            let error = this.state.error;
+        if (!validateEmail(email)) {
             error.email = "Not a valid email";
-            return this.setState({
-                error: error
-            });
+            setError(error);
         }
         
         // https://stackoverflow.com/a/21456918
         const passwordReqCheck = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
-        if (!passwordReqCheck.test(this.state.password)) {
-            let error = this.state.error;
+        if (!passwordReqCheck.test(password)) {
             error.password = "Password does not meet criteria:\n" +
             "8 char minimum,\n" +
             "at least one uppercase,\n" +
             "one lowercase letter,\n" +
             "one number and one special character.";
-            return this.setState({
-                error: error
-            });
+            return setError(error);
         }
-        if (this.state.password !== this.state.confirmPassword) {
-            let error = this.state.error;
+        if (password !== confirmPassword) {
             error.confirm = "Passwords do not match";
-            return this.setState({
-                error: error
-            });
+            return setError(error);
         }
         
 
         // sends POST to API with new signup details
         // recieves http status and profile
 
-        let error;
-        this.callSignupAPI(newProfile)
+        callSignupAPI(newProfile)
             .then((result) => {
                 const user = result.data.profile
                 let redirect = {
                     pathname: "/profile/" + user.userName,
                 }
                 console.log("redirect", redirect)
-                ReactSession.set("username", user.userName);
-                ReactSession.set("userId", result.data.user_id)
-                this.setState({
-                    redirect: redirect
-                });
+                setUser({
+                    userName: user.userName,
+                    user_id: result.data.user_id
+                })
+                setRedirect(redirect);
             })
             .catch((error) => {
                 console.log(error);
-                this.setState({
-                    error: {
-                        username: error.message
-                    }
-                });
+                setError({
+                    username: error.message,
+                })
             });
     }
-    printType = (event) => {
-        console.log(event.target.value)
-    }
-    render() {
 
-        return (
-            <div className="signup-container">
-                <h1>Sign-up</h1>
-                <img className="logo-img" src={process.env.PUBLIC_URL + "/images/6ixfix_logo_black.png"}/>
-                <form className="signup-form">
-                    <div className = "radio-button-container" onChange={this.handleInput}>
-                        <input type = 'radio' value = 'Client' name = 'type' defaultChecked='checked'/>
-                        <label for = 'type'>Client</label>
-                        <input type = 'radio' value = 'Mechanic' name = 'type'/> 
-                        <label for = 'type'>Mechanic</label>
-                    </div>
-                    <div className="inputName"><p>Email:</p><p>*</p></div>
-                    <input
-                        type = "text"
-                        name = "email"
-                        value = {this.state.email}
-                        onChange = {this.handleInput}
-                        placeholder = "email@example.com"/>
-                    {
-                        this.state.error.email ? <p className="error">Error: {this.state.error.email}</p> : null
-                    }
-                    <div className="inputName"><p>Username:</p><p>*</p></div>
-                    <input
-                        type = "text"
-                        name = "userName"
-                        value = {this.state.userName}
-                        onChange = {this.handleInput}
-                        placeholder = "jdoe123"/>
-                    {
-                        this.state.error.username ? <p className="error">Error: {this.state.error.username}</p> : null
-                    }
-                    <div className="inputName"><p>Password:</p><p>*</p></div>
-                    <input
-                        type = "password"
-                        name = "password"
-                        value = {this.state.password}
-                        onChange = {this.handleInput}
-                        placeholder = "password"/>
-                    {
-                        this.state.error.password ? <p className="error">Error: {this.state.error.password}</p> : null
-                    }
-                    <div className="inputName"><p>Confirm Password:</p><p>*</p></div>
-                    <input
-                        type = "password"
-                        name = "confirmPassword"
-                        value = {this.state.confirmPassword}
-                        onChange = {this.handleInput}
-                        placeholder = "confirm password"/>
-                    {
-                        this.state.error.confirm ? <p className="error">Error: {this.state.error.confirm}</p> : null
-                    }
-                    <button type="submit" className="submit" onClick={this.send}>Signup</button>
-                </form>
-                { this.state.redirect ? (<Redirect push to={this.state.redirect}/>) : null }
-                <Link to="/login" className="signup-prompt">Already have an account? Login</Link>
-            </div>
-        )
-    }
+    return (
+        <div className="signup-container">
+            <h1>Sign-up</h1>
+            <img className="logo-img" src={process.env.PUBLIC_URL + "/images/6ixfix_logo_black.png"}/>
+            <form className="signup-form">
+                <div className = "radio-button-container" onChange={handleInput}>
+                    <input type = 'radio' value = 'Client' name = 'type' defaultChecked='checked'/>
+                    <label for = 'type'>Client</label>
+                    <input type = 'radio' value = 'Mechanic' name = 'type'/> 
+                    <label for = 'type'>Mechanic</label>
+                </div>
+                <div className="inputName"><p>Email:</p><p>*</p></div>
+                <input
+                    type = "text"
+                    name = "email"
+                    value = {email}
+                    onChange = {handleInput}
+                    placeholder = "email@example.com"/>
+                {
+                    error.email ? <p className="error">Error: {error.email}</p> : null
+                }
+                <div className="inputName"><p>Username:</p><p>*</p></div>
+                <input
+                    type = "text"
+                    name = "userName"
+                    value = {userName}
+                    onChange = {handleInput}
+                    placeholder = "jdoe123"/>
+                {
+                    error.username ? <p className="error">Error: {error.username}</p> : null
+                }
+                <div className="inputName"><p>Password:</p><p>*</p></div>
+                <input
+                    type = "password"
+                    name = "password"
+                    value = {password}
+                    onChange = {handleInput}
+                    placeholder = "password"/>
+                {
+                    error.password ? <p className="error">Error: {error.password}</p> : null
+                }
+                <div className="inputName"><p>Confirm Password:</p><p>*</p></div>
+                <input
+                    type = "password"
+                    name = "confirmPassword"
+                    value = {confirmPassword}
+                    onChange = {handleInput}
+                    placeholder = "confirm password"/>
+                {
+                    error.confirm ? <p className="error">Error: {error.confirm}</p> : null
+                }
+                <button type="submit" className="submit" onClick={send}>Signup</button>
+            </form>
+            { redirect ? (<Redirect push to={redirect}/>) : null }
+            <Link to="/login" className="signup-prompt">Already have an account? Login</Link>
+        </div>
+    )
+    
 }

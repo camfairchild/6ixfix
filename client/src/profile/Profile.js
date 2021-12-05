@@ -6,21 +6,23 @@ import { useLocation, useParams, useHistory } from 'react-router';
 
 import './Profile.css'
 import ProfilePic from './ProfilePic';
-import { getUser, getProfileByuserName, updateProfile, uploadImage, useQuery } from '../Helper';
+import { getProfileByuserName, updateProfile, uploadImage, useQuery } from '../Helper';
 import UserVehicleInfo from './userVehicleInfo';
 import UserInfoEdit from './UserInfoEdit';
 
+import { useSessionStorage } from '../useSessionStorage'
+
 export default function Profile(props) {
-    const [user, setUser] = useState(null);
+    const [user, setUser] = useSessionStorage('user', null);
     const [profile, setProfile] = useState(null);
     const [loggedIn, setLoggedIn] = useState(false);
     const [isUser, setisUser] = useState(false);
     const [editVehicleInfo, setEditVehicleInfo] = useState(false);
     const [newImage, setNewImage] = useState(null);
     const [editUserInfo, setEditUserInfo] = useState(false);
-
     const params = useParams();
-    let userName = params['userName'] || null;
+    const [userName, setUserName] = useState(params['userName'] || null);
+
 
     const query = useQuery()
     const err_ = query.get('e')
@@ -30,9 +32,8 @@ export default function Profile(props) {
     useEffect(() => {
         async function fetchData() {
             try {
-                const user_ = await getUser()
-                if (!userName && user_) {
-                        userName = user_.userName
+                if (!userName && user) {
+                        setUserName(user.userName)
                 }
                 let profile;
                 try {
@@ -40,11 +41,9 @@ export default function Profile(props) {
                 } catch (error) {
                     return console.log(error)
                 }
-                setUser(user_)
-                setLoggedIn(user_ !== null)
+                setLoggedIn(user !== null)
                 setProfile(profile)
-                console.log(user_?.userName, profile?.userName)
-                setisUser(user_?.userName === profile.userName)
+                setisUser(user?.userName === profile.userName)
             } catch (err) {
                 if (err.code === 404) {
                     return history.push(`/profile/${userName || ""}?e=404`)

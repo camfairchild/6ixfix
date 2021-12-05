@@ -2,7 +2,6 @@ import React from 'react';
 import { uid } from 'react-uid';
 import { DELETE_ICON, USER_ICON, LOCATION_ICON, CERTIFIED_ICON, EMAIL_ICON, VIEWS_ICON } from "../Icons/icons";
 import { Link } from 'react-router-dom';
-import { getUser } from '../Helper';
 
 import { getAllMechanics } from '../Helper';
 import { deleteUser } from '../Helper';
