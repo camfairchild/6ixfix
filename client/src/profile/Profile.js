@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import Header from './Header';
-import Error from './Error';
+import Header from '../Header';
+import Error from '../Error';
 
 import { useLocation, useParams, useHistory } from 'react-router';
 
 import './Profile.css'
 import ProfilePic from './ProfilePic';
-import { getUser, getProfileByuserName, updateProfile, uploadImage, useQuery } from './Helper';
+import { getUser, getProfileByuserName, updateProfile, uploadImage, useQuery } from '../Helper';
 import UserVehicleInfo from './userVehicleInfo';
 import UserInfoEdit from './UserInfoEdit';
 

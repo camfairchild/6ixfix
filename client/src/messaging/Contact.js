@@ -1,6 +1,6 @@
 import React from 'react';
 
-import ProfilePic from '../ProfilePic';
+import ProfilePic from '../profile/ProfilePic';
 import { formatTime } from '../Helper';
 
 export default class Contact extends React.Component {

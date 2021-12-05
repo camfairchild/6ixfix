@@ -3,12 +3,10 @@ import Home from './Home';
 import Search from './Search';
 import About from './About';
 import Help from './Help';
-import dotenv from 'dotenv';
 
 // https://reactrouter.com/web/guides/quick-start
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
-import Profile from './Profile';
-import MakePost from './MakePost';
+import Profile from './profile/Profile';
 import Messaging from './messaging/Messaging';
 import LandingPage from './LandingPage';
 import { Dashboard } from './Dashboard/Dashboard';
@@ -16,7 +14,6 @@ import { ReactSession } from 'react-client-session';
 export default class App extends React.Component {
     render() {
         ReactSession.setStoreType("localStorage");
-        //dotenv.config()
         console.log(`Running in env: ${process.env.REACT_APP_ENV}`)
         return (
             <Router>
@@ -27,7 +24,7 @@ export default class App extends React.Component {
                     <Route exact path='/about' component={About} />
                     {/* <Route path='/admin/:view' component={Admin}/> */}
                     <Route path='/profile/:userName?' component={Profile}/>
-                    <Route exact path='/post' component={MakePost}/>
+                    
                     <Route exact path='/signup'>
                         <Home page='signup'/>
                     </Route>

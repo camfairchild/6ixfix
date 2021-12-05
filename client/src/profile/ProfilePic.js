@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { getProfileByuserName, uploadProfilePic } from './Helper';
+import { getProfileByuserName, uploadProfilePic } from '../Helper';
 
 export default class ProfilePic extends React.Component {
     constructor(props) {
