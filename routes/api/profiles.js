@@ -55,7 +55,7 @@ router.post('/', mongoChecker, async (req, res) => {
         rate: null
 	})
 
-    if (req.body.type === 'Client') {
+    if (req.body.userType === 'Client') {
         profile.cars = []
         const car = profile.cars.create({
             carMake: req.body.carMake,
@@ -67,7 +67,7 @@ router.post('/', mongoChecker, async (req, res) => {
         profile.carPics = []
         profile.defaultCar = car._id
     }
-    if (req.body.type === 'Mechanic') {
+    if (req.body.userType === 'Mechanic') {
         profile.mechType = req.body.mechType
         profile.certified = req.body.certified,
         profile.rate = req.body.rate

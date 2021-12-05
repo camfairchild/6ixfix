@@ -359,3 +359,43 @@ export async function signup_(userName, password, confirmPassword, email, type) 
   })
   return result
 }
+
+export async function getAllProfiles() {
+  const result = await instance.get(`api/profiles`)
+    if (result.status === 200) {
+      return result.data;
+    } else {
+      console.error(result.data, result.status)
+      return null;
+    }
+}
+
+export async function deleteUser(id) {
+  const result = await instance.delete(`api/profiles/${id}`)
+  if (result.status === 200) {
+    return result.data
+  } else {
+    console.error(result.data, result.status)
+    return null;
+  }
+}
+
+export async function getAllClients() {
+  const result = await instance.get(`api/clients`)
+    if (result.status === 200) {
+      return result.data;
+    } else {
+      console.error(result.data, result.status)
+      return null;
+    }
+}
+
+export async function getAllMechanics() {
+  const result = await instance.get(`/api/mechanics`)
+    if (result.status === 200) {
+      return result.data;
+    } else {
+      console.error(result.data, result.status)
+      return null;
+    }
+}

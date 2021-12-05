@@ -4,85 +4,82 @@ import { DELETE_ICON, USER_ICON, LOCATION_ICON, CERTIFIED_ICON, EMAIL_ICON, VIEW
 import { Link } from 'react-router-dom';
 import { getUser } from '../Helper';
 
+import { getAllMechanics } from '../Helper';
+import { deleteUser } from '../Helper';
+
 export default class Mechanics extends React.Component {
-    state = {
-        mechanics: [{
-            name: 'John Doe',
-            type: 'Mechanic',
-            userName: 'jDoe123',
-            location: 'Toronto',
-            profilePic: null,
-            link: '/',
-            email: "abc@gmail.com",
-            mechType: 'Private',
-            certified: true, //can also potentially have a list of certifications based on the profile
-            numViews: 32
-        },
-        {
-            name: 'Kenneth Crane',
-            type: 'Mechanic',
-            userName: 'craneK78',
-            location: 'Waterloo',
-            profilePic: null,
-            link: '/',
-            email: "kenneth@crane.com",
-            mechType: 'Dealer', //include dealer info?
-            certified: true,
-            numViews: 27
-        },
-        {
-            name: 'Drake',
-            type: 'Mechanic',
-            userName: 'drizzy86',
-            location: 'Degrassi',
-            profilePic: '/images/Drake-Profile-Pic.png',
-            link: '/',
-            email: "drake@ovo.com",
-            mechType: 'Private',
-            certified: false,
-            numViews: 52
-        }] //make an api call to get all the mechanics in the system
+    constructor(props) {
+        super(props)
+        this.state = {
+            // mechanics: [{
+            //     name: 'John Doe',
+            //     type: 'Mechanic',
+            //     userName: 'jDoe123',
+            //     location: 'Toronto',
+            //     profilePic: null,
+            //     link: '/',
+            //     email: "abc@gmail.com",
+            //     mechType: 'Private',
+            //     certified: true, //can also potentially have a list of certifications based on the profile
+            //     numViews: 32
+            // },
+            // {
+            //     name: 'Kenneth Crane',
+            //     type: 'Mechanic',
+            //     userName: 'craneK78',
+            //     location: 'Waterloo',
+            //     profilePic: null,
+            //     link: '/',
+            //     email: "kenneth@crane.com",
+            //     mechType: 'Dealer', //include dealer info?
+            //     certified: true,
+            //     numViews: 27
+            // },
+            // {
+            //     name: 'Drake',
+            //     type: 'Mechanic',
+            //     userName: 'drizzy86',
+            //     location: 'Degrassi',
+            //     profilePic: '/images/Drake-Profile-Pic.png',
+            //     link: '/',
+            //     email: "drake@ovo.com",
+            //     mechType: 'Private',
+            //     certified: false,
+            //     numViews: 52
+            // }] //make an api call to get all the mechanics in the system //make an api call to get all the clients in the system
+            mechanics: []
+        }
+        this.banMech = this.banMech.bind(this);
     }
-
-    // banMech = (mechanic) => {
-    //     const mechList = this.state.mechanics.filter((mech) => {
-    //         return mech !== mechanic
-    //     })
-    //     this.setState({ //we also want to make an api call sending the new mech list to the server
-    //         mechanics: mechList
-    //     })
-    // }
-
-    banMech = (mechanic) => {
-        const mechList = this.state.mechanics.filter((mech) => {
-            return mech !== mechanic
+ 
+    
+    async componentDidMount() {
+        const list = await getAllMechanics();
+        console.log(list)
+        const filteredList = list.filter((user) => {
+            return user.fullName !== null
         })
-        this.callAPIBan(mechanic, this.state.loggedIn).then((result) => {
-            const [status, message] = result;
-            if (status === 200) {
-                this.setState({
-                    mechanics: mechList
-                })
-            } else {
-                // error
-                console.log("error")
-            }
-        })
-    }
-    callAPIBan = (client, admin) => {
-        console.log("banning user")
-        return new Promise((resolve, reject) => {
-            resolve([200, ""]);
+        this.setState({
+            mechanics: filteredList
         })
     }
 
-    componentDidMount() {
-        getUser().then((user) => {
-            this.setState({
-                loggedIn: user
+    banMech = async (mechanic) => {
+        const result = await deleteUser(mechanic._id)
+        if (result !== null) {
+            const list = await getAllMechanics();
+            const filteredList = list.filter((user) => {
+                return user.fullName !== null
             })
-        })
+            this.setState({
+                mechanics: filteredList
+            })
+        } else {
+            console.log("banning error")
+        }
+
     }
+    
 
     render() {
         return (
@@ -93,11 +90,11 @@ export default class Mechanics extends React.Component {
                         return (
                             <div key={uid(mechanic)} className="result dashboard__result">
                                 <div className="profile-container">
-                                    <img src={mechanic.profilePic !== null ? mechanic.profilePic : '/images/defaultprofpic.png'} />
+                                    <img src={mechanic.picture !== null ? mechanic.picture : '/images/defaultprofpic.png'} />
                                 </div>
                                 <div className="profile-info-container">
                                     <div className = 'name-container'>
-                                        <h4>{mechanic.name}</h4> 
+                                        <h4>{mechanic.fullName}</h4> 
                                         {mechanic.certified ? <div className='profile-icon'>{CERTIFIED_ICON}</div> : ''}
                                     </div>
                                     <div className={ mechanic.mechType === 'Dealer' ? "user__type__tag tag__dealer" : "user__type__tag tag__private"}>{mechanic.mechType}</div>

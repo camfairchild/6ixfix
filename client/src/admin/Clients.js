@@ -4,90 +4,91 @@ import { getUser } from '../Helper';
 import {DELETE_ICON, USER_ICON, LOCATION_ICON, CAR_ICON, SERVICE_ICON, EMAIL_ICON, VIEWS_ICON } from "../Icons/icons";
 import { Link } from 'react-router-dom';
 
-
+import { getAllClients } from '../Helper';
+import { deleteUser } from '../Helper';
 
 export default class Clients extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
-            clients: [{
-                name: 'Jimmy Parker',
-                type: 'Client',
-                userName: 'jPark23',
-                location: 'Markham',
-                profilePic: null,
-                link: '/',
-                email: "parkerj97@hotmail.com",
-                carMake: 'Honda',
-                carModel: 'Civic',
-                carYear: '2012',
-                serviceRequested: 'Oil Change',
-                numViews: 10
-            },
-            {
-                name: 'Nav',
-                type: 'Client',
-                userName: 'brownBoy1',
-                location: 'Rexdale',
-                profilePic: '/images/Nav.jpeg',
-                link: '/',
-                email: "nav@yahoo.com",
-                carMake: 'Toyota',
-                carModel: 'Corolla',
-                carYear: '2007',
-                serviceRequested: 'Brake Maintenance',
-                numViews: 35
-            },
-            {
-                name: 'Shawn Carter',
-                type: 'Client',
-                userName: 'carter97',
-                location: 'Brampton',
-                profilePic: null,
-                link: '/',
-                email: "shawn27@carter.com",
-                carMake: 'VolksWagen',
-                carModel: 'Jetta',
-                carYear: '2018',
-                serviceRequested: 'Full Inspection',
-                numViews: 52
-            }] //make an api call to get all the clients in the system
+            // clients: [{
+            //     name: 'Jimmy Parker',
+            //     type: 'Client',
+            //     userName: 'jPark23',
+            //     location: 'Markham',
+            //     profilePic: null,
+            //     link: '/',
+            //     email: "parkerj97@hotmail.com",
+            //     carMake: 'Honda',
+            //     carModel: 'Civic',
+            //     carYear: '2012',
+            //     serviceRequested: 'Oil Change',
+            //     numViews: 10
+            // },
+            // {
+            //     name: 'Nav',
+            //     type: 'Client',
+            //     userName: 'brownBoy1',
+            //     location: 'Rexdale',
+            //     profilePic: '/images/Nav.jpeg',
+            //     link: '/',
+            //     email: "nav@yahoo.com",
+            //     carMake: 'Toyota',
+            //     carModel: 'Corolla',
+            //     carYear: '2007',
+            //     serviceRequested: 'Brake Maintenance',
+            //     numViews: 35
+            // },
+            // {
+            //     name: 'Shawn Carter',
+            //     type: 'Client',
+            //     userName: 'carter97',
+            //     location: 'Brampton',
+            //     profilePic: null,
+            //     link: '/',
+            //     email: "shawn27@carter.com",
+            //     carMake: 'VolksWagen',
+            //     carModel: 'Jetta',
+            //     carYear: '2018',
+            //     serviceRequested: 'Full Inspection',
+            //     numViews: 52
+            // }] //make an api call to get all the clients in the system
+            clients: []
         }
         this.banClient = this.banClient.bind(this);
-        this.callAPIBan = this.callAPIBan.bind(this);
     }
     
-
-    banClient = (client) => {
-        const clientList = this.state.clients.filter((c) => {
-            return c !== client
+    async componentDidMount() {
+        const list = await getAllClients();
+        console.log(list)
+        const filteredList = list.filter((user) => {
+            return user.fullName !== null
         })
-        this.callAPIBan(client, this.state.loggedIn).then((result) => {
-            const [status, message] = result;
-            if (status === 200) {
-                this.setState({
-                    clients: clientList
-                })
-            } else {
-                // error
-                console.log("error")
-            }
-        })
-    }
-    callAPIBan = (client, admin) => {
-        console.log("banning user")
-        return new Promise((resolve, reject) => {
-            resolve([200, ""]);
+        this.setState({
+            clients: filteredList
         })
     }
 
-    componentDidMount() {
-        getUser().then((user) => {
-            this.setState({
-                loggedIn: user
+    getDefaultCar(client) {
+        return client.cars.find(car => car._id = client.defaultCar)
+    }
+
+    banClient = async (client) => {
+        const result = await deleteUser(client._id)
+        if (result !== null) {
+            const list = await getAllClients();
+            const filteredList = list.filter((user) => {
+                return user.fullName !== null
             })
-        })
+            this.setState({
+                clients: filteredList
+            })
+        } else {
+            console.log("banning error")
+        }
+
     }
+    
 
 
     render() {
@@ -99,10 +100,10 @@ export default class Clients extends React.Component {
                         return (
                             <div key={uid(client)} className="result dashboard__result">
                                 <div className="profile-container">
-                                    <img src={client.profilePic !== null ? client.profilePic : '/images/defaultprofpic.png'} />
+                                    <img src={client.picture !== null ? client.picture : '/images/defaultprofpic.png'} />
                                 </div>
                                 <div className="profile-info-container">
-                                    <h4>{client.name}</h4>
+                                    <h4>{client.fullName}</h4>
                                     <div className='icon-text-container'>
                                         <div className='profile-icon'>{USER_ICON}</div>
                                         <div className='icon-text'>{client.userName}</div>
@@ -120,7 +121,7 @@ export default class Clients extends React.Component {
                                     <br/>
                                     <div className='icon-text-container'>
                                         <div className='profile-icon'>{CAR_ICON}</div>
-                                        <div className='icon-text'>{client.carYear +' '+ client.carMake +' '+client.carModel}</div>
+                                        <div className='icon-text'>{this.getDefaultCar(client).carYear+' '+ this.getDefaultCar(client).carMake +' '+this.getDefaultCar(client).carModel}</div>
                                     </div>
                                     <br/>
                                     <div className='icon-text-container'>
