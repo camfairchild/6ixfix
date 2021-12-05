@@ -94,12 +94,16 @@ router.post('/signup', async (req, res) => {
             email
         })
         await newUser.save()
-        const profile = await Profile.create({
-            userName,
-            email,
-            type,
-            link: `/profile/${userName}`
-        })
+        
+        let profile = await Profile.findOne({userName: userName})
+        if (!profile) {
+            profile = await Profile.create({
+                userName,
+                email,
+                type,
+                link: `/profile/${userName}`
+            })
+        }
 
         req.session.user = newUser._id;
         req.session.username = newUser.userName;
