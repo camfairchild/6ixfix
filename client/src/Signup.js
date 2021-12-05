@@ -4,7 +4,7 @@ import './signup.css';
 import { Redirect } from 'react-router';
 import { validate as validateEmail } from 'email-validator';
 import { Link } from 'react-router-dom';
-import { ReactSession } from 'react-client-session';
+import ReactSession from 'react-client-session';
 
 import { signup_ } from './Helper';
 

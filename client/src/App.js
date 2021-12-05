@@ -10,10 +10,10 @@ import Profile from './profile/Profile';
 import Messaging from './messaging/Messaging';
 import LandingPage from './LandingPage';
 import { Dashboard } from './Dashboard/Dashboard';
-import { ReactSession } from 'react-client-session';
+import ReactSession from 'react-client-session';
 export default class App extends React.Component {
     render() {
-        ReactSession.setStoreType("localStorage");
+        ReactSession.setStoreType("sessionStorage");
         console.log(`Running in env: ${process.env.REACT_APP_ENV}`)
         return (
             <Router>
@@ -22,13 +22,15 @@ export default class App extends React.Component {
                     <Route exact path='/search' component={Search}/>
                     <Route exact path='/help' component={Help} />
                     <Route exact path='/about' component={About} />
-                    {/* <Route path='/admin/:view' component={Admin}/> */}
                     <Route path='/profile/:userName?' component={Profile}/>
                     
                     <Route exact path='/signup'>
                         <Home page='signup'/>
                     </Route>
                     <Route exact path='/login'>
+                        <Home page='login'/>
+                    </Route>
+                    <Route exact path='/logout'>
                         <Home page='login'/>
                     </Route>
                     <Route exact path='/messages' component={Messaging} />

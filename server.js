@@ -7,6 +7,8 @@ import fileUpload from 'express-fileupload'
 import session from 'express-session'
 import cors from 'cors'
 import MongoStore from "connect-mongo"; // to store session information on the database in production
+import dotenv from 'dotenv'
+dotenv.config() // loads .env file
 
 import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);

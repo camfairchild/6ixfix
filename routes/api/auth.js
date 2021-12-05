@@ -53,10 +53,12 @@ router.post('/signup', async (req, res) => {
     }
     
     // don't check for dev environment
-    if (process.env.NODE_ENV === "production" && password.length < 8) {
+    if (process.env.NODE_ENV !== "development") {
+        if (password.length < 8) {
         return res.status(400).json({
             error: 'Password length must be at least 8 characters long'
         })
+        }
     }
     try {
         const user = await User.count({ $or: [
@@ -86,6 +88,7 @@ router.post('/signup', async (req, res) => {
         })
 
         req.session.user = newUser._id;
+        req.session.username = newUser.userName;
         delete newUser.password // delete password from response
         return res.json({
             user_id: newUser._id,

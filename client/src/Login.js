@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { useLocation, Redirect } from 'react-router';
-import { ReactSession } from 'react-client-session';
+import ReactSession from 'react-client-session';
 import { Link } from 'react-router-dom';
 import { login_ } from './Helper';
 
