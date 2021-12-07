@@ -1,9 +1,10 @@
 import React from 'react';
 import { uid } from 'react-uid';
-import {DELETE_ICON } from "../Icons/icons";
+import { DELETE_ICON } from "../Icons/icons";
 import { Link } from 'react-router-dom';
 
 import { getAllClients, deleteUser } from '../Helper';
+import { USER_ICON, LOCATION_ICON, EMAIL_ICON, VIEWS_ICON, CAR_ICON, SERVICE_ICON } from "../Icons/icons";
 import Client from './Client';
 
 export default class Clients extends React.Component {
@@ -55,8 +56,9 @@ export default class Clients extends React.Component {
             clients: []
         }
         this.banClient = this.banClient.bind(this);
+        this.getDefaultCar = this.getDefaultCar.bind(this)
     }
-    
+
     async componentDidMount() {
         const list = await getAllClients();
         console.log(list)
@@ -83,6 +85,10 @@ export default class Clients extends React.Component {
         }
 
     }
+    getDefaultCar(client) {
+        console.log("test")
+        return client.cars.find(car => car._id = client.defaultCar)
+    }
 
     render() {
         return (
@@ -92,9 +98,42 @@ export default class Clients extends React.Component {
                     {this.state.clients.map((client) => {
                         return (
                             <div key={uid(client)} className="result dashboard__result">
-                                <Client client={client}/>
+                                <div className="profile-container">
+                                    <img src={client.picture !== null ? client.picture : '/images/defaultprofpic.png'} />
+                                </div>
+                                <div className="profile-info-container">
+                                    <h4>{client.fullName}</h4>
+                                    <div className='icon-text-container'>
+                                        <div className='profile-icon'>{USER_ICON}</div>
+                                        <div className='icon-text'>{client.userName}</div>
+                                    </div>
+                                    <div className='icon-text-container'>
+                                        <div className='profile-icon'>{LOCATION_ICON}</div>
+                                        <div className='icon-text'>{client.location}</div>
+                                    </div>
+                                    <div className='icon-text-container'>
+                                        <div className='profile-icon'>{EMAIL_ICON}</div>
+                                        <div className='icon-text'><a href={"mailto:" + client.email}>{client.email}</a></div>
+                                    </div>
+                                    <div className='icon-text-container'>
+                                        <div className='profile-icon'>{CAR_ICON}</div>
+                                        <div className='icon-text'>{(() => {
+                                            const car = this.getDefaultCar(client);
+                                            return car ? car?.carYear + ' ' + car?.carMake + ' ' + car?.carModel: ""
+                                        })()}
+                                        </div>
+                                    </div>
+                                    <div className='icon-text-container'>
+                                        <div className='profile-icon'>{SERVICE_ICON}</div>
+                                        <div className='icon-text'>{client.serviceRequested}</div>
+                                    </div>
+                                    <div className='icon-text-container'>
+                                        <div className='profile-icon'>{VIEWS_ICON}</div>
+                                        <div className='icon-text'>{client.numViews}</div>
+                                    </div>
+                                </div>
                                 <div className="delete__btn">
-                                    <div className='ban' onClick={() => this.banClient(client)}>{DELETE_ICON}</div> 
+                                    <div className='ban' onClick={() => this.banClient(client)}>{DELETE_ICON}</div>
                                 </div>
 
                                 <div className="get-profile-btn-container">

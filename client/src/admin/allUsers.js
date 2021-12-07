@@ -117,12 +117,10 @@ export default class AllUsers extends React.Component {
                                         <div className='profile-icon'>{USER_ICON}</div>
                                         <div className='icon-text'>{user.userName}</div>
                                     </div>
-                                    <br/>
                                     <div className='icon-text-container'>
                                         <div className='profile-icon'>{LOCATION_ICON}</div>
                                         <div className='icon-text'>{user.location}</div>
                                     </div>
-                                    <br/>
                                     <div className='icon-text-container'>
                                         <div className='profile-icon'>{EMAIL_ICON}</div>
                                         <div className='icon-text'><a href={"mailto:" + user.email}>{user.email}</a></div>

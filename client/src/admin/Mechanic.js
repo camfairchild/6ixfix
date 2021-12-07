@@ -1,12 +1,13 @@
 import React from 'react';
 
 import { USER_ICON, LOCATION_ICON, CERTIFIED_ICON, EMAIL_ICON, VIEWS_ICON } from "../Icons/icons";
+import { Link } from 'react-router-dom';
 
 export default function Mechanic(props) {
     const [mechanic, setMechanic] = React.useState(props.mechanic);
 
     return (
-        <div>
+        <div className="result dashboard__result">
             <div className="profile-container">
                 <img src={mechanic.picture !== null ? mechanic.picture : '/images/defaultprofpic.png'} />
             </div>
@@ -20,12 +21,10 @@ export default function Mechanic(props) {
                     <div className='profile-icon'>{USER_ICON}</div>
                     <div className='icon-text'>{mechanic.userName}</div>
                 </div>
-                <br />
                 <div className='icon-text-container'>
                     <div className='profile-icon'>{LOCATION_ICON}</div>
                     <div className='icon-text'>{mechanic.location}</div>
                 </div>
-                <br />
                 <div className='icon-text-container'>
                     <div className='profile-icon'>{EMAIL_ICON}</div>
                     <div className='icon-text'><a href={"mailto:" + mechanic.email}>{mechanic.email}</a></div>
@@ -34,8 +33,11 @@ export default function Mechanic(props) {
                     <div className='profile-icon'>{VIEWS_ICON}</div>
                     <div className='icon-text'>{mechanic.numViews}</div>
                 </div>
-                <br />
-                <br />
+            </div>
+            <div className="get-profile-btn-container">
+                <Link className="profile-btn" to={`/profile/${mechanic.userName}`}>
+                    Continue to profile
+                </Link>
             </div>
         </div>
     )

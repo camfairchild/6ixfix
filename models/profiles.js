@@ -118,11 +118,11 @@ const ProfileSchema = new mongoose.Schema({
         type: Number,
         default: 0
     },
-    carPics:  {
+    carPics:  [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Picture',
         default: null
-    }
+    }]
 
 })
 

@@ -92,15 +92,18 @@ export default function Profile(props) {
     }
 
     const addToGallery = async () => {
+        console.log("abc")
         if (!newImage) {
             return 
         }
+        console.log(newImage)
         const result = await uploadImage(newImage)
         setProfile(result.client)
         setNewImage(null)
     }
 
     const addImageChange = (e) => {
+        console.log("add")
         e.preventDefault()
         const file = e.target.files[0]
         setNewImage(file)
@@ -185,15 +188,16 @@ export default function Profile(props) {
                             <input onClick={addToGallery} id="add-image" type="submit" className="profile-gallery-add-button" value="Add Image" />
                         </div>
                         <div className="profile-gallery-images" key={profile}>
-                            {() => {
+                            {(() => {
                                 console.log(profile)
                                 return profile?.carPics?.map((image, index) => {
                                 return (
                                     <div className="profile-gallery-item" key={index}>
                                         <img src={image.url} alt="gallery" />
-                                        <div className="profile-gallery-caption">{image.caption}</div>
-                                    </div>)
-                            })}}
+                                        {/* <div className="profile-gallery-caption">{image.caption}</div> */}
+                                    </div>
+                                )
+                            })})()}
                         </div>
                     </div>
             </div> }

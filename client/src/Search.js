@@ -71,7 +71,7 @@ export class Result extends React.Component {
       //     <p className="text">{this.props.text}</p>
       //   </div>
       // </div>
-      <div className="result dashboard__result">
+      <div>
         {this.props.userType === "Client" ? <Client client={this.props} /> : <Mechanic mechanic={this.props} />}
       </div>
     )

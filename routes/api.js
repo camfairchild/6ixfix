@@ -91,7 +91,6 @@ router.post('/clientPictures/', mongoChecker, isLoggedIn, async (req, res) => {
 			error: "Must include a picture to upload"
 		})
 	}
-
 	try {
 		const profile = await Profile.findById(id)
 		if (!profile) {
@@ -106,7 +105,7 @@ router.post('/clientPictures/', mongoChecker, isLoggedIn, async (req, res) => {
 				await profile.save()
 				res.json({
 					"picture": picture,
-					"client": profile
+					"client": await profile.populate('carPics')
 				})
 			} catch (error) {
 				throw error
@@ -131,8 +130,6 @@ router.post('/profilePic/', mongoChecker, isLoggedIn, async (req, res) => {
 	try {
 		if (!profile) {
 			res.status(404).json('Resource not found')  // could not find this client
-		} else if (profile.userType !== 'Client') {
-			res.status(400).json("Bad Request: Not a client")
 		} else {
 			const picture = await upload_image(req.files.picture, '')
 
@@ -214,9 +211,9 @@ router.get('/search', mongoChecker, async (req, res) => {
 				filter_.picture = { $ne: null }
 			}
 			if (filter.dealer) {
-				filter_.mechType = { $in: ['Dealer', null]}
+				filter_.mechType =  'Dealer' 
 			} else if (filter.private) {
-				filter_.mechType = { $in: ['Private', null]}
+				filter_.mechType = 'Private'
 			}
 			if (filter.oilChange) {
 				// case insensitive regex
