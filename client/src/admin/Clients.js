@@ -1,10 +1,10 @@
 import React from 'react';
 import { uid } from 'react-uid';
-import {DELETE_ICON, USER_ICON, LOCATION_ICON, CAR_ICON, SERVICE_ICON, EMAIL_ICON, VIEWS_ICON } from "../Icons/icons";
+import {DELETE_ICON } from "../Icons/icons";
 import { Link } from 'react-router-dom';
 
-import { getAllClients } from '../Helper';
-import { deleteUser } from '../Helper';
+import { getAllClients, deleteUser } from '../Helper';
+import Client from './Client';
 
 export default class Clients extends React.Component {
     constructor(props) {
@@ -68,10 +68,6 @@ export default class Clients extends React.Component {
         })
     }
 
-    getDefaultCar(client) {
-        return client.cars.find(car => car._id = client.defaultCar)
-    }
-
     banClient = async (client) => {
         const result = await deleteUser(client._id)
         if (result !== null) {
@@ -87,8 +83,6 @@ export default class Clients extends React.Component {
         }
 
     }
-    
-
 
     render() {
         return (
@@ -98,42 +92,7 @@ export default class Clients extends React.Component {
                     {this.state.clients.map((client) => {
                         return (
                             <div key={uid(client)} className="result dashboard__result">
-                                <div className="profile-container">
-                                    <img src={client.picture !== null ? client.picture : '/images/defaultprofpic.png'} />
-                                </div>
-                                <div className="profile-info-container">
-                                    <h4>{client.fullName}</h4>
-                                    <div className='icon-text-container'>
-                                        <div className='profile-icon'>{USER_ICON}</div>
-                                        <div className='icon-text'>{client.userName}</div>
-                                    </div>
-                                    <br/>
-                                    <div className='icon-text-container'>
-                                        <div className='profile-icon'>{LOCATION_ICON}</div>
-                                        <div className='icon-text'>{client.location}</div>
-                                    </div>
-                                    <br/>
-                                    <div className='icon-text-container'>
-                                        <div className='profile-icon'>{EMAIL_ICON}</div>
-                                        <div className='icon-text'><a href={"mailto:" + client.email}>{client.email}</a></div>
-                                    </div>
-                                    <br/>
-                                    <div className='icon-text-container'>
-                                        <div className='profile-icon'>{CAR_ICON}</div>
-                                        <div className='icon-text'>{this.getDefaultCar(client).carYear+' '+ this.getDefaultCar(client).carMake +' '+this.getDefaultCar(client).carModel}</div>
-                                    </div>
-                                    <br/>
-                                    <div className='icon-text-container'>
-                                        <div className='profile-icon'>{SERVICE_ICON}</div>
-                                        <div className='icon-text'>{client.serviceRequested}</div>
-                                    </div>
-                                    <br/>
-                                    <div className='icon-text-container'>
-                                        <div className='profile-icon'>{VIEWS_ICON}</div>
-                                        <div className='icon-text'>{client.numViews}</div>
-                                    </div>
-                                    <br/>
-                                </div>
+                                <Client client={client}/>
                                 <div className="delete__btn">
                                     <div className='ban' onClick={() => this.banClient(client)}>{DELETE_ICON}</div> 
                                 </div>

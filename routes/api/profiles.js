@@ -117,7 +117,7 @@ router.get('/:userName', mongoChecker, async (req, res) => {
 	}
 	
 	try {
-		const profile = await Profile.findOne({ userName })
+		const profile = await Profile.findOne({ userName }).populate('carPics').lean()
 		if (!profile) {
 			res.status(404).json({
 				error: 'Resource not found'

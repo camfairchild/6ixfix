@@ -334,7 +334,7 @@ export async function uploadProfilePic(image) {
       }
     })
     console.log(response)
-    return response.data
+    return response.data.picture.url
   } catch (error) {
     console.error(error)
   }
@@ -399,12 +399,41 @@ export async function getAllMechanics() {
     }
 }
 
+export async function search(query, filter) {
+  query = query.query || "";
+  console.log(query, filter)
+  const result = await instance.get(`api/search/`, {
+    params: {
+      query: query,
+      ...filter
+    }
+  })
+  if (result.status === 200 || result.status === 304) {
+    return result.data;
+  } else {
+    console.error(result.data, result.status)
+    return [];
+  }
+}
+
+export async function getFilterOptions() {
+  const result = await instance.get(`api/search/filterOptions/`)
+   if (result.status === 200) {
+    return result.data;
+  } else {
+    console.error(result.data, result.status)
+    return [];
+    
+  }
+}
+
 export async function sendHelpForm(helpForm) {
   const result = await instance.post(`api/help`, helpForm)
   if (result.status === 200) {
     return result.data;
   } else {
     console.error(result.data, result.status)
+
     return null;
   }
 }

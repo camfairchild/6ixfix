@@ -36,10 +36,14 @@ export default function Profile(props) {
                         setUserName(user.userName)
                 }
                 let profile;
-                try {
-                    profile = await getProfileByuserName(userName)
-                } catch (error) {
-                    return console.log(error)
+                profile = await getProfileByuserName(userName)
+
+                if (!profile) {
+                    console.log('no profile')
+                    throw new Error({
+                        message: 'No profile found',
+                        code: 404
+                    })
                 }
                 setLoggedIn(user !== null)
                 setProfile(profile)
@@ -181,13 +185,15 @@ export default function Profile(props) {
                             <input onClick={addToGallery} id="add-image" type="submit" className="profile-gallery-add-button" value="Add Image" />
                         </div>
                         <div className="profile-gallery-images" key={profile}>
-                            {profile?.carPics?.map((image, index) => {
+                            {() => {
+                                console.log(profile)
+                                return profile?.carPics?.map((image, index) => {
                                 return (
                                     <div className="profile-gallery-item" key={index}>
                                         <img src={image.url} alt="gallery" />
                                         <div className="profile-gallery-caption">{image.caption}</div>
                                     </div>)
-                            })}
+                            })}}
                         </div>
                     </div>
             </div> }

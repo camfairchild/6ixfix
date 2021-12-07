@@ -37,7 +37,7 @@ export default class ProfilePic extends React.Component {
         uploadProfilePic(file)
         .then((res) => {
             this.setState({
-                picture: res.data.picture
+                picture: res
             })
         }).catch((err) => {
             console.log(err);

@@ -23,7 +23,7 @@ export const Dashboard = () => {
         // check if user is admin, if not redirect to login
         
         console.log(user);
-        if (user.userType !== 'Admin') {
+        if (!user || user.userType !== 'Admin') {
             return history.push('/login');
         }       
     }, []);

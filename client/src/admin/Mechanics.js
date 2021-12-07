@@ -1,10 +1,10 @@
 import React from 'react';
 import { uid } from 'react-uid';
-import { DELETE_ICON, USER_ICON, LOCATION_ICON, CERTIFIED_ICON, EMAIL_ICON, VIEWS_ICON } from "../Icons/icons";
+import { DELETE_ICON } from "../Icons/icons";
 import { Link } from 'react-router-dom';
 
-import { getAllMechanics } from '../Helper';
-import { deleteUser } from '../Helper';
+import { getAllMechanics, deleteUser } from '../Helper';
+import Mechanic from './Mechanic';
 
 export default class Mechanics extends React.Component {
     constructor(props) {
@@ -88,36 +88,7 @@ export default class Mechanics extends React.Component {
                     {this.state.mechanics.map((mechanic) => {
                         return (
                             <div key={uid(mechanic)} className="result dashboard__result">
-                                <div className="profile-container">
-                                    <img src={mechanic.picture !== null ? mechanic.picture : '/images/defaultprofpic.png'} />
-                                </div>
-                                <div className="profile-info-container">
-                                    <div className = 'name-container'>
-                                        <h4>{mechanic.fullName}</h4> 
-                                        {mechanic.certified ? <div className='profile-icon'>{CERTIFIED_ICON}</div> : ''}
-                                    </div>
-                                    <div className={ mechanic.mechType === 'Dealer' ? "user__type__tag tag__dealer" : "user__type__tag tag__private"}>{mechanic.mechType}</div>
-                                    <div className='icon-text-container'>
-                                        <div className='profile-icon'>{USER_ICON}</div>
-                                        <div className='icon-text'>{mechanic.userName}</div>
-                                    </div>
-                                    <br />
-                                    <div className='icon-text-container'>
-                                        <div className='profile-icon'>{LOCATION_ICON}</div>
-                                        <div className='icon-text'>{mechanic.location}</div>
-                                    </div>
-                                    <br />
-                                    <div className='icon-text-container'>
-                                        <div className='profile-icon'>{EMAIL_ICON}</div>
-                                        <div className='icon-text'><a href={"mailto:" + mechanic.email}>{mechanic.email}</a></div>
-                                    </div>
-                                    <div className='icon-text-container'>
-                                        <div className='profile-icon'>{VIEWS_ICON}</div>
-                                        <div className='icon-text'>{mechanic.numViews}</div>
-                                    </div>
-                                    <br />
-                                    <br/>
-                                </div>
+                                <Mechanic mechanic={mechanic} />
                                 <div className="delete__btn">
                                     <div className='ban' onClick={() => this.banMech(mechanic)}>{DELETE_ICON}</div>
                                 </div>

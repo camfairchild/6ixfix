@@ -119,11 +119,13 @@ const ProfileSchema = new mongoose.Schema({
         default: 0
     },
     carPics:  {
-        type: [CarPictureSchema],
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Picture',
         default: null
     }
 
 })
 
+ProfileSchema.index({ fullName: "text", bio: "text", serviceRequested: "text", email: "text", userName: "text", location: "text" }); // text index for search
 const Profile = mongoose.model('Profile', ProfileSchema);
 export default Profile;
