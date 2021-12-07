@@ -12,7 +12,7 @@ if (process.env.REACT_APP_ENV === "development") {
 const instance = axios.create({
   baseURL: base_url,
   withCredentials: true,
-})
+}) 
 
 export function getUserByUserName(userName) {
   // makes a call to the server to get the profile by userName
@@ -292,8 +292,18 @@ export async function getProfileByuserName(userName) {
   }
 }
 
-export async function updateProfile(newProfile) {
-
+export async function updateProfile(newProfile, user) {
+  console.log(newProfile)
+  let url = `api/profiles/`
+  if (user.userType === 'Admin') {
+    url = `api/profiles/${newProfile.userName}`
+  }
+  const result = await instance.put(url, newProfile)
+  if (result.status !== 200) {
+    console.log("error: cannot update profile")
+  } else {
+    console.log(result)
+  }
 }
 
 export async function uploadImage(image, caption) {

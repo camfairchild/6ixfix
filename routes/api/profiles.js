@@ -5,6 +5,7 @@ const log = console.log
 
 import mongoChecker from '../../middleware/mongoose.js';
 import isLoggedIn from '../../middleware/loggedin.js';
+import isAdmin from '../../middleware/isAdmin.js'
 import mongoose from 'mongoose';
 const Profile = mongoose.model('Profile')
 const Picture = mongoose.model('Picture')
@@ -19,7 +20,7 @@ router.post('/', mongoChecker, async (req, res) => {
 	let bannerImage;
 	let picture;
 
-	if (req.files?.bannerImage) {
+	if (req.files?.bannerImage) { 
 		bannerImage = new Picture({
 			picture: {
 				data: req.files.bannerImage.data,
@@ -168,6 +169,57 @@ router.delete('/:id', mongoChecker, isLoggedIn, async (req, res) => {
 		log(error)
 		res.status(500).send() // server error, could not delete.
 	}
+})
+
+// a PUT route for replacing an *entire* resource.
+//  The body should contain *all* of the required fields of the resource.
+router.put('/', mongoChecker, isLoggedIn, async (req, res) => {
+	
+	// Replace the profile by their userName from the session using req.body
+	try {
+		const profile = await Profile.findOneAndUpdate({userName: req.session.username}, req.body, {returnOriginal: false})
+		if (!profile) {
+			res.status(404).json({
+				error: "profile is null"
+			})
+		} else {   
+			res.json(profile)
+		}
+	} catch (error) {
+		log(error) // log server error to the console, not to the client.
+		if (isMongoError(error)) { // check for if mongo server suddenly disconnected before this request.
+			res.status(500).send('Internal server error')
+		} else {
+			res.status(400).send('Bad Request') // bad request for changing the student.
+		}
+	}
+
+})
+
+
+// a PUT route for replacing an *entire* resource.
+//  The body should contain *all* of the required fields of the resource.
+router.put('/:userName', mongoChecker, isLoggedIn, isAdmin, async (req, res) => {
+	const userName = req.params.userName
+	// Replace the profile by their userName from the session using req.body
+	try {
+		const profile = await Profile.findOneAndUpdate({userName}, req.body, {returnOriginal: false})
+		if (!profile) {
+			res.status(404).json({
+				error: "profile is null"
+			})
+		} else {   
+			res.json(profile)
+		}
+	} catch (error) {
+		log(error) // log server error to the console, not to the client.
+		if (isMongoError(error)) { // check for if mongo server suddenly disconnected before this request.
+			res.status(500).send('Internal server error')
+		} else {
+			res.status(400).send('Bad Request') // bad request for changing the student.
+		}
+	}
+
 })
 
 /// a PATCH route for making *specific* changes to a profile.

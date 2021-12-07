@@ -18,7 +18,7 @@ const app = express();
 
 // mongoose and mongo connection
 
-// to validate object IDs
+// to validate object IDs 
 import mongoose from 'mongoose';
 mongoose.set('bufferCommands', false);  // don't buffer db requests if the db server isn't connected - minimizes http requests hanging if this is the case.
 const mongoURI = process.env.MONGODB_URI || 'mongodb+srv://affan:csc309project@cluster0.hc477.mongodb.net/6ixFixAPI'
@@ -56,7 +56,7 @@ app.use(session({
     resave: false,
     saveUninitialized: false,
     cookie: {
-      expires: 60000,
+      expires: 6000000,
       httpOnly: true,
     },
     // store the sessions on the database in production

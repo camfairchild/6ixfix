@@ -43,7 +43,9 @@ export default function Profile(props) {
                 }
                 setLoggedIn(user !== null)
                 setProfile(profile)
-                setisUser(user?.userName === profile.userName)
+                setisUser(user?.userName === profile.userName || user.userType === 'Admin')
+                console.log(loggedIn)
+                console.log(user)
             } catch (err) {
                 if (err.code === 404) {
                     return history.push(`/profile/${userName || ""}?e=404`)
@@ -76,10 +78,10 @@ export default function Profile(props) {
         callUpdateProfile(profile)
     }
 
-    const callUpdateProfile = async (newProfile) => {
+    const callUpdateProfile = async (newProfile, user) => {
         // make api call to update profile
         try {
-            updateProfile(newProfile)
+            updateProfile(newProfile, user)
         } catch(error) {
             console.log(error)
         }
@@ -106,12 +108,14 @@ export default function Profile(props) {
     }
 
     const handleEditUserInfo = (newInfo) => {
-        setProfile({
+        const newProfile = {
             ...profile,
             ...newInfo
-        })
+        }
+        setProfile(newProfile)
         setEditUserInfo(false)
-        callUpdateProfile(profile)
+        console.log(newProfile)
+        callUpdateProfile(newProfile, user)
     }
 
 

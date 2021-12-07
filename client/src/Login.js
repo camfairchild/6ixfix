@@ -73,14 +73,21 @@ export default function Login(props) {
     // sends POST to API with new signup details
     // recieves http status and profile
 
-    callLoginAPI(userName, password).then(result => {
+    callLoginAPI(userName, password).then(result => { 
+      console.log(result.data)
       setUser(({
         userName: result.data.user.userName,
-        user_id: result.data.user_id,
+        user_id: result.data.user._id,
+        userType: result.data.profile.userType
       }));
-      let redirect = {
+      let redirect = { 
         pathname: `/profile/${result.data.user.userName}`,
       }
+      if (result.data.profile.userType === 'Admin') {
+        redirect = {
+          pathname: `/admin`,
+        }
+      } 
       setRedirect(redirect)
     }).catch((error) => {
       console.log(error);
