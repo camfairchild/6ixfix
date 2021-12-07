@@ -17,6 +17,7 @@ import { upload_image } from '../api/picture.js'
 
 const Profile = mongoose.model('Profile');
 const User = mongoose.model('User');
+const HelpForm = mongoose.model('HelpForm');
 
 router.use('/profiles', profilesRouter);
 router.use('/clients', clientsRouter);
@@ -42,7 +43,23 @@ router.get('/mechanics', mongoChecker, async (req, res) => {
 
 })
 
-
+router.post('/help', mongoChecker, async (req, res) => {
+	const {uName, email, message} = req.body
+	try {
+		const form = await HelpForm.create({
+			name: uName,
+			email: email,
+			message: message
+		})
+		res.json(form)
+	} catch (error) {
+		console.log(error)
+		res.status(500).json({
+			error, 
+			message: 'Help form did not get submitted correctly'
+		})
+	}
+})
 
 /// Route for adding a car picture to a client's pictures.
 /* 

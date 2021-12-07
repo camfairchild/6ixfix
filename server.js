@@ -29,6 +29,7 @@ import Profile from './models/profiles.js'
 import Picture from './models/picture.js'
 import Message from './models/message.js'
 import User from './models/user.js'
+import HelpForm from './models/helpForm.js'
 import apiRouter from './routes/api.js'
 import pictureRouter from './routes/picture.js'
 

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Logo from './Logo';
 import NavButton from './NavButton';
 import SearchBar from './SearchBar';
@@ -8,7 +8,9 @@ import { useSessionStorage } from './useSessionStorage';
 
 export default function Header() {
     const [user, setUser] = useSessionStorage('user', null);
-    console.log("user", user);
+    useEffect(() => {
+        console.log("user", user);
+    }, [])
     return (
     <div className="header">
         <ul>

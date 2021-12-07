@@ -390,11 +390,21 @@ export async function getAllClients() {
 }
 
 export async function getAllMechanics() {
-  const result = await instance.get(`/api/mechanics`)
+  const result = await instance.get(`api/mechanics`)
     if (result.status === 200) {
       return result.data;
     } else {
       console.error(result.data, result.status)
       return null;
     }
+}
+
+export async function sendHelpForm(helpForm) {
+  const result = await instance.post(`api/help`, helpForm)
+  if (result.status === 200) {
+    return result.data;
+  } else {
+    console.error(result.data, result.status)
+    return null;
+  }
 }

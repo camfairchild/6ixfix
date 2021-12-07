@@ -56,6 +56,7 @@ div.navbutton {
   vertical-align: middle;
   background: #ffffff;
   border-radius: 0.25rem;
+  cursor: pointer;
 }
   div.navbutton a {
     text-decoration: none;
