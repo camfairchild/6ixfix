@@ -8,6 +8,8 @@ import isLoggedIn from '../../middleware/loggedin.js';
 import isAdmin from '../../middleware/isAdmin.js'
 import mongoose from 'mongoose';
 
+const Profile = mongoose.model('Profile');
+
 router.get('/', mongoChecker, async (req, res) => {
 	try {
 		const query = req.query.query
