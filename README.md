@@ -135,5 +135,5 @@ From npm
     1. The "router.get('/search')" route in api.js is used to get the profiles of users which match the search provided by the user. The router expects to recieve the search query that the user provides. The router will return the JSON of the profile documents of all profiles that match the search.
     * Postman route: get: /api/search/
 
-    2. The "router.get('/search/filterOptions')" route in api.js is used to get the profiles based on the search and filter options a user selects. The route expects to recieve the desired fields that the user wants to filter their search by. The route returns the JSON of the profile documents of all profiles that match the search with the specified filters.
+    2. The "router.get('/search/filterOptions')" route in api.js is used to get the filter options available for search. The route does not expect any ancillary data. The route returns the JSON of the filter options allowed.
     * Postman route: get: /api/search/filterOptions
