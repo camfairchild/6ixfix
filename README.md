@@ -70,14 +70,23 @@ From npm
     * Postman route: patch: /api/clients/pictures/:id/:car_id
 
 ### /routes/api/messages.js
-    1. The "router.get('/:userName/')" route in messages.js is used to get all messages sent between the logged in user and the user with userName in our app. The route does not expect to recive any ancilliary data. The route will return all messages between the logged in user and the user with userName as mentioned before.
+    1. The "router.get('/:userName/')" route in messages.js is used to get all messages sent between the logged in user and the user with userName in our app. The route does not expect to receive any ancilliary data. The route will return all messages between the logged in user and the user with userName as mentioned before.
     * Postman route: get: /api/messages/:userName/
 
-    2. The "router.get('/')" route in messages.js is used to get all messages for the logged in user. The route does not expect to recieve any ancilliary data and the route will return all messages that the logged in user has sent or recieved.
+    2. The "router.get('/')" route in messages.js is used to get all messages for the logged in user. The route does not expect to recieve any ancillary data and the route will return all messages that the logged in user has sent or recieved.
     * Postman route: get: /api/messages/
 
-    3. The "router.post('/)" route in messages.js is used to send a message to a user with is in the url. The route does not expect to recieve any ancilliary data and the route will return a JSON object of type Message which inclues the id of who the message was sent by, the id of who the message is to, and the message itself.
+    3. The "router.post('/)" route in messages.js is used to send a message to a user with is in the url. The route does not expect to recieve any ancillary data and the route will return a JSON object of type Message which inclues the id of who the message was sent by, the id of who the message is to, and the message itself.
     * Postman route: post: /api/messages/
+
+    4. The "router.get('/recent')" route in messages.js is used to get the most recent messages for a logged-in user between each person they message (a contact). The route does not expect to receive any ancilliary data. The route will return the most recent messages containing the logged-in user, formatted as an object with keys being the userName for each contact.
+    * Postman route: get: /api/messages/recent/
+
+    5. The "router.get('/:checkTime')" route in messages.js is used to get all messages for the logged in user since checkTime. The route expects to recieve a unix timestamp and the route will return all messages that the logged in user has sent or recieved since that timestamp.
+    * Postman route: get: /api/messages/:checkTime
+
+    6. The "router.get('/contacts)" route in messages.js is used to get all the contacts of a logged-in user. The route does not expect to recieve any ancillary data and the route will return an array of Profile objects corresponding to the user's contacts (people he has messaged with).
+    * Postman route: post: /api/messages/contacts
 
 ### /routes/api/profiles.js
     1. The "router.post('/')" route in profiles.js is used to create a profile in our app. The route expects to receive the fullName, userType, userName, location, picture, email, bio for both types of users. If the user is a client, the route also expects to recieve the carMake, carModel, and carYear. If the user is a mechanic, the route will instead also expect the mechType, certified, and rate fields. The route will return the JSON of the profile document we just created.
@@ -98,7 +107,7 @@ From npm
     6. The "router.put('/:userName)" route in profiles.js is used to get replace the entire profile of the user with userName. The route expects to recieve all of the required fields of the profile we want to replace. The route will return the JSON of the profile document that was replaced.
     * Postman route: put: /api/profiles/:userName
 
-    7. The "router.patch('/:id')" in profiles.js is used to replace the fields and update their values of the user with id in our app. The route expects to recive the fields of the profile that need to be updated and will return the JSON of the profile document that was updated. 
+    7. The "router.patch('/:id')" in profiles.js is used to replace the fields and update their values of the user with id in our app. The route expects to receive the fields of the profile that need to be updated and will return the JSON of the profile document that was updated. 
     * Postman route: patch: /api/profiles/:id
 
 ### api.js
@@ -108,10 +117,10 @@ From npm
     2. The "router.post('/help')" route in api.js is used to send a help query on our app. The route expects ro recieve the uName, email and message of the help query a user wants to send and returns the JSON of the HelpForm document that was created.
     * Postman route: post: /api/help/
 
-    3. The "router.post('/clientPictures/')" route in api.js is used to add a car picture to the clients pictures in our app. The route expects to recive the picture and caption for the image to upload and the route will return a JSON object with the picture and client fields (the client being the profile of the user uploading this picture). 
+    3. The "router.post('/clientPictures/')" route in api.js is used to add a car picture to the clients pictures in our app. The route expects to receive the picture and caption for the image to upload and the route will return a JSON object with the picture and client fields (the client being the profile of the user uploading this picture). 
     * Postman route: post: /api/clientPictures/
 
-    4. The "router.post('/profilePic/')" route in api.js is used to add a profile picture to a clients profile in our app. The route expects to recive the picture to upload and the route will return a JSON object with the picture and client fields (the client being the profile of the user uploading this picture).
+    4. The "router.post('/profilePic/')" route in api.js is used to add a profile picture to a clients profile in our app. The route expects to receive the picture to upload and the route will return a JSON object with the picture and client fields (the client being the profile of the user uploading this picture).
     * Postman route: post: /api/profilePic/
 
     5. The "router.get('/profile')" route in api.js is used to get the profile information of a user whose profile we are currently viewing. The route does not expect to recieve any ancilliary information and the route will return the JSON of the profile document that is currently being viewed.
@@ -119,13 +128,14 @@ From npm
 
     6. The "router.get('/user/:id')" route in api.js is used to get the profile information of a user with the specified id in the url. The route does not expect to recieve any ancilliary information and the route will return the JSON of the profile document that is currently being viewed.
     * Postman route: get: /api/user/:id
-
-    7. The "router.get('/search')" route in api.js is used to get the profiles of users which match the search provided by the user. The router expects to recieve the search query that the user provides. The router will return the JSON of the profile documents of all profiles that match the search.
-    * Postman route: get: /api/search/
-
-    8. The "router.get('/search/filterOptions')" route in api.js is used to get the profiles based on the search and filter options a user selects. The route expects to recieve the desired fields that the user wants to filter their search by. The route returns the JSON of the profile documents of all profiles that match the search with the specified filters.
-    * Postman route: get: /api/search/filterOptions
     
 ### pictures.js
     1. The "router.get(/picture/:id')" route in pictures.js is used to get a picture for the client with the specified id in the url. The route does not expect any ancilliary information and the route will return a JSON object which has a url and caption field which have the url and the caption for the picture. 
     * Postman route: get: /pictures/picture/:id
+
+### /routes/api/search.js
+    1. The "router.get('/search')" route in api.js is used to get the profiles of users which match the search provided by the user. The router expects to recieve the search query that the user provides. The router will return the JSON of the profile documents of all profiles that match the search.
+    * Postman route: get: /api/search/
+
+    2. The "router.get('/search/filterOptions')" route in api.js is used to get the profiles based on the search and filter options a user selects. The route expects to recieve the desired fields that the user wants to filter their search by. The route returns the JSON of the profile documents of all profiles that match the search with the specified filters.
+    * Postman route: get: /api/search/filterOptions
