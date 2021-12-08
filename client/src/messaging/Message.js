@@ -6,7 +6,7 @@ export default class Message extends React.Component {
         let { message, from, to, time_ } = this.props.message;
         const userName = this.props.user?.userName;
         let sent = false;
-        if (from === userName || from === "" ) {
+        if (from.userName === userName || from.userName === "" ) {
             from = "me";
             sent = true;
         }
@@ -14,7 +14,7 @@ export default class Message extends React.Component {
         return (
             <div className={`message-container ${sent ? "sent" : "recieved"}`}>
                 <div className="message-from">
-                    {from}
+                    {from.userName}
                 </div>
                 <div className="message-timestamp">
                     {time_}

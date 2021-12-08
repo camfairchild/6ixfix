@@ -22,7 +22,7 @@ const app = express();
 import mongoose from 'mongoose';
 mongoose.set('bufferCommands', false);  // don't buffer db requests if the db server isn't connected - minimizes http requests hanging if this is the case.
 const mongoURI = process.env.MONGODB_URI || 'mongodb+srv://affan:csc309project@cluster0.hc477.mongodb.net/6ixFixAPI'
-const db = mongoose.connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true})
+const db = mongoose.connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true })
 
 // import the mongoose models
 import Profile from './models/profiles.js'
@@ -35,45 +35,66 @@ import pictureRouter from './routes/picture.js'
 
 import cloudinary from 'cloudinary'
 cloudinary.config({
-    cloud_name: 'app-6ixfix',
-    api_key: '352848523658664',
-    api_secret: 'xrcl63fW0yEipRaXD9s-wlXcamk'
+  cloud_name: 'app-6ixfix',
+  api_key: '352848523658664',
+  api_secret: 'xrcl63fW0yEipRaXD9s-wlXcamk'
 });
 
 // express json: middleware for parsing HTTP JSON body into a usable object
-app.use(cors())
+if (process.env.NODE_ENV === 'development') {
+  const corsOptions = {
+    origin: function (origin, cb) {
+      const whitelist = [
+        'http://localhost:3000',
+        'http://localhost:5000',
+      ]
+
+      // check if the request is from a origin in whitelist
+      if (!origin || whitelist.indexOf(origin) !== -1) {
+        cb(null, true)
+      } else {
+        cb(new Error('Not allowed by CORS'))
+      }
+    },
+    credentials: true,
+  }
+
+  app.use(cors(corsOptions))
+} else {
+  app.use(cors())
+}
 app.use(express.json())
 app.use(cookieParser())
 app.use(express.urlencoded({ extended: false }));
 app.use(fileUpload({
-	limits: { 
-        fileSize: 10 * 1024 * 1024 * 1024 //10MB max file size
-    },
-	useTempFiles : true,
-    tempFileDir : '/tmp/'
+  limits: {
+    fileSize: 10 * 1024 * 1024 * 1024 //10MB max file size
+  },
+  useTempFiles: true,
+  tempFileDir: '/tmp/'
 }))
 app.use(session({
-    secret: process.env.SESSION_SECRET || "secret", // make a SESSION_SECRET environment variable when deploying (for example, on heroku)
-    resave: false,
-    saveUninitialized: false,
-    cookie: {
-      expires: 6000000,
-      httpOnly: true,
-    },
-    // store the sessions on the database in production
-    store:
-      process.env.NODE_ENV === "production"
-        ? MongoStore.create({
-            mongoUrl:
-              process.env.MONGODB_URI ||
-              "mongodb+srv://affan:csc309project@cluster0.hc477.mongodb.net/6ixFixAPI",
-          })
-        : null,
-  }))
+  secret: process.env.SESSION_SECRET || "secret", // make a SESSION_SECRET environment variable when deploying (for example, on heroku)
+  resave: false,
+  saveUninitialized: false,
+  cookie: {
+    expires: 6000000,
+    httpOnly: true,
+  },
+  // store the sessions on the database in production
+  store:
+    process.env.NODE_ENV === "production"
+      ? MongoStore.create({
+        mongoUrl:
+          process.env.MONGODB_URI ||
+          "mongodb+srv://affan:csc309project@cluster0.hc477.mongodb.net/6ixFixAPI",
+      })
+      : null,
+}))
 
 /*** Helper functions below **********************************/
 function isMongoError(error) { // checks for first error returned by promise rejection if Mongo database suddently disconnects
-	return typeof error === 'object' && error !== null && error.name === "MongoNetworkError"
+  return typeof error === 'object' && error !== null && error.name === "MongoNetworkError"
 }
 
 app.use('/api', apiRouter)
@@ -90,20 +111,20 @@ app.use(express.static(path.join(__dirname, "/client/build")));
 
 // All routes other than above will go to index.html
 app.get("*", (req, res) => {
-    // check for page routes that we expect in the frontend to provide correct status code.
-    const goodPageRoutes = [
-		"/", "/search", "/dashboard",
-		"/help", "/about", "/profile",
-		"/login", "/signup", "/admin",
-		"/messages"
-	];
-    if (!goodPageRoutes.includes(req.url)) {
-        // if url not in expected page routes, set status to 404.
-        res.status(404);
-    }
+  // check for page routes that we expect in the frontend to provide correct status code.
+  const goodPageRoutes = [
+    "/", "/search", "/dashboard",
+    "/help", "/about", "/profile",
+    "/login", "/signup", "/admin",
+    "/messages"
+  ];
+  if (!goodPageRoutes.includes(req.url)) {
+    // if url not in expected page routes, set status to 404.
+    res.redirect("/");
+  }
 
-    // send index.html
-    res.sendFile(path.join(__dirname, "/client/build/index.html"));
+  // send index.html
+  res.sendFile(path.join(__dirname, "/client/build/index.html"));
 });
 
 /*************************************************/
@@ -111,18 +132,18 @@ app.get("*", (req, res) => {
 // Express server listening...
 const port = process.env.PORT || 5000
 app.listen(port, () => {
-	mongoose.connection.on('connected', () => {
-		log(`Mongoose connected to ${mongoURI}`)
-	})
+  mongoose.connection.on('connected', () => {
+    log(`Mongoose connected to ${mongoURI}`)
+  })
 
-	mongoose.connection.on('error', (error) => {
-		if (isMongoError(error)) {
-			console.log(error)
-           	console.log('Error connecting to mongodb. Timeout reached.') 
-		}
-	})
-	
-	log(`Listening on port ${port}...`)
-}) 
+  mongoose.connection.on('error', (error) => {
+    if (isMongoError(error)) {
+      console.log(error)
+      console.log('Error connecting to mongodb. Timeout reached.')
+    }
+  })
+
+  log(`Listening on port ${port}...`)
+})
 
 export default app

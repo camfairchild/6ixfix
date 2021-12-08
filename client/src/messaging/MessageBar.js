@@ -30,7 +30,7 @@ export default class MessageBar extends React.Component {
             from: this.props.user?.userName,
             time_: new Date() // TODO: should be verified on server
         }
-        sendMessage(this.props.socket, newMessage).then((result) => {
+        sendMessage(newMessage).then((result) => {
             const [status, message] = result;
             if (status === '200') {
                 // success, message sent
@@ -42,6 +42,7 @@ export default class MessageBar extends React.Component {
             }
         }).catch((err) => {
             // handle error
+            console.log(err)
         })
     }
 

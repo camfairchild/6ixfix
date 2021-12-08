@@ -8,7 +8,8 @@ export default class Messages extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            messages: {}
+            messages: {},
+            message_ids: []
         }
 
         this.handleRecentMessage = this.handleRecentMessage.bind(this);
@@ -17,37 +18,41 @@ export default class Messages extends React.Component {
     handleRecentMessage(recentMessage) {
         // TODO: remove after sockets are implemented
         // grabs message from event
-        let message = recentMessage.detail; 
-
+        let message = recentMessage.detail;
         const user = this.props.user;
         const messages = this.state.messages;
-        if (message.to === user.userName) {
-            if (message.from in messages) {
-                messages[message.from].splice(0, 0, message)
+        if (this.state.message_ids.includes(message._id)) {
+            return;
+        }
+        if (message.to.userName === user.userName) {
+            if (message.from.userName in messages) {
+                messages[message.from.userName].splice(0, 0, message)
             } else {
-                messages[message.from] = [message]
+                messages[message.from.userName] = [message]
             }
         } else {
-            if (message.to in messages) {
-                messages[message.to].splice(0, 0, message)
+            if (message.to.userName in messages) {
+                messages[message.to.userName].splice(0, 0, message)
             } else {
-                messages[message.to] = [message]
+                messages[message.to.userName] = [message]
             }
         }
-        console.log("message:", message)
-        this.setState({ messages })
+        this.setState({ messages, message_ids: this.state.message_ids.concat(message._id) })
     }
 
     componentDidMount() {
-        getMessages(this.props.user?.userName).then((messages) => {
-            this.setState({ messages })
+        getMessages().then((messages) => {
+            const message_ids = Object.keys(messages).map((key) => {
+                return messages[key].map(message => message._id)
+            })
+            this.setState({ messages, message_ids })
             // sets the listener for the messages
-            addMessageListener(this.props.socket, this.handleRecentMessage);
+            addMessageListener(this.handleRecentMessage);
         })
     }
 
     componentWillUnmount() {
-        removeMessageListener(this.props.socket, this.handleRecentMessage);
+        removeMessageListener(this.handleRecentMessage);
     }
 
     render() {

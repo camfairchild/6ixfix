@@ -31,7 +31,7 @@ export default class App extends React.Component {
                     <Route exact path='/logout'>
                         <Home page='login'/>
                     </Route>
-                    <Route exact path='/messages' component={Messaging} />
+                    <Route path='/messages/:userName?' component={Messaging} />
                     {/* Optional argument here*/}
                     <Route path="/admin/:view?" component={Dashboard}/>
                 </Switch>
