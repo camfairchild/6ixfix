@@ -70,8 +70,8 @@ From npm
     * Postman route: patch: /api/clients/pictures/:id/:car_id
 
 ### /routes/api/messages.js
-    1. The "router.get('/:userName/')" route in messages.js is used to get all messages sent between the logged in user and the user with userName in our app. The route does not expect to receive any ancilliary data. The route will return all messages between the logged in user and the user with userName as mentioned before.
-    * Postman route: get: /api/messages/:userName/
+    1. The "router.get('/user/:userName/')" route in messages.js is used to get all messages sent between the logged in user and the user with userName in our app. The route does not expect to receive any ancilliary data. The route will return all messages between the logged in user and the user with userName as mentioned before.
+    * Postman route: get: /api/messages/user/:userName/
 
     2. The "router.get('/')" route in messages.js is used to get all messages for the logged in user. The route does not expect to recieve any ancillary data and the route will return all messages that the logged in user has sent or recieved.
     * Postman route: get: /api/messages/
