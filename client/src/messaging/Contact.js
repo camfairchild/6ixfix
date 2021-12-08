@@ -6,6 +6,7 @@ import { formatTime } from '../Helper';
 export default class Contact extends React.Component {
 
     render() {
+        console.log("recentMessage render:", this.props.mostRecentMessage);
         let { message, from, time_ } = this.props.mostRecentMessage;
         if (from !== this.props.contact.userName) {
             from = "me";

@@ -15,23 +15,22 @@ export default class Contacts extends React.Component {
     }
 
     componentDidMount() {
-        const userName = this.props.user?.userName;
-        getContacts(userName).then((contacts) => {
-            getMostRecentMessages(userName).then((mostRecentMessages) => {
+        getContacts().then((contacts) => {
+            getMostRecentMessages().then((mostRecentMessages) => {
                 this.setState({
                     contacts,
                     mostRecentMessages
                 })
                 
             // sets the listener for the new messages and updates the state
-            addMessageListener(this.props.socket, this.handleRecentMessage);
+            addMessageListener(this.handleRecentMessage);
             })
         })
     }
 
     componentWillUnmount() {
         // removes the listener for the new messages and updates the state
-        removeMessageListener(this.props.socket, this.handleRecentMessage);
+        removeMessageListener(this.handleRecentMessage);
     }
 
     handleRecentMessage(recentMessage) {
@@ -41,13 +40,13 @@ export default class Contacts extends React.Component {
 
         // update contacts list with the new last message
         let contact;
-        if (message.from === this.props.user?.userName) {
-            contact = message.to;
-        } else if (message.to === this.props.user?.userName) {
-            contact = message.from;
+        if (message.from.userName === this.props.user?.userName) {
+            contact = message.to.userName;
+        } else if (message.to.userName === this.props.user?.userName) {
+            contact = message.from.userName;
         }
         let mostRecentMessages = this.state.mostRecentMessages;
-        mostRecentMessages[contact] = message;
+        mostRecentMessages[contact] = [message];
         this.setState({
             mostRecentMessages
         })
@@ -67,11 +66,12 @@ export default class Contacts extends React.Component {
                         if (!this.state.mostRecentMessages[contact.userName]) {
                             return(null);
                         }
+                        console.log(contact.userName)
                         return (
                             <Contact
                                 key={index}
                                 contact={contact}
-                                mostRecentMessage={this.state.mostRecentMessages[contact.userName]}
+                                mostRecentMessage={this.state.mostRecentMessages[contact.userName][0]}
                                 selected={contact.userName === this.props.selectedContact}
                                 onClick={this.updateSelectedContact(contact)}
                             />

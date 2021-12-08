@@ -6,6 +6,8 @@ const Profile = mongoose.model('Profile')
 import { Router } from 'express';
 import _ from 'lodash';
 
+import isLoggedIn from '../../middleware/loggedin.js';
+
 const router = new Router();
 
 const log = console.log;
@@ -123,4 +125,7 @@ router.post('/signup', async (req, res) => {
     
 })
 
+router.get('/checkSession', isLoggedIn, (req, res) => {
+    res.send()
+})
 export default router;

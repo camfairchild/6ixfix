@@ -12,131 +12,38 @@ if (process.env.REACT_APP_ENV === "development") {
 const instance = axios.create({
   baseURL: base_url,
   withCredentials: true,
-}) 
+})
+
+export async function checkSession() {
+  try {
+    const result = await instance.get("api/auth/checkSession");
+    return result.status === 200;
+  } catch (error) {
+    console.log(error);
+    return false;
+  }
+}
 
 export function getUserByUserName(userName) {
   // makes a call to the server to get the profile by userName
   return getProfileByuserName(userName)
 }
 
-export async function getMessages(userName, token = null) {
+export async function getMessages(date = null) {
   // makes GET request to the server
   // gets the message history of a user by userName
   // token is a login token for authentication
-  userName = userName || "";
-  return new Promise((resolve, reject) => {
-    let mock = [];
-    if (userName.toLowerCase().includes("mechanic")) {
-      mock = {
-        client1: [
-          {
-            from: "client1",
-            to: userName,
-            message: "test message 3",
-            time_: new Date("2021-10-31T13:01:00+00:00"),
-          },
-          {
-            from: userName,
-            to: "client1",
-            message: "test message 2",
-            time_: new Date("2021-10-31T12:34:10+00:00"),
-          },
-          {
-            from: "client1",
-            to: userName,
-            message: "test message 1",
-            time_: new Date("2021-10-31T12:30:23+00:00"),
-          },
-        ],
-        client2: [
-          {
-            from: userName,
-            to: "client2",
-            message: "test message 5",
-            time_: new Date("2021-10-29T16:35:19+00:00"),
-          },
-          {
-            from: userName,
-            to: "client2",
-            message: "test message 4",
-            time_: new Date("2021-10-29T16:23:17+00:00"),
-          },
-        ],
-      };
-    } else {
-      mock = {
-        mech1: [
-          {
-            from: "mech1",
-            to: userName,
-            message: "test message 3",
-            time_: new Date("2021-10-31T13:01:00+00:00"),
-          },
-          {
-            from: userName,
-            to: "mech1",
-            message: "test message 2",
-            time_: new Date("2021-10-31T12:34:10+00:00"),
-          },
-          {
-            from: "mech1",
-            to: userName,
-            message: "test message 1",
-            time_: new Date("2021-10-31T12:30:23+00:00"),
-          },
-        ],
-        mech2: [
-          {
-            from: userName,
-            to: "mech2",
-            message: "test message 5",
-            time_: new Date("2021-10-29T16:35:19+00:00"),
-          },
-          {
-            from: userName,
-            to: "mech2",
-            message: "test message 4",
-            time_: new Date("2021-10-29T16:23:17+00:00"),
-          },
-        ],
-        mech3: [
-          {
-            from: userName,
-            to: "mech3",
-            message: "test message 5",
-            time_: new Date("2021-10-29T16:35:19+00:00"),
-          },
-        ],
-        mech4: [
-          {
-            from: userName,
-            to: "mech4",
-            message: "test message 5",
-            time_: new Date("2021-10-29T16:35:19+00:00"),
-          },
-        ],
-        mech5: [
-          {
-            from: userName,
-            to: "mech5",
-            message: "test message 5",
-            time_: new Date("2021-10-29T16:35:19+00:00"),
-          },
-        ],
-        mech6: [
-          {
-            from: userName,
-            to: "mech6",
-            message: "test message 19",
-            time_: new Date("2021-10-28T16:06:19+00:00"),
-          },
-        ],
-      };
-    }
-  });
+  const result = await instance.get(`api/messages/${date || ""}`);
+  if (result.status === 200) {
+    return result.data
+  } else {
+    console.log("error getting messages");
+    console.log(result.data);
+    return null
+  }
 }
 
-export function addMessageListener(socket, listener) {
+export function addMessageListener(listener) {
   // handles the messages sent from the server
   // socket is the socket that the messages are sent to
   // calls the listener everytime the socket receives a message
@@ -145,39 +52,74 @@ export function addMessageListener(socket, listener) {
   document.addEventListener("message", listener);
 }
 
-export function removeMessageListener(socket, listener) {
+export function removeMessageListener(listener) {
   // removes the listener from the socket
 
   // TODO: change this to use the socket.io library
   document.removeEventListener("message", listener);
 }
 
-export function getMostRecentMessages() {
+export async function getMostRecentMessages() {
   // returns the most recent message for each contact the user has
-  return new Promise((resolve, reject) => {
-    instance.get(`/messages/`).then((res) => {
-      if (res.status === 200) {
-        resolve(res.data);
-      } else {
-        reject(res.data);
-      }
-    });
-  });
+  try {
+    const result = await instance.get(`api/messages/recent/`)
+    if (result.status === 200) {
+      return result.data;
+    } else {
+      return null
+    }
+  } catch (error) {
+    console.log("error getting recent messages");
+    console.log(error);
+    return null;
+  }
 }
 
-export async function getContacts(userName, token = null) {
+export async function startPollingForMessages() {
+  const interval = setInterval(async () => {
+    console.log('checking for new messages')
+    // last time interval was checked + 1 second
+    const date = (new Date()) - 1000 * 6;
+
+    try {
+      // get messages since last check
+      const messages = await getMessages(date);
+      if (messages) {
+        messages.forEach(message => {
+          document.dispatchEvent(new CustomEvent("message", { detail: message }));
+        });
+      }
+    } catch (error) {
+      stopPollingForMessages()
+    }
+  }, 1000 * 5); // every 5 seconds
+  return interval
+}
+
+export async function stopPollingForMessages(interval) {
+  const int = setInterval(() => {}, 0)
+  // clears all intervals
+  for (let i = 0; i < int; i++) {
+    clearInterval(i);
+  }
+  clearInterval(interval);
+}
+
+export async function getContacts() {
   // makes GET request to the server
   // gets the contacts of a user using session
-  return new Promise(async (resolve, reject) => {
-    const result = await instance.get('api/messages/')
-    if (result.status !== 200) {
-      console.error(result.data)
-      reject(null)
-    } else {
-      // TODO:
-      resolve(result.data)
-    }
-  });
+  try {
+  const result = await instance.get('api/messages/contacts')
+  if (result.status !== 200) {
+    console.error(result.data)
+    return null
+  } else {
+    return result.data
+  }
+} catch (error) {
+  console.log(error)
+  return null
+}
 }
 
 function dateDiff(first, second) {
@@ -188,6 +130,10 @@ function dateDiff(first, second) {
 }
 
 export function formatTime(time_) {
+  console.log("time:", time_)
+  if (!(time_ instanceof Date)) {
+    time_ = new Date(time_);
+  }
   const now = new Date();
   let result = "";
   const daysDiff = dateDiff(now, time_);
@@ -242,26 +188,18 @@ export async function sendMessage(message) {
     if (!message) {
       reject("No message to send");
     }
-    const options = {
-      url: `/api/messages/`,
-      method: 'POST',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json;charset=UTF-8'
-      },
-      data: {
-        message
-      }
-    };
 
-    instance(options).then(res => {
+    instance.post('api/messages/',{
+      message
+    }).then(res => {
       if (res.status !== 200) {
         return reject(res.data);
       }
 
       const messageEvent = new CustomEvent("message", {
-        detail: message,
+        detail: res.data,
       });
+      console.log("message sent", messageEvent);
       document.dispatchEvent(messageEvent);
       resolve(["200", message]);
     })
@@ -361,12 +299,12 @@ export async function logout() {
 
 export async function getAllProfiles() {
   const result = await instance.get(`api/profiles`)
-    if (result.status === 200) {
-      return result.data;
-    } else {
-      console.error(result.data, result.status)
-      return null;
-    }
+  if (result.status === 200) {
+    return result.data;
+  } else {
+    console.error(result.data, result.status)
+    return null;
+  }
 }
 
 export async function deleteUser(id) {
@@ -381,22 +319,22 @@ export async function deleteUser(id) {
 
 export async function getAllClients() {
   const result = await instance.get(`api/clients`)
-    if (result.status === 200) {
-      return result.data;
-    } else {
-      console.error(result.data, result.status)
-      return null;
-    }
+  if (result.status === 200) {
+    return result.data;
+  } else {
+    console.error(result.data, result.status)
+    return null;
+  }
 }
 
 export async function getAllMechanics() {
   const result = await instance.get(`api/mechanics`)
-    if (result.status === 200) {
-      return result.data;
-    } else {
-      console.error(result.data, result.status)
-      return null;
-    }
+  if (result.status === 200) {
+    return result.data;
+  } else {
+    console.error(result.data, result.status)
+    return null;
+  }
 }
 
 export async function search(query, filter) {
@@ -418,12 +356,12 @@ export async function search(query, filter) {
 
 export async function getFilterOptions() {
   const result = await instance.get(`api/search/filterOptions/`)
-   if (result.status === 200) {
+  if (result.status === 200) {
     return result.data;
   } else {
     console.error(result.data, result.status)
     return [];
-    
+
   }
 }
 
