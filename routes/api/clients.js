@@ -238,9 +238,7 @@ Request body expects:
 // Returned JSON has the updated client database 
 //   document in which the picture was changed, AND the picture subdocument:
 //   { "picture": <picture subdocument>, "client": <entire client document>}
-// PATCH restaurant/<client_id>/<car_id>
 router.patch('/pictures/:id/:pict_id', mongoChecker, async (req, res) => {
-	// Add code here
 	const id = req.params.id
 
 	const pid = req.params.pict_id
