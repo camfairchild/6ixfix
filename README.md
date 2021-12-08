@@ -70,22 +70,20 @@ From npm
     * Postman route: patch: /api/clients/pictures/:id/:car_id
 
 ### /routes/api/messages.js
-    1. The "router.get('/user/:userName/')" route in messages.js is used to get all messages sent between the logged in user and the user with userName in our app. The route does not expect to receive any ancilliary data. The route will return all messages between the logged in user and the user with userName as mentioned before.
-    * Postman route: get: /api/messages/user/:userName/
 
-    2. The "router.get('/')" route in messages.js is used to get all messages for the logged in user. The route does not expect to recieve any ancillary data and the route will return all messages that the logged in user has sent or recieved.
+    1. The "router.get('/')" route in messages.js is used to get all messages for the logged in user. The route does not expect to recieve any ancillary data and the route will return all messages that the logged in user has sent or recieved.
     * Postman route: get: /api/messages/
 
-    3. The "router.post('/)" route in messages.js is used to send a message to a user with is in the url. The route does not expect to recieve any ancillary data and the route will return a JSON object of type Message which inclues the id of who the message was sent by, the id of who the message is to, and the message itself.
+    2. The "router.post('/)" route in messages.js is used to send a message to a user with is in the url. The route does not expect to recieve any ancillary data and the route will return a JSON object of type Message which inclues the id of who the message was sent by, the id of who the message is to, and the message itself.
     * Postman route: post: /api/messages/
 
-    4. The "router.get('/recent')" route in messages.js is used to get the most recent messages for a logged-in user between each person they message (a contact). The route does not expect to receive any ancilliary data. The route will return the most recent messages containing the logged-in user, formatted as an object with keys being the userName for each contact.
+    3. The "router.get('/recent')" route in messages.js is used to get the most recent messages for a logged-in user between each person they message (a contact). The route does not expect to receive any ancilliary data. The route will return the most recent messages containing the logged-in user, formatted as an object with keys being the userName for each contact.
     * Postman route: get: /api/messages/recent/
 
-    5. The "router.get('/:checkTime')" route in messages.js is used to get all messages for the logged in user since checkTime. The route expects to recieve a unix timestamp and the route will return all messages that the logged in user has sent or recieved since that timestamp.
+    4. The "router.get('/:checkTime')" route in messages.js is used to get all messages for the logged in user since checkTime. The route expects to recieve a unix timestamp and the route will return all messages that the logged in user has sent or recieved since that timestamp.
     * Postman route: get: /api/messages/:checkTime
 
-    6. The "router.get('/contacts)" route in messages.js is used to get all the contacts of a logged-in user. The route does not expect to recieve any ancillary data and the route will return an array of Profile objects corresponding to the user's contacts (people he has messaged with).
+    5. The "router.get('/contacts)" route in messages.js is used to get all the contacts of a logged-in user. The route does not expect to recieve any ancillary data and the route will return an array of Profile objects corresponding to the user's contacts (people he has messaged with).
     * Postman route: post: /api/messages/contacts
 
 ### /routes/api/profiles.js

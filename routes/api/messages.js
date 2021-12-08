@@ -229,42 +229,6 @@ router.get('/contacts', mongoChecker, isLoggedIn, async (req, res) => {
     }
 })
 
-// GET /api/messages/:userName/
-// Route for getting all messages between the loggedin user and the user with the userName in the url.
-router.get('/user/:userName/', mongoChecker, async (req, res) => {
-    const { userName } = req.params;
-    const { user } = req.session; // logged in user
-    if (!user) {
-        return res.redirect('/login');
-    }
-    try {
-        const otherUser = await User.findOne({ userName });
-        if (!otherUser) {
-            return res.status(404).json({ error: 'User not found' });
-        }
-
-        const messages = await Message.find({
-            $or: [
-                {
-                    to: user._id,
-                    from: otherUser._id
-                },
-                {
-                    to: otherUser._id,
-                    from: user._id,
-                }
-            ]
-        })
-            .populate('from', '-__v -password').populate('to', '-__v -password'); // populate the user objects
-        return res.json(messages[0]);
-    } catch (err) {
-        console.log(err);
-        res.status(500).json({
-            error: "Internal Server Error"
-        });
-    }
-});
-
 // GET /api/messages/
 // Route for getting all messages for the loggedin user.
 router.get('/', mongoChecker, isLoggedIn, async (req, res) => {
