@@ -127,4 +127,6 @@ From npm
     8. The "router.get('/search/filterOptions')" route in api.js is used to get the profiles based on the search and filter options a user selects. The route expects to recieve the desired fields that the user wants to filter their search by. The route returns the JSON of the profile documents of all profiles that match the search with the specified filters.
     * Postman route: get: /api/search/filterOptions
     
-
+### pictures.js
+    1. The "router.get(/picture/:id')" route in pictures.js is used to get a picture for the client with the specified id in the url. The route does not expect any ancilliary information and the route will return a JSON object which has a url and caption field which have the url and the caption for the picture. 
+    * Postman route: get: /pictures/picture/:id
