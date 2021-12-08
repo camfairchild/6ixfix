@@ -38,6 +38,8 @@ From npm
 "validator": "^13.7.0"
 
 ## Routes
+
+Included is a postman link to a collection with some routes [![Run in Postman](https://run.pstmn.io/button.svg)](https://app.getpostman.com/run-collection/15354362-eadb3933-34e8-41bc-9ac2-df8e1e2d42ee?action=collection%2Ffork&collection-url=entityId%3D15354362-eadb3933-34e8-41bc-9ac2-df8e1e2d42ee%26entityType%3Dcollection%26workspaceId%3Dda55a802-ded7-4f6d-9fff-c1f8233cb228)
 ### /routes/api/admin.js
     1. The "router.delete('/profiles/:id')" route in admin.js is used to remove a profile by their id in our app. The route expects to be sent the id of the profile which is to be deleted and the returned JSON is the profile document that was deleted.
     * Postman route: delete: /api/admin/profiles/:id
