@@ -42,12 +42,12 @@ From npm
 ### /routes/api/admin.js
     1. The "router.delete('/profiles/:id')" route in admin.js is used to remove a profile by their id in our app. The route expects to be sent the id of the profile which is to be deleted and the returned JSON is the profile document that was deleted.
 
-/routes/api/auth.js
+### /routes/api/auth.js
     1. The "router.post('/login')" route in auth.js is used to help a user login to our app using their username and password. The route expectes to be sent the username and password of the user who wants to login and the route will return a json object that includes the username, id, profile of the user, and a message which says "Authenticated" when the login is successful. If the login is not successful, the route will return a json object with an error message saying "Incorrect userName or password".
 
     2. The "router.post('/signup')" route in auth.js is used to create a new user on our app. The route expectes to be sent the username and password, type of user and email of the user who wants to signup and the route will return a json object that includes the id, profile of the newly created user, and a message which says "Account created" when the signup is successful. If the login is not successful, the route will return a json object with the appropriate error message.
 
-/routes/api/clients.js
+### /routes/api/clients.js
     1. The "router.get('/)" route in clients.js is used to get all client profile information from our app. The route does not expect to recieve any data since it simply retrieves all client profile information. The route will return all client profiles if it is successful.
 
     2. The "router.post('/:id')" route in clients.js is used to add a car to a client. The route expects to be sent the the carMake, carModel, and carYear of the car to be added and the returned JSON for this route has the updated client database document that the car was added to, and the car subdocument.
@@ -61,14 +61,14 @@ From npm
 
     6. The "router.patch('/pictures/:id/:pict_id')" route in clients.js is used to change a car picture for a particular client in our app. The route expects to recieve the picture and caption for the image we want to upload. The returned JSON has the updated client database document in which the picture was changed, and the picture subdocument.
 
-/routes/api/messages.js
+### /routes/api/messages.js
     1. The "router.get('/:userName/')" route in messages.js is used to get all messages sent between the logged in user and the user with userName in our app. The route does not expect to recive any ancilliary data. The route will return all messages between the logged in user and the user with userName as mentioned before.
 
     2. The "router.get('/')" route in messages.js is used to get all messages for the logged in user. The route does not expect to recieve any ancilliary data and the route will return all messages that the logged in user has sent or recieved.
 
     3. The "router.post('/)" route in messages.js is used to send a message to a user with is in the url. The route does not expect to recieve any ancilliary data and the route will return a JSON object of type Message which inclues the id of who the message was sent by, the id of who the message is to, and the message itself.
 
-/routes/api/profiles.js
+### /routes/api/profiles.js
     1. The "router.post('/')" route in profiles.js is used to create a profile in our app. The route expects to receive the fullName, userType, userName, location, picture, email, bio for both types of users. If the user is a client, the route also expects to recieve the carMake, carModel, and carYear. If the user is a mechanic, the route will instead also expect the mechType, certified, and rate fields. The route will return the JSON of the profile document we just created. 
 
     2. The "router.get('/)" route in profiles.js is used to get all profile information in our app. The route does not expect to recieve any ancilliary information. The route will return the JSON of all the profile documents for all users in our app.
@@ -83,7 +83,7 @@ From npm
 
     7. The "router.patch('/:id')" in profiles.js is used to replace the fields and update their values of the user with id in our app. The route expects to recive the fields of the profile that need to be updated and will return the JSON of the profile document that was updated. 
 
-api.js
+### api.js
     1. The "router.get('/mechanics')" route in api.js is used to get all mechanics profile information in our app. The route does not expect any ancilliary information and returns the JSON of the all the mechanic profile documents in our app.
 
     2. The "router.post('/help')" route in api.js is used to send a help query on our app. The route expects ro recieve the uName, email and message of the help query a user wants to send and returns the JSON of the HelpForm document that was created.
