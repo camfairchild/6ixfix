@@ -49,6 +49,12 @@ From npm
     2. The "router.post('/signup')" route in auth.js is used to create a new user on our app. The route expectes to be sent the username and password, type of user and email of the user who wants to signup and the route will return a json object that includes the id, profile of the newly created user, and a message which says "Account created" when the signup is successful. If the login is not successful, the route will return a json object with the appropriate error message.
     * Postman route: post: /api/auth/signup
 
+    3. The "router.post('/checkSession')" route in auth.js is used to check if the user's session is valid. The route does not expect any ancillary data. If the session is valid, the route responds with 200, 401, otherwise.
+    * Postman route: post: /api/auth/checkSession
+
+    4. The "router.put('/logout')" route in auth.js is used to logout the current user. This destroys the session on serverside.
+    * Postman route: post: /api/auth/logout
+
 ### /routes/api/clients.js
     1. The "router.get('/)" route in clients.js is used to get all client profile information from our app. The route does not expect to recieve any data since it simply retrieves all client profile information. The route will return all client profiles if it is successful.
     * Postman route: get: /api/clients/
