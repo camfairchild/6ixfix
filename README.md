@@ -39,7 +39,7 @@ From npm
 "validator": "^13.7.0"
 
 ## Routes
-/routes/api/admin.js
+### /routes/api/admin.js
     1. The "router.delete('/profiles/:id')" route in admin.js is used to remove a profile by their id in our app. The route expects to be sent the id of the profile which is to be deleted and the returned JSON is the profile document that was deleted.
 
 /routes/api/auth.js
