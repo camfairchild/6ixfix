@@ -15,10 +15,6 @@
   font-family: Roboto;
 }
 
-.messaging .profilePic-container {
-  margin: none;
-}
-
 .messaging .profilePic-container img {
   width: 3rem;
   height: 3rem;
@@ -29,7 +25,7 @@
   height: 3rem;
 }
 
-.messaging .profilePic-container .profilePic-bg {
+.messaging .profilePic-container {
   width: 3rem;
   height: 3rem;
 }
@@ -53,7 +49,6 @@
 .contacts {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
   border-right: grey solid 4px;
   height: 100%;
   background-color: lightgrey;

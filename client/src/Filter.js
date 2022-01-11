@@ -39,8 +39,8 @@ export default class Filter extends React.Component {
         return (
             <div className="filter-container">
                 {this.state.filterOptions?.fields?.map(field => (
-                    <div className = "option-container">
-                        <label for = {field.name}>{field.label}</label>
+                    <div className = "option-container" key={field.name}>
+                        <label for={field.name}>{field.label}</label>
                         <input type="checkbox" name = {field.name}onChange = {this.toggleFilter}/>
                     </div>
                 )) || <div>No fields to filter</div>}

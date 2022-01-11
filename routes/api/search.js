@@ -28,7 +28,7 @@ router.get('/', mongoChecker, async (req, res) => {
 			let options = {}
 			let sort = { userName: 1 }
 			if (query) {
-				filter_['$text'] = { $search: req.query.query }
+				filter_['$text'] = { $search: query }
 				options = {score: { $meta: "textScore" }}
 				sort = { score: { $meta: "textScore" } }
 			}
@@ -67,7 +67,7 @@ router.get('/', mongoChecker, async (req, res) => {
 			).sort(sort)
 		} else {
 			profiles = await Profile.find(
-				{ $text: { $search: req.query.query || "" }, _id: { $ne: profile?._id } },
+				{ $text: { $search: query || "" }, _id: { $ne: profile?._id } },
 				{ score: { $meta: "textScore" } },
 			).sort({ score: { $meta: "textScore" } })
 		}

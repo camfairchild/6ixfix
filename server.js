@@ -118,10 +118,6 @@ app.get("*", (req, res) => {
     "/login", "/signup", "/admin",
     "/messages"
   ];
-  if (!goodPageRoutes.includes(req.url)) {
-    // if url not in expected page routes, set status to 404.
-    res.redirect("/");
-  }
 
   // send index.html
   res.sendFile(path.join(__dirname, "/client/build/index.html"));

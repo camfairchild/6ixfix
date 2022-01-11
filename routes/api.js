@@ -14,6 +14,8 @@ import searchRouter from './api/search.js';
 import mongoChecker from '../middleware/mongoose.js';
 import isLoggedIn from '../middleware/loggedin.js'
 
+import isAdmin from '../middleware/isAdmin.js'
+
 import { upload_image } from '../api/picture.js'
 
 const Profile = mongoose.model('Profile');
@@ -119,9 +121,85 @@ router.post('/clientPictures/', mongoChecker, isLoggedIn, async (req, res) => {
 	}
 })
 
+router.post('/clientPictures/:userName', mongoChecker, isLoggedIn, isAdmin, async (req, res) => {
+	
+	const profile = await Profile.findOne({ userName: req.params.userName })
+	const id = profile?._id
+
+	// Good practise: Validate id immediately.
+	if (!mongoose.isValidObjectId(id)) {
+		res.status(404).json({
+			error: "Invalid Id"
+		}) // if invalid id, definitely can't find resource, 404.
+		return;  // so that we don't run the rest of the handler.
+	}
+
+	if (!req.files || !req.files.picture) {
+		res.status(400).json({
+			error: "Must include a picture to upload"
+		})
+	}
+	try {
+		const profile = await Profile.findById(id)
+		if (!profile) {
+			res.status(404).json('Resource not found')  // could not find this client
+		} else if (profile.userType !== 'Client') {
+			res.status(400).json("Bad Request: Not a client")
+		} else {
+			const picture = await upload_image(req.files.picture, req.body.caption)
+
+			profile.carPics.push(picture._id)
+			try {
+				await profile.save()
+				res.json({
+					"picture": picture,
+					"client": await profile.populate('carPics')
+				})
+			} catch (error) {
+				throw error
+			}
+		}
+	} catch (error) {
+		log(error)
+		res.status(500).json('Internal Server Error')  // server error
+	}
+})
+
 router.post('/profilePic/', mongoChecker, isLoggedIn, async (req, res) => {
 	const user_id = req.user
 	const profile = (await Profile.findOne({ userName: req.user.userName }))
+
+	if (!req.files || !req.files.picture) {
+		res.status(400).json({
+			error: "Must include a picture to upload"
+		})
+	}
+
+	try {
+		if (!profile) {
+			res.status(404).json('Resource not found')  // could not find this client
+		} else {
+			const picture = await upload_image(req.files.picture, '')
+
+			profile.picture = picture.url
+			try {
+				await profile.save()
+				res.json({
+					"picture": picture,
+					"client": profile
+				})
+			} catch (error) {
+				throw error
+			}
+		}
+	} catch (error) {
+		log(error)
+		res.status(500).json('Internal Server Error')  // server error
+	}
+})
+
+router.post('/profilePic/:userName', mongoChecker, isLoggedIn, isAdmin, async (req, res) => {
+	const profile = (await Profile.findOne({ userName: req.params.userName }))
 
 	if (!req.files || !req.files.picture) {
 		res.status(400).json({

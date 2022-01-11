@@ -34,7 +34,11 @@ export default class ProfilePic extends React.Component {
 
     changeProfilePic = (file) => {
         // PUT request to update profile picture
-        uploadProfilePic(file)
+        let userName = null
+        if (this.props.isAdmin){
+            userName = this.props.user?.userName;
+        }
+        uploadProfilePic(file, userName)
         .then((res) => {
             this.setState({
                 picture: res

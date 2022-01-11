@@ -11,6 +11,7 @@ import isAdmin from '../../middleware/isAdmin.js'
 const Profile = mongoose.model('Profile');
 const User = mongoose.model('User');
 
+router.use(isLoggedIn)
 router.use(isAdmin) // checks session first to check if admin user
 
 // example route

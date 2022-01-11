@@ -244,12 +244,16 @@ export async function updateProfile(newProfile, user) {
   }
 }
 
-export async function uploadImage(image, caption) {
+export async function uploadImage(image, caption, userName=null) {
   try {
     const formData = new FormData();
     formData.append("picture", image)
     formData.append("caption", caption || null)
-    const response = await instance.post(`api/clientPictures/`, formData, {
+    let url = `api/clientPictures/`
+    if (userName) {
+      url = `api/clientPictures/${userName}/`
+    } 
+    const response = await instance.post(url, formData, {
       headers: {
         'Content-Type': 'multipart/form-data'
       }
@@ -262,11 +266,15 @@ export async function uploadImage(image, caption) {
 }
 
 
-export async function uploadProfilePic(image) {
+export async function uploadProfilePic(image, userName=null) {
   try {
     const formData = new FormData();
     formData.append("picture", image)
-    const response = await instance.post(`api/profilePic/`, formData, {
+    let url = `api/profilePic/`
+    if (userName) {
+      url = `api/profilePic/${userName}/`
+    } 
+    const response = await instance.post(url, formData, {
       headers: {
         'Content-Type': 'multipart/form-data'
       }

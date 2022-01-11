@@ -5,7 +5,7 @@ import About from './About';
 import Help from './Help';
 
 // https://reactrouter.com/web/guides/quick-start
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-dom';
 import Profile from './profile/Profile';
 import Messaging from './messaging/Messaging';
 import LandingPage from './LandingPage';
@@ -16,7 +16,6 @@ export default class App extends React.Component {
         return (
             <Router>
                 <Switch>    
-                    <Route exact path='/' component={LandingPage}/>
                     <Route exact path='/search' component={Search}/>
                     <Route exact path='/help' component={Help} />
                     <Route exact path='/about' component={About} />
@@ -34,6 +33,8 @@ export default class App extends React.Component {
                     <Route path='/messages/:userName?' component={Messaging} />
                     {/* Optional argument here*/}
                     <Route path="/admin/:view?" component={Dashboard}/>
+                    <Route exact path='/' component={LandingPage}/>
+                    <Redirect exact from='/' to='/' />
                 </Switch>
             </Router>
         )

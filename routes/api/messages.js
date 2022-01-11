@@ -132,8 +132,12 @@ router.get('/recent', mongoChecker, isLoggedIn, async (req, res) => {
                 }
              },
         ]);
-
-        return res.json(messages[0]);
+        const allMsg = messages.reduce((acc, curr) => {
+            const user_ = Object.keys(curr)[0]
+            acc[user_] = curr[user_]
+            return acc;
+        }, {})
+        return res.json(allMsg);
     } catch (err) {
         console.log(err);
         res.status(500).json({
@@ -347,8 +351,12 @@ router.get('/', mongoChecker, isLoggedIn, async (req, res) => {
                 }
              },
         ]);
-
-        return res.json(messages[0]);
+        const allMsg = messages.reduce((acc, curr) => {
+            const user_ = Object.keys(curr)[0]
+            acc[user_] = curr[user_]
+            return acc;
+        }, {})
+        return res.json(allMsg);
     } catch (err) {
         console.log(err);
         res.status(500).json({

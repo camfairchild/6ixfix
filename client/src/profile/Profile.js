@@ -23,6 +23,7 @@ export default function Profile(props) {
     const params = useParams();
     const [userName, setUserName] = useState(params['userName'] || null);
 
+    const isAdmin = (user.userType === 'Admin');
 
     const query = useQuery()
     const err_ = query.get('e')
@@ -97,7 +98,11 @@ export default function Profile(props) {
             return 
         }
         console.log(newImage)
-        const result = await uploadImage(newImage)
+        let userName = null
+        if (isAdmin) {
+            userName = profile?.userName
+        }
+        const result = await uploadImage(newImage, null, userName)
         setProfile(result.client)
         setNewImage(null)
     }
@@ -137,7 +142,7 @@ export default function Profile(props) {
                     <img src={profile?.bannerImage || `${process.env.PUBLIC_URL}/images/defaultbanner.jpg`} alt="banner" />
                 </div>
                 <div className="profile-user-details">
-                    <ProfilePic user={profile} editable={isUser} key={profile} />
+                    <ProfilePic user={profile} editable={isUser} key={profile} isAdmin={isAdmin} />
                     <div className="profile-location">
                         {profile?.location}
                     </div>
